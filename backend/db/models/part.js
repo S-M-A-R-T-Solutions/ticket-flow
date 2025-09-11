@@ -8,6 +8,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'partId',
         onDelete: 'CASCADE'
       });
+      Part.hasMany(models.PartStock, {
+        foreignKey: 'partId',
+        onDelete: 'CASCADE'
+      });
+      Part.hasMany(models.StockMovement, {
+        foreignKey: 'partId',
+        onDelete: 'CASCADE'
+      });
     }
   }
   Part.init({
