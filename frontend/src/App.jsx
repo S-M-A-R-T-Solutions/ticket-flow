@@ -7,7 +7,7 @@ import './index.css'
 import { useEffect } from "react";
 
 import LoginSignup from "./components/LoginSignup/LoginSignup";
-import Splash from "./components/Splash/Splash";
+// import Splash from "./components/Splash/Splash";
 import Navigation from "./components/Navigation/Navigation";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Footer from "./components/Splash/Footer";
@@ -64,12 +64,16 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Splash />
-      },
-      {
-        path: '/login',
         element: <LoginSignup />
       },
+      // {
+      //   path: '/',
+      //   element: <Splash />
+      // },
+      // {
+      //   path: '/login',
+      //   element: <LoginSignup />
+      // },
       {
         path: '/dashboard',
         element: <Dashboard />
