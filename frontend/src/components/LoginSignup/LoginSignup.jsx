@@ -3,9 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store/session";
 
-import { FaArrowRightToBracket } from "react-icons/fa6";
-import { FaUserPlus } from "react-icons/fa6";
-
 import "./LoginSignup.css";
 
 export default function LoginSignup() {
