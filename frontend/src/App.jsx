@@ -7,7 +7,6 @@ import './index.css'
 import { useEffect } from "react";
 
 import LoginSignup from "./components/LoginSignup/LoginSignup";
-// import Splash from "./components/Splash/Splash";
 import Navigation from "./components/Navigation/Navigation";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Footer from "./components/Splash/Footer";
@@ -16,6 +15,7 @@ import MyWork from "./components/MyWork";
 import TicketDetails from "./components/TicketDetails";
 import Clients from "./components/Clients/Clients";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
+import Inventory from "./components/Inventory";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ function Layout() {
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser())
-      // .then(() => setIsLoaded(true));
+    // .then(() => setIsLoaded(true));
   }, [dispatch]);
 
   return (
@@ -93,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: '/track/:ticketHashedId',
         element: <TrackingPage />
+      },
+      {
+        path: '/inventory',
+        element: <Inventory />
       }
     ]
   }
