@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import * as sessionActions from "./store/session";
 
+import './components/Splash/Splash.css'
 import './index.css'
 
 import { useEffect } from "react";
