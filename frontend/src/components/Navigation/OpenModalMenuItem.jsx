@@ -5,13 +5,15 @@ function OpenModalMenuItem({
   modalComponent,
   itemText,
   onItemClick,
-  onModalClose
+  onModalClose,
+  dismisable,
 }) {
-  const { setModalContent, setOnModalClose } = useModal();
+  const { setModalContent, setOnModalClose, setDismisable } = useModal();
 
   const onClick = () => {
     if (onModalClose) setOnModalClose(onModalClose);
     setModalContent(modalComponent);
+    setDismisable(dismisable);
     if (typeof onItemClick === "function") onItemClick();
   };
 
