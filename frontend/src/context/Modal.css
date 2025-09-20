@@ -25,3 +25,7 @@
     border-radius: 10px;
     width: 400px;
 }
+
+.dismisable #modal-background {
+    cursor: pointer;
+}

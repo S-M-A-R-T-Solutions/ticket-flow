@@ -51,7 +51,7 @@ export function Modal() {
     }
 
     return ReactDOM.createPortal(
-        <div id="modal">
+        <div id="modal" className={dismisable != false ? "dismisable" : ""}>
             <div id="modal-background" onClick={onBackgroundClick} />
             <div id="modal-content">{modalContent}</div>
         </div>,
