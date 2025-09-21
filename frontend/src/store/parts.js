@@ -2,6 +2,7 @@ import { csrfFetch } from './csrf';
 
 //Constants
 const GET_ALL_PARTS = 'parts/getAllParts';
+const GET_TOTAL_PARTS_AMOUNT = 'parts/getTotalPartsAmount';
 const GET_PART = 'parts/getPart';
 const ADD_PART = 'parts/addPart';
 const EDIT_PART = 'parts/editPart';
@@ -11,6 +12,11 @@ const DELETE_PART = 'parts/deletePart';
 const getAllParts = (parts) => ({
     type: GET_ALL_PARTS,
     payload: parts
+});
+
+const getTotalPartsAmount = (amount) => ({
+    type: GET_TOTAL_PARTS_AMOUNT,
+    payload: amount
 });
 
 const getPart = (part) => ({
@@ -34,10 +40,16 @@ const deletePart = (part) => ({
 });
 
 //Thunks
-export const getAllPartsThunk = () => async (dispatch) => {
-    const res = await csrfFetch('/api/parts');
+export const getAllPartsThunk = (page, size) => async (dispatch) => {
+    const res = await csrfFetch(`/api/parts?page=${page}&size=${size}`);
     const parts = await res.json();
     dispatch(getAllParts(parts));
+};
+
+export const getTotalPartsAmountThunk = () => async (dispatch) => {
+    const res = await csrfFetch('/api/parts');
+    const amount = await res.json();
+    dispatch(getTotalPartsAmount(amount.length));
 };
 
 export const getPartThunk = (partId) => async (dispatch) => {
@@ -120,13 +132,17 @@ export const deletePartThunk = (partId) => async (dispatch) => {
 //Reducer
 const initialState = {
     allParts: [],
-    part: {}
+    part: {},
+    totalPartsAmount: 0
 };
 
 const partsReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_ALL_PARTS: {
             return { ...state, allParts: action.payload };
+        }
+        case GET_TOTAL_PARTS_AMOUNT: {
+            return { ...state, totalPartsAmount: action.payload };
         }
         case GET_PART: {
             return { ...state, part: action.payload };
