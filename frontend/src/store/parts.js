@@ -59,10 +59,11 @@ export const getPartThunk = (partId) => async (dispatch) => {
 };
 
 export const addPartThunk = (part) => async (dispatch) => {
-    const { name, description, ticketId, imageUrl } = part;
+    const { sku, name, description, ticketId, imageUrl } = part;
 
     try {
         const formData = new FormData();
+        formData.append('sku', sku);
         formData.append('name', name);
         formData.append('description', description);
         formData.append('ticketId', ticketId);
@@ -70,11 +71,12 @@ export const addPartThunk = (part) => async (dispatch) => {
 
         const options = {
             method: "POST",
+            headers: {},
             body: formData
         }
         const res = await csrfFetch('/api/parts', options);
 
-        if(res.ok) {
+        if (res.ok) {
             const newPart = await res.json();
             dispatch(addPart(newPart));
         } else if (res.status < 500) {
@@ -106,7 +108,7 @@ export const editPartThunk = (part) => async (dispatch) => {
         }
         const res = await csrfFetch(`/api/parts/${part.id}`, options);
 
-        if(res.ok) {
+        if (res.ok) {
             const updatedPart = await res.json();
             dispatch(editPart(updatedPart));
         } else if (res.status < 500) {
