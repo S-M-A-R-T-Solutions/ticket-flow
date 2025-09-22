@@ -11,7 +11,16 @@ const router = express.Router();
 // List all parts
 router.get('/', requireAuth, async (req, res) => {
     try {
-        const parts = await Part.findAll();
+        const page = parseInt(req.query.page) || null;
+        const size = parseInt(req.query.size) || null;
+
+        const where = {};
+
+        const parts = await Part.findAll({
+            where,
+            limit: size,
+            offset: (page - 1) * size
+        });
 
         if (!parts) {
             return res.status(404).json({ error: 'No parts found' });
