@@ -8,11 +8,39 @@
     width: $sidebarWidth;
     height: 100vh;
 
-    background-color: cyan;
-
     overflow-y: auto;
 }
 
-.sidebar ul.nav-list {
-    list-style: none;
+.sidebar {
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        width: 100%;
+
+        padding: 16px;
+
+        text-decoration: none;
+
+        img {
+            height: 32px;
+            width: 32px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        &:hover{
+            img{
+                transform: scale(1.2);
+            }
+        }
+    }
+
+    ul.nav-list {
+        list-style: none;
+    }
 }

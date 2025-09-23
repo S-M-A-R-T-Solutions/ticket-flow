@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-
 import { MdHome, MdConfirmationNumber, MdGroup, MdInventory } from "react-icons/md";
 
 import './SideBar.scss';
@@ -7,6 +6,11 @@ import './SideBar.scss';
 export default function SideBar() {
     return (
         <nav className="sidebar">
+            <NavLink to="/" className="brand">
+                <img src="/assets/logo-tf.png" className='logo-main' alt='logo'></img>
+                <span className="title">ticketFlow</span>
+            </NavLink>
+
             <ul className="nav-list">
                 <li>
                     <NavLink to="/dashboard" className="menu-item">
