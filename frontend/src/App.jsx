@@ -9,6 +9,7 @@ import { useEffect } from "react";
 
 import LoginSignup from "./components/LoginSignup/LoginSignup";
 import Navigation from "./components/Navigation/Navigation";
+import SideBar from "./components/Layout/SideBar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Footer from "./components/Splash/Footer";
 import Tickets from "./components/Tickets";
@@ -18,7 +19,7 @@ import Clients from "./components/Clients/Clients";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
 import Inventory from "./components/Inventory";
 
-function Layout() {
+function _Layout() {
   const dispatch = useDispatch();
   // const [isLoaded, setIsLoaded] = useState(false);
 
@@ -48,6 +49,53 @@ function Layout() {
               </div>
             </main>
             <Footer />
+          </>
+        ) : (
+          <main className='main-zone'>
+            <Outlet />
+          </main>
+        )
+      }
+    </div>
+  )
+}
+
+function Layout() {
+  const dispatch = useDispatch();
+  // const [isLoaded, setIsLoaded] = useState(false);
+
+  const sessionUser = useSelector(state => state.session.user);
+  const myTickets = useSelector(state => state.tickets.myTickets);
+  const status = useSelector(state => state.status.allStatus);
+
+  useEffect(() => {
+    dispatch(sessionActions.restoreUser())
+    // .then(() => setIsLoaded(true));
+  }, [dispatch]);
+
+  return (
+    <div className="app-div-container">
+      {
+        sessionUser ? (
+          <>
+            <SideBar />
+
+            <div className="main-panel">
+              <header className="header">
+                <Navigation />
+              </header>
+
+              <main className='main-zone'>
+                <div className="left-section-mm">
+                  <MyWork myTickets={myTickets} status={status} />
+                </div>
+                <div className="right-section-mm">
+                  <Outlet />
+                </div>
+              </main>
+
+              <Footer />
+            </div>
           </>
         ) : (
           <main className='main-zone'>
