@@ -6,12 +6,12 @@
     --surface-color: #ffffff;
 }
 
-[data-theme="dark"] {
-    --background-color: #121212;
-    --text-color: #ffffff;
-    --button-bg-color: #1e90ff;
+.dark-mode {
+    --background-color: #0B0A24;
+    --text-color: #F5F4FB;
+    --button-bg-color: #61a1e0;
 
-    --surface-color: #1e1e1e;
+    --surface-color: #201E43;
 }
 
 body {

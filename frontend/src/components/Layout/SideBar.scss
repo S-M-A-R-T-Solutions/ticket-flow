@@ -8,7 +8,7 @@
     width: $sidebarWidth;
     height: 100vh;
 
-    background-color: var(--surface-color);
+    background-color: var(--surface-color) !important;
 
     overflow-y: auto;
 }
