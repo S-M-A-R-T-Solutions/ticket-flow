@@ -2,7 +2,8 @@ const express = require('express');
 
 const { Part } = require('@db/models');
 const { requireAuth } = require('@utils/auth');
-const { singleFileUpload } = require('@backend/awsS3');
+
+const { singleMulterUpload, singleFileUpload } = require('@backend/awsS3');
 
 
 const router = express.Router();
@@ -49,23 +50,38 @@ router.get('/:id', requireAuth, async (req, res) => {
 
 // POST /api/parts
 // Create a new Part
-router.post('/', requireAuth, async (req, res, next) => {
-    try {
-        const { sku, name, description, brand, model, imageUrl, unit, defaultPrice, active } = req.body;
+router.post(
+    '/',
+    requireAuth,
+    singleMulterUpload("image"),   // 👈 este middleware parsea el FormData
+    async (req, res, next) => {
+        try {
+            const { sku, name, description, brand, model, unit, defaultPrice, active } = req.body;
 
-        // Upload image to S3 if provided
-        let finalImageUrl = imageUrl;
-        if (req.file) {
-            finalImageUrl = await singleFileUpload({ file: req.file, public: true });
+            // si hay archivo, se sube a S3
+            let finalImageUrl = req.body.imageUrl;
+            if (req.file) {
+                finalImageUrl = await singleFileUpload({ file: req.file, public: true });
+            }
+
+            const newPart = await Part.create({
+                sku,
+                name,
+                description,
+                brand,
+                model,
+                unit,
+                defaultPrice,
+                active,
+                imageUrl: finalImageUrl
+            });
+
+            return res.status(201).json(newPart);
+        } catch (error) {
+            return next(error);
         }
-
-        // Create part
-        const newPart = await Part.create({ sku, name, description, brand, model, imageUrl: finalImageUrl, unit, defaultPrice, active });
-        return res.status(201).json(newPart);
-    } catch (error) {
-        return next(error);
     }
-});
+);
 
 // PUT /api/parts/:id
 // Update Part
