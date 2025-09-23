@@ -68,13 +68,12 @@ export const addPartThunk = (part) => async (dispatch) => {
         formData.append('description', description);
         formData.append('ticketId', ticketId);
         formData.append('image', imageUrl);
-
-        const options = {
+        
+        const res = await csrfFetch('/api/parts', {
             method: "POST",
             headers: {},
             body: formData
-        }
-        const res = await csrfFetch('/api/parts', options);
+        });
 
         if (res.ok) {
             const newPart = await res.json();
