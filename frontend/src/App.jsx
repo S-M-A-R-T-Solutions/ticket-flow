@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import * as sessionActions from "./store/session";
 
 import './components/Splash/Splash.css'
-import './index.css'
+import './index.scss'
 
 import { useEffect } from "react";
 
