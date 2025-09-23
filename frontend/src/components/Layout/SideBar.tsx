@@ -1,6 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { FaHome, FaTicketAlt } from "react-icons/fa";
-import { FaUsers, FaBoxArchive } from "react-icons/fa6";
 
 import { MdHome, MdConfirmationNumber, MdGroup, MdInventory } from "react-icons/md";
 
