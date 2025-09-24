@@ -40,7 +40,7 @@ function Layout() {
             <SideBar />
 
             <div className="main-panel">
-              <header className="header">
+              <header className="main-header">
                 <TopBar />
               </header>
 
