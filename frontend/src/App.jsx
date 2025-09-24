@@ -8,8 +8,8 @@ import './index.scss'
 import { useEffect } from "react";
 
 import LoginSignup from "./components/LoginSignup/LoginSignup";
-import Navigation from "./components/Navigation/Navigation";
 import SideBar from "./components/Layout/SideBar";
+import TopBar from "./components/Layout/TopBar/TopBar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Footer from "./components/Splash/Footer";
 import Tickets from "./components/Tickets";
@@ -82,7 +82,7 @@ function Layout() {
 
             <div className="main-panel">
               <header className="header">
-                <Navigation />
+                <TopBar />
               </header>
 
               <main className='main-zone'>
