@@ -45,11 +45,12 @@ function Layout() {
               </header>
 
               <main className='main-zone'>
-                <div className="left-section-mm">
-                  <MyWork myTickets={myTickets} status={status} />
-                </div>
-                <div className="right-section-mm">
+                <div className="section-container">
                   <Outlet />
+                </div>
+
+                <div className="my-work-panel">
+                  <MyWork myTickets={myTickets} status={status} />
                 </div>
               </main>
 
@@ -57,7 +58,7 @@ function Layout() {
             </div>
           </>
         ) : (
-          <main className='main-zone'>
+          <main className='main-zone-login'>
             <Outlet />
           </main>
         )
