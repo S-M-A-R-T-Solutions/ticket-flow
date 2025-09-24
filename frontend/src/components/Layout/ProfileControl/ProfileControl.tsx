@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./ProfileControl.scss";
 import { LuUserRound } from "react-icons/lu";
+import { TbLogout } from "react-icons/tb";
 
 
 export default function ProfileControl() {
@@ -37,8 +38,12 @@ export default function ProfileControl() {
 
             <div className="user-info">
                 <span className="first-name">{user.firstName}</span>
-                <span className="username">@{user.username}</span>
+                <span className="username">{user.username}</span>
             </div>
+
+            <button className="btn btn-icon btn-logout" title="Logout" onClick={(e: any) => handleLogout(e)}>
+                <TbLogout className="btn-icon-icon" />
+            </button>
 
         </div >
     );
