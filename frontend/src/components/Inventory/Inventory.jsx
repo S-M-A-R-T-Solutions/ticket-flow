@@ -60,15 +60,15 @@ export default function Inventory() {
 
                 <div className="spacer"></div>
 
-                <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <FaCirclePlus />
-                    <OpenModalMenuItem
-                        itemText={"Add Part"}
-                        modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
-                        onModalClose={onModalClose}
-                        dismisable={false}
-                    />
-                </div>
+                <OpenModalMenuItem
+                    modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
+                    onModalClose={onModalClose}
+                    dismisable={false}
+                >
+                    <button className="btn btn-add-item">
+                        <FaCirclePlus /> Add Part
+                    </button>
+                </OpenModalMenuItem>
             </div>
 
             <div className="inventory-container">

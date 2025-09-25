@@ -62,14 +62,14 @@ export default function Clients() {
 
                 <div className="spacer"></div>
 
-                <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <FaCirclePlus />
-                    <OpenModalMenuItem
-                        itemText={"Add Client"}
-                        modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
-                        onModalClose={onModalClose}
-                    />
-                </div>
+                <OpenModalMenuItem
+                    modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
+                    onModalClose={onModalClose}
+                >
+                    <button className="btn btn-add-item">
+                        <FaCirclePlus /> Add Client
+                    </button>
+                </OpenModalMenuItem>
             </div>
 
             <div className="clients-container">
@@ -79,7 +79,7 @@ export default function Clients() {
                     ))}
                 </div>
             </div>
-            
+
             <div className='tickets-footer'>
                 <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
                 <div>

@@ -52,15 +52,15 @@ export default function Tickets() {
                 <h1>Tickets</h1>
 
                 <div className="spacer"></div>
-                
-                <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
-                    <FaCirclePlus />
-                    <OpenModalMenuItem
-                        itemText={"Add Ticket"}
-                        modalComponent={<AddTicket setTicketsChecker={setTicketsChecker} />}
-                        onModalClose={onModalClose}
-                    ></OpenModalMenuItem>
-                </div>
+
+                <OpenModalMenuItem
+                    modalComponent={<AddTicket setTicketsChecker={setTicketsChecker} />}
+                    onModalClose={onModalClose}
+                >
+                    <button className="btn btn-add-item">
+                        <FaCirclePlus /> Add Ticket
+                    </button>
+                </OpenModalMenuItem>
             </div>
 
             <div className='tickets-container'>

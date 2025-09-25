@@ -7,6 +7,7 @@ function OpenModalMenuItem({
   onItemClick,
   onModalClose,
   dismisable,
+  children,
 }) {
   const { setModalContent, setOnModalClose, setDismisable } = useModal();
 
@@ -19,7 +20,10 @@ function OpenModalMenuItem({
 
   return (
     <li className="open-modal-menu-item" onClick={onClick}>
-      {itemText}
+      {
+        itemText ? itemText :
+          children
+      }
     </li>
   );
 }
