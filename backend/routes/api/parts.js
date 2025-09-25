@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Part } = require('@db/models');
+const { Part, PartStock } = require('@db/models');
 const { requireAuth } = require('@utils/auth');
 
 const { singleMulterUpload, singleFileUpload } = require('@backend/awsS3');
@@ -42,6 +42,11 @@ router.get('/:id', requireAuth, async (req, res) => {
         if (!part) {
             return res.status(404).json({ error: 'Part not found' });
         }
+
+        const stocks = await part.getPartStocks();
+        part.dataValues.stocks = stocks;
+        part.dataValues.totalStock = stocks.reduce((acc, stock) => acc + stock.quantity, 0);
+
         return res.json(part);
     } catch (error) {
         return res.status(500).json({ error: 'Error fetching part' });
