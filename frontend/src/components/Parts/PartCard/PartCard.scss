@@ -101,6 +101,8 @@
             justify-content: space-between;
 
             width: 100%;
+
+            font-size: 14px;
         }
 
         .part-sku {
@@ -109,7 +111,6 @@
 
         .part-total-stock {
             flex-shrink: 0;
-            font-size: 14px;
         }
     }
 }
