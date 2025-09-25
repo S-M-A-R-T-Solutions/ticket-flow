@@ -11,7 +11,6 @@ import LoginSignup from "./components/LoginSignup/LoginSignup";
 import SideBar from "./components/Layout/SideBar";
 import TopBar from "./components/Layout/TopBar/TopBar";
 import Dashboard from "./components/Dashboard/Dashboard";
-import Footer from "./components/Splash/Footer";
 import Tickets from "./components/Tickets";
 import MyWork from "./components/MyWork";
 import TicketDetails from "./components/TicketDetails";
@@ -54,7 +53,6 @@ function Layout() {
                 </div>
               </main>
 
-              <Footer />
             </div>
           </>
         ) : (
