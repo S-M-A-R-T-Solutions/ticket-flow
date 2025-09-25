@@ -1,0 +1,10 @@
+section.app-section {
+    .spacer {
+        flex-grow: 1;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+    }
+}
