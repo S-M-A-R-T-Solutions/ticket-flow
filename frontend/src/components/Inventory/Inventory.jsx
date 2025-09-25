@@ -71,11 +71,9 @@ export default function Inventory() {
                 </div>
 
                 <div className="inventory-container">
-                    <div>
-                        {allParts.map((part) => (
-                            <PartCard key={part.id} part={part} setEditPartChecker={setEditPartChecker} setDeletePartChecker={setEditPartChecker} />
-                        ))}
-                    </div>
+                    {allParts.map((part) => (
+                        <PartCard key={part.id} part={part} setEditPartChecker={setEditPartChecker} setDeletePartChecker={setEditPartChecker} />
+                    ))}
                 </div>
 
                 <div className="tickets-footer">
