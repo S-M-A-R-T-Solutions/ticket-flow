@@ -24,7 +24,7 @@ export default function Inventory() {
     const [addPartCkecker, setAddPartChecker] = useState(false);
     const [editPartCkecker, setEditPartChecker] = useState(false);
 
-    const PARTS_PER_PAGE = 5;
+    const PARTS_PER_PAGE = 10;
 
     useEffect(() => {
         dispatch(getTotalPartsAmountThunk());

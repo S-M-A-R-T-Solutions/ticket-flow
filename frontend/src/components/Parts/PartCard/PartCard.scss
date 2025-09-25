@@ -10,7 +10,18 @@
     background-color: var(--surface-color);
     border-radius: 16px;
 
+    border: 2px solid var(--surface-color);
+
     overflow: hidden;
+
+    user-select: none;
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: var(--button-bg-color);
+    }
 }
 
 .part-card {
