@@ -12,15 +12,6 @@ button:hover {
     opacity: 0.9;
 }
 
-/* Header Styles */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: var(--header-bg-color);
-}
-
 .logo {
     display: flex;
     flex-direction: row;

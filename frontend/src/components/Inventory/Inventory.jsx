@@ -9,7 +9,7 @@ import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import './Inventory.css';
 
 import { getAllPartsThunk, getTotalPartsAmountThunk } from "../../store/parts";
-import PartCard from "../PartCard";
+import PartCard from "../Parts/PartCard/PartCard";
 import AddPart from "../AddPart";
 import { getAllStatusThunk } from "../../store/status";
 
