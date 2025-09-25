@@ -54,37 +54,37 @@ export default function Inventory() {
     }
 
     return (
-        <section className="inventory-tab">
-            <div>
-                <div className="tickets-header">
-                    <h1>Inventory</h1>
+        <section className="app-section inventory-tab">
+            <div className="section-header">
+                <h1>Inventory</h1>
 
-                    <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
-                        <FaCirclePlus />
-                        <OpenModalMenuItem
-                            itemText={"Add Part"}
-                            modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
-                            onModalClose={onModalClose}
-                            dismisable={false}
-                        />
-                    </div>
-                </div>
+                <div className="spacer"></div>
 
-                <div className="inventory-container">
-                    {allParts.map((part) => (
-                        <PartCard key={part.id} part={part} setEditPartChecker={setEditPartChecker} setDeletePartChecker={setEditPartChecker} />
-                    ))}
+                <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
+                    <FaCirclePlus />
+                    <OpenModalMenuItem
+                        itemText={"Add Part"}
+                        modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
+                        onModalClose={onModalClose}
+                        dismisable={false}
+                    />
                 </div>
+            </div>
 
-                <div className="tickets-footer">
-                    <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
-                    <div>
-                        <span >
-                            {page} of {lastPage}
-                        </span>
-                    </div>
-                    <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><FaAngleRight /></button>
+            <div className="inventory-container">
+                {allParts.map((part) => (
+                    <PartCard key={part.id} part={part} setEditPartChecker={setEditPartChecker} setDeletePartChecker={setEditPartChecker} />
+                ))}
+            </div>
+
+            <div className="tickets-footer">
+                <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
+                <div>
+                    <span >
+                        {page} of {lastPage}
+                    </span>
                 </div>
+                <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><FaAngleRight /></button>
             </div>
         </section>
     );

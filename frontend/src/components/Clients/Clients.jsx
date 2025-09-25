@@ -56,35 +56,38 @@ export default function Clients() {
     }
 
     return (
-        <section className="clients-tab">
-            <div>
-                <div className={`tickets-header`}>
-                    <h1>Clients</h1>
-                    <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
-                        <FaCirclePlus />
-                        <OpenModalMenuItem
-                            itemText={"Add Client"}
-                            modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
-                            onModalClose={onModalClose}
-                        />
-                    </div>
+        <section className="app-section clients-tab">
+            <div className="section-header">
+                <h1>Clients</h1>
+
+                <div className="spacer"></div>
+
+                <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
+                    <FaCirclePlus />
+                    <OpenModalMenuItem
+                        itemText={"Add Client"}
+                        modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
+                        onModalClose={onModalClose}
+                    />
                 </div>
-                <div className="clients-container">
-                    <div>
-                        {allClients.map((client) => (
-                            <ClientCard key={client.id} client={client} setEditClientChecker={setEditClientChecker} setDeleteClientChecker={setDeleteClientChecker} />
-                        ))}
-                    </div>
+            </div>
+
+            <div className="clients-container">
+                <div>
+                    {allClients.map((client) => (
+                        <ClientCard key={client.id} client={client} setEditClientChecker={setEditClientChecker} setDeleteClientChecker={setDeleteClientChecker} />
+                    ))}
                 </div>
-                <div className='tickets-footer'>
-                    <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
-                    <div>
-                        <span >
-                            {page} of {lastPage}
-                        </span>
-                    </div>
-                    <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><FaAngleRight /></button>
+            </div>
+            
+            <div className='tickets-footer'>
+                <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
+                <div>
+                    <span >
+                        {page} of {lastPage}
+                    </span>
                 </div>
+                <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><FaAngleRight /></button>
             </div>
         </section>
     )

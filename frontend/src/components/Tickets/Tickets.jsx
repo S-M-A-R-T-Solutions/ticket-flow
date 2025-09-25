@@ -47,29 +47,32 @@ export default function Tickets() {
     }
 
     return (
-        <section className='tickets-tab'>
-            <div>
-                <div className={`tickets-header`}>
-                    <h1>Tickets</h1>
-                    <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
-                        <FaCirclePlus />
-                        <OpenModalMenuItem
-                            itemText={"Add Ticket"}
-                            modalComponent={<AddTicket setTicketsChecker={setTicketsChecker} />}
-                            onModalClose={onModalClose}
-                        ></OpenModalMenuItem>
-                    </div>
-                </div>
-                <div className='tickets-container'>
-                    {
-                        <div>
-                            {allTickets.map(ticket => (
-                                <TicketCard key={ticket.id} ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
-                            ))}
-                        </div>
-                    }
+        <section className='app-section tickets-tab'>
+            <div className="section-header">
+                <h1>Tickets</h1>
+
+                <div className="spacer"></div>
+                
+                <div className='add-ticket-btn' style={{ listStyle: "none", display: "flex", flexDirection: "row", gap: "5px" }}>
+                    <FaCirclePlus />
+                    <OpenModalMenuItem
+                        itemText={"Add Ticket"}
+                        modalComponent={<AddTicket setTicketsChecker={setTicketsChecker} />}
+                        onModalClose={onModalClose}
+                    ></OpenModalMenuItem>
                 </div>
             </div>
+
+            <div className='tickets-container'>
+                {
+                    <div>
+                        {allTickets.map(ticket => (
+                            <TicketCard key={ticket.id} ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
+                        ))}
+                    </div>
+                }
+            </div>
+
             <div className='tickets-footer'>
                 <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
                 <div>
