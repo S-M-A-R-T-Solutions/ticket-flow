@@ -2,6 +2,8 @@ import "./TopBar.scss";
 import SearchBar from "../SearchBar/SearchBar";
 import ProfileControl from "../ProfileControl";
 
+import ThemeSwitch from "../../IconThemeSwitch";
+
 export default function TopBar() {
     return (
         <div className="top-bar">
@@ -10,6 +12,8 @@ export default function TopBar() {
             </div>
 
             <div className="spacer"></div>
+
+            <ThemeSwitch />
 
             <ProfileControl />
         </div>
