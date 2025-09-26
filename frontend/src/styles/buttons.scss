@@ -49,3 +49,10 @@ a.btn {
         white-space: nowrap;
     }
 }
+
+button.btn,
+a.btn {
+    &.btn-danger {
+        background-color: var(--razzmatazz);
+    }
+}
