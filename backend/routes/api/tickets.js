@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {  StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, Signature } = require('@db/models');
+const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, Signature } = require('@db/models');
 
 const { requireAuth } = require('@utils/auth');
 const { properUserValidation, properNoteValidation } = require('@utils/validation');
@@ -42,7 +42,7 @@ router.get('/', requireAuth, async (req, res, next) => {
         for (const ticket of tickets) {
             ticket["status"] = await Status.findByPk(where.status);
             ticket.clientId = await Client.findByPk(where.client || ticket.clientId, { attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'email', 'phoneNumber', 'address'] } });
-            ticket.createdBy = await User.findByPk(where.createdBy || ticket.createdBy, { attributes: { exclude: ['id', 'username', 'email', 'hashedPassword', 'createdAt', 'updatedAt', 'isActive', 'departmentId'] } });
+            ticket.createdBy = await User.findByPk(where.createdBy || ticket.createdBy, { attributes: { exclude: ['username', 'email', 'hashedPassword', 'createdAt', 'updatedAt', 'isActive', 'departmentId'] } });
 
             const values = ticket.toJSON();
 
@@ -146,7 +146,7 @@ router.get('/:id', requireAuth, async (req, res, next) => {
         });
 
         const Parts = [];
-        
+
         for (const part of ticketParts) {
             const partInfo = await Part.findByPk(part.partId);
             Parts.push(partInfo);
@@ -306,7 +306,7 @@ router.post('/:ticketId/parts', requireAuth, properUserValidation, async (req, r
 // Update a Part as "Picked Up" and substract from stock
 router.put('/:ticketId/parts/:ticketPartId/pickup', requireAuth, properUserValidation, async (req, res, next) => {
     const { ticketId, ticketPartId } = req.params;
-    
+
     try {
         const ticketPart = await TicketPart.findOne({
             where: {
@@ -331,7 +331,7 @@ router.put('/:ticketId/parts/:ticketPartId/pickup', requireAuth, properUserValid
 // Update a Part as "Installed"
 router.put('/:ticketId/parts/:ticketPartId/install', requireAuth, properUserValidation, async (req, res, next) => {
     const { ticketId, ticketPartId } = req.params;
-    
+
     try {
         const ticketPart = await TicketPart.findOne({
             where: {
@@ -356,7 +356,7 @@ router.put('/:ticketId/parts/:ticketPartId/install', requireAuth, properUserVali
 // Update a Part as "Returned" and add back to stock
 router.put('/:ticketId/parts/:ticketPartId/return', requireAuth, properUserValidation, async (req, res, next) => {
     const { ticketId, ticketPartId } = req.params;
-    
+
     try {
         const ticketPart = await TicketPart.findOne({
             where: {
