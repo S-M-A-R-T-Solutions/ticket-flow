@@ -8,7 +8,8 @@ import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
 import './Tickets.css';
 import { getAllTicketsThunk, getMyTicketsThunk, getTotalTicketsAmountThunk } from '../../store/tickets';
-import TicketCard from '../MyWork/TicketCard';
+import TicketCardOld from '../MyWork/TicketCard';
+import TicketCard from './TiketCard';
 import AddTicket from '../AddTicket/AddTicket';
 
 export default function Tickets() {
@@ -64,13 +65,13 @@ export default function Tickets() {
             </div>
 
             <div className='tickets-container'>
-                {
-                    <div>
-                        {allTickets.map(ticket => (
-                            <TicketCard key={ticket.id} ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
-                        ))}
-                    </div>
-                }
+                {allTickets.map(ticket => (
+                    <TicketCard key={ticket.id} ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
+                ))}
+
+                {allTickets.map(ticket => (
+                    <TicketCardOld key={ticket.id} ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
+                ))}
             </div>
 
             <div className='tickets-footer'>

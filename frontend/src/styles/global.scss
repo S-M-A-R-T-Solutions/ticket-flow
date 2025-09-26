@@ -4,13 +4,16 @@
 
 :root {
     --background-color: #f5f2f7;
-    --text-color: #51385e;
+    --text-color: var(--light-black);
     --text-color-inverted: #F5F4FB;
 
     --button-bg-color: #007bff;
-    --button-text-color: #f9f9f9;
+    --button-text-color: var(--light-white);
 
     --surface-color: #ffffff;
+
+    --light-white: #f9f9f9;
+    --light-black: #51385e;
 
     --background-gradient: linear-gradient(90deg, var(--razzmatazz), var(--jonquil), var(--tiffany-blue));
     --special-button-color: none;

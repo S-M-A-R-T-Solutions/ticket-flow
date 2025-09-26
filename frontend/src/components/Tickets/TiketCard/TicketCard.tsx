@@ -48,30 +48,28 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
 
     return (
         <div className="ticket-card-wrapper">
-            <NavLink to={"/tickets/" + 1} className="ticket-card-new">
-                <h3 className="ticket-title">{ticket.title}</h3>
+            <NavLink to={"/tickets/" + 1} className={`ticket-card-new status-${ticketStatus}`}>
+                <div className="ticket-title">{ticket.title}</div>
 
-                {typeof (ticket.createdBy) !== "number" && (<>
-                    <span>Created by: {ticket.createdBy.firstName}</span>
-                    <p>{ticket.description}</p>
-                </>)}
+                {typeof (ticket.createdBy) !== "number" && (<div className='ticket-author'>
+                    Created by: <strong>{ticket.createdBy.firstName}</strong>
+                </div>)}
 
                 {ticket.clientId.companyName !== '' ? (
                     <div className='client-corporate'>
                         <BsBuildingsFill />
-                        <span>{ticket.clientId.companyName}</span>
+                        {ticket.clientId.companyName}
                     </div>
                 ) : (
                     <div className='client-individual'>
                         <BsFillPersonFill />
-                        <span style={{ textOverflow: "ellipsis" }}>{ticket.clientId.firstName} {ticket.clientId.lastName}</span>
+                        {ticket.clientId.firstName} {ticket.clientId.lastName}
                     </div>
                 )}
 
-                <p>{formatDate(ticket.createdAt)}</p>
+                <div className='ticket-description'>{ticket.description}</div>
 
-
-
+                <div className="ticket-date">{formatDate(ticket.createdAt)}</div>
             </NavLink>
 
             {user.id === ticket.createdBy.id && (
@@ -83,8 +81,8 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                         onModalClose={() => { }}
 
                     >
-                        <button className="btn btn-icon btn-danger">
-                            <FaTrash />
+                        <button className="btn btn-delete-ticket">
+                            <FaTrash className="btn-icon-icon" />
                         </button>
                     </OpenModalMenuItem>
                 </div>
