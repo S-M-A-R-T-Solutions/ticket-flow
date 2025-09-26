@@ -44,17 +44,11 @@
 
 /* Tickets Container */
 .tickets-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 96%;
-    /* margin-bottom: 10px; */
-    /* overflow-y: auto; */
-    overflow-x: hidden;
-    max-height: 850px;
-    /* Allow scrolling within the container */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 16px;
+
+    width: 100%;    
 }
 
 /* Tickets Footer */
