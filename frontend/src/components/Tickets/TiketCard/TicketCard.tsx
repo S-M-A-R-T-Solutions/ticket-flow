@@ -28,6 +28,14 @@ interface TicketCardProps {
     setDeleteTicketChecker: any;
 }
 
+function PerforatedZone() {
+    return (
+        <div className="perforated-zone">
+            <div className="perforated-line"></div>
+        </div>
+    );
+}
+
 export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
     const dispatch = useDispatch();
     const user = useSelector((state: any) => state.session.user);
@@ -66,6 +74,8 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                         {ticket.clientId.firstName} {ticket.clientId.lastName}
                     </div>
                 )}
+
+                <PerforatedZone />
 
                 <div className='ticket-description'>{ticket.description}</div>
 
