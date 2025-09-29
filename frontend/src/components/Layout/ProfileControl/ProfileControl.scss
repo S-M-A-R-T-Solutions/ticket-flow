@@ -9,12 +9,14 @@
 .profile-control {
     display: flex;
     gap: 20px;
+
+    user-select: none;
 }
 
 .profile-control {
     .avatar {
         flex-shrink: 0;
-        
+
         display: flex;
         align-items: center;
         justify-content: center;
