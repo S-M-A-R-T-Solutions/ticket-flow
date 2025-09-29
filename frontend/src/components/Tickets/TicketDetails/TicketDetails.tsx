@@ -18,6 +18,7 @@ import PartCard from "../../_PartCard/PartCard";
 import AddPart from "../../AddPart";
 import EditTicket from "../../EditTicket/EditTicket";
 import TicketQR from "./TicketQR";
+import TicketEmployees from "./TicketEmployees";
 
 import './TicketDetails.scss';
 
@@ -141,18 +142,7 @@ export default function TicketDetails() {
                         <div className="description-content">{ticket.description}</div>
                     </div>
 
-                    <div className="author">
-                        <div className="author-image">
-                            {ticket.CreatedBy.profilePicUrl ?
-                                <img src={ticket.CreatedBy.profilePicUrl} alt="Author" /> :
-                                <BsFillPersonFill />
-                            }
-                        </div>
-
-                        <div className="author-info">
-                            {ticket.CreatedBy.firstName} {ticket.CreatedBy.lastName}
-                        </div>
-                    </div>
+                    <TicketEmployees author={ticket.CreatedBy} employees={ticket.AssignedEmployees} />
                 </div>
 
                 <div className="share-container">
