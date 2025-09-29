@@ -13,7 +13,8 @@ import TopBar from "./components/Layout/TopBar/TopBar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Tickets from "./components/Tickets";
 import MyWork from "./components/MyWork";
-import TicketDetails from "./components/TicketDetails";
+import TicketDetailsOld from "./components/TicketDetails";
+import TicketDetails from "./components/Tickets/TicketDetails/TicketDetails";
 import Clients from "./components/Clients/Clients";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
 import Inventory from "./components/Inventory";
@@ -92,6 +93,10 @@ const router = createBrowserRouter([
       {
         path: '/tickets/:ticketId',
         element: <TicketDetails />
+      },
+      {
+        path: '/tickets/:ticketId/test',
+        element: <TicketDetailsOld />
       },
       {
         path: '/clients',
