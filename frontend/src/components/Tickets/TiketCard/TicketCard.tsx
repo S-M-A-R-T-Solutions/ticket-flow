@@ -56,7 +56,7 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
 
     return (
         <div className="ticket-card-wrapper">
-            <NavLink to={"/tickets/" + 1} className={`ticket-card-new status-${ticketStatus}`}>
+            <NavLink to={"/tickets/" + ticket.id} className={`ticket-card-new status-${ticketStatus}`}>
                 <div className="ticket-title">{ticket.title}</div>
 
                 {typeof (ticket.createdBy) !== "number" && (<div className='ticket-author'>
