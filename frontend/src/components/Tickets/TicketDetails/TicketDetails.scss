@@ -1,5 +1,6 @@
 .app-section.ticket-details {
     color: var(--text-color);
+    padding-bottom: 24px;
 
     .section-header {
         flex-direction: column;
@@ -106,6 +107,14 @@
         }
     }
 
+    .notes-and-parts {
+        display: grid;
+        grid-template-columns: 1fr 418px;
+        gap: 24px;
+
+        margin-top: 24px;
+    }
+
     .parts-container {
         display: flex;
         flex-direction: column;
@@ -127,13 +136,41 @@
 
     .parts-list {
         display: flex;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 16px;
-
-        overflow-x: auto;
     }
 
     .no-parts-placeholder {
+        font-size: 14px;
+        opacity: 0.7;
+    }
+
+    .notes-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .notes-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        button.btn-add-note {
+            width: 32px;
+            height: 32px;
+
+            margin: 0;
+        }
+    }
+
+    .notes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .no-notes-placeholder {
         font-size: 14px;
         opacity: 0.7;
     }

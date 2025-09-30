@@ -12,13 +12,13 @@ import { useEffect, useState } from "react";
 import { getTicketThunk, updateTicketThunk, getMyTicketsThunk } from "../../../store/tickets";
 import { getAllStatusThunk } from "../../../store/status";
 import { getAllNotesThunk } from "../../../store/notes";
-import NoteCard from "../../NoteCard";
 import { getAllPartsThunk } from "../../../store/parts";
 import TicketPartCard from "../TicketPartCard";
 import AddPart from "../../AddPart";
 import EditTicket from "../../EditTicket/EditTicket";
 import TicketQR from "./TicketQR";
 import TicketEmployees from "./TicketEmployees";
+import TicketNoteCard from "../TicketNoteCard/TicketNoteCard";
 
 import './TicketDetails.scss';
 
@@ -150,25 +150,49 @@ export default function TicketDetails() {
                 </div>
             </div>
 
-            <div className="parts-container">
-                <div className="parts-header">
-                    <div className="parts-title">Parts</div>
+            <div className="notes-and-parts">
+                <div className="notes-container">
+                    <div className="notes-header">
+                        <div className="notes-title">Notes</div>
 
-                    <button className="btn btn-icon btn-add-part" title="Add Part to Ticket">
-                        <FaPlus className="btn-icon-icon" />
-                    </button>
+                        <button className="btn btn-icon btn-add-note" title="Add Note to Ticket">
+                            <FaPlus className="btn-icon-icon" />
+                        </button>
+                    </div>
+
+                    <div className="notes-list">
+                        {
+                            notesForTicket.length > 0 ? (
+                                notesForTicket?.map((note: any) => (
+                                    <TicketNoteCard key={note.id} note={note} setDeleteNoteChecker={setDeleteNoteChecker} />
+                                ))
+                            ) : (
+                                <span>No notes for this ticket</span>
+                            )
+                        }
+                    </div>
                 </div>
 
-                {ticket.Parts.length > 0 ?
-                    <div className="parts-list">
-                        {
-                            ticket.Parts.map((part: any) => (
-                                <TicketPartCard key={part.id} part={part} setDeletePartChecker={setDeletePartChecker} ticketAuthor={ticket.CreatedBy?.id} setPartsChecker={setPartsChecker} />
-                            ))
-                        }
-                    </div> :
-                    <div className="no-parts-placeholder">No parts for this ticket</div>
-                }
+                <div className="parts-container">
+                    <div className="parts-header">
+                        <div className="parts-title">Parts</div>
+
+                        <button className="btn btn-icon btn-add-part" title="Add Part to Ticket">
+                            <FaPlus className="btn-icon-icon" />
+                        </button>
+                    </div>
+
+                    {ticket.Parts.length > 0 ?
+                        <div className="parts-list">
+                            {
+                                ticket.Parts.map((part: any) => (
+                                    <TicketPartCard key={part.id} part={part} setDeletePartChecker={setDeletePartChecker} ticketAuthor={ticket.CreatedBy?.id} setPartsChecker={setPartsChecker} />
+                                ))
+                            }
+                        </div> :
+                        <div className="no-parts-placeholder">No parts for this ticket</div>
+                    }
+                </div>
             </div>
         </section>
     );
