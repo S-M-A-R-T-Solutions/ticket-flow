@@ -8,7 +8,7 @@ import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
 import './Tickets.css';
 import { getAllTicketsThunk, getMyTicketsThunk, getTotalTicketsAmountThunk } from '../../store/tickets';
-import TicketCard from './TiketCard';
+import TicketCard from './TicketCard';
 import AddTicket from '../AddTicket/AddTicket';
 
 export default function Tickets() {
