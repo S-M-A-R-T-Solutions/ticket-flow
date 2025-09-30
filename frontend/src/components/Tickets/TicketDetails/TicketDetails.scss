@@ -105,4 +105,36 @@
             width: 100%;
         }
     }
+
+    .parts-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .parts-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        button.btn-add-part {
+            width: 32px;
+            height: 32px;
+
+            margin: 0;
+        }
+    }
+
+    .parts-list {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 16px;
+
+        overflow-x: auto;
+    }
+
+    .no-parts-placeholder {
+        font-size: 14px;
+        opacity: 0.7;
+    }
 }

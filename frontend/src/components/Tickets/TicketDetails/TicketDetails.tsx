@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 import AddNote from "../../AddNote/AddNote";
 
-import { FaBuilding, FaUser, FaPen, FaPlusCircle } from "react-icons/fa";
+import { FaBuilding, FaUser, FaPen, FaPlus } from "react-icons/fa";
 import { FaTicketAlt } from "react-icons/fa";
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 
@@ -14,7 +14,7 @@ import { getAllStatusThunk } from "../../../store/status";
 import { getAllNotesThunk } from "../../../store/notes";
 import NoteCard from "../../NoteCard";
 import { getAllPartsThunk } from "../../../store/parts";
-import PartCard from "../../_PartCard/PartCard";
+import TicketPartCard from "../TicketPartCard";
 import AddPart from "../../AddPart";
 import EditTicket from "../../EditTicket/EditTicket";
 import TicketQR from "./TicketQR";
@@ -150,7 +150,26 @@ export default function TicketDetails() {
                 </div>
             </div>
 
+            <div className="parts-container">
+                <div className="parts-header">
+                    <div className="parts-title">Parts</div>
 
+                    <button className="btn btn-icon btn-add-part" title="Add Part to Ticket">
+                        <FaPlus className="btn-icon-icon" />
+                    </button>
+                </div>
+
+                {ticket.Parts.length > 0 ?
+                    <div className="parts-list">
+                        {
+                            ticket.Parts.map((part: any) => (
+                                <TicketPartCard key={part.id} part={part} setDeletePartChecker={setDeletePartChecker} ticketAuthor={ticket.CreatedBy?.id} setPartsChecker={setPartsChecker} />
+                            ))
+                        }
+                    </div> :
+                    <div className="no-parts-placeholder">No parts for this ticket</div>
+                }
+            </div>
         </section>
     );
 }

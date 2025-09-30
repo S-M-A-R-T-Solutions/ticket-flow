@@ -37,6 +37,13 @@ header.main-header {
     width: 100%;
 }
 
+.section-container {
+    max-width: 100%;
+    min-width: 0;
+}
+
+.my-work-panel {}
+
 /* Footer styles */
 footer {
     background-color: var(--footer-bg-color);
