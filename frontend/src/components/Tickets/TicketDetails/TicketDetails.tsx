@@ -155,9 +155,16 @@ export default function TicketDetails() {
                     <div className="notes-header">
                         <div className="notes-title">Notes</div>
 
-                        <button className="btn btn-icon btn-add-note" title="Add Note to Ticket">
-                            <FaPlus className="btn-icon-icon" />
-                        </button>
+                        <OpenModalMenuItem
+                            modalComponent={<AddNote userId={user.id} ticketId={ticket.id} setNotesChecker={setNoteChecker} />}
+                            onModalClose={onModalClose}
+                        >
+                            <button className="btn btn-icon btn-add-note" title="Add Note to Ticket">
+                                <FaPlus className="btn-icon-icon" />
+                            </button>
+                        </OpenModalMenuItem>
+
+
                     </div>
 
                     <div className="notes-list">
