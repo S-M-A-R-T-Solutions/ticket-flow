@@ -1,8 +1,17 @@
+// TicketTrackingPage.js
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTicketByHashThunk } from '../../store/tickets';
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
+
+import { PDFDownloadLink } from '@react-pdf/renderer';
+
+import TrackingReport from './TrackingReport/TrackingReport';
+
+import { ThemeContext } from '../../context/ThemeContext';
+
+import { RiProgress1Line, RiProgress6Line, RiProgress8Line } from "react-icons/ri";
 
 import './TrackingPage.scss';
 
@@ -29,14 +38,13 @@ const TICKET_STATUSES = [
     }
 ];
 
-
 function TicketStatusLegend() {
     return (
         <div className="status-legend">
             <h4 style={{ fontSize: '12px', fontWeight: '300' }}>What Do Ticket Statuses Mean?</h4>
             <ul>
                 {TICKET_STATUSES.map((status, idx) => (
-                    <li key={idx} className="status-item" style={{ listStyle: 'none', fontSize: '10px'}}>
+                    <li key={idx} className="status-item" style={{ listStyle: 'none', fontSize: '10px' }}>
                         <strong>{status.name}:</strong> {status.description}
                     </li>
                 ))}
@@ -45,14 +53,34 @@ function TicketStatusLegend() {
     );
 }
 
+function DownloadPDFButton({ ticket }) {
+    return (
+        <PDFDownloadLink
+            document={<TrackingReport ticket={ticket} />}
+            fileName="Ticket Status Report.pdf"
+            style={{
+                padding: '10px 20px',
+                backgroundColor: '#e40613',
+                color: 'white',
+                borderRadius: 6,
+                textDecoration: 'none',
+                fontSize: 14
+            }}
+        >
+            {({ loading }) => (loading ? 'Generating Report...' : 'Download Report')}
+        </PDFDownloadLink>
+    );
+}
 
 const TicketTrackingPage = () => {
     const { ticketHashedId } = useParams();
-
     const dispatch = useDispatch();
     const ticket = useSelector(state => state.tickets.ticketByHash);
     const isLoading = useSelector(state => state.tickets.isLoading);
     const error = useSelector(state => state.tickets.error);
+
+    // 👇 get theme from context
+    const { theme } = useContext(ThemeContext);
 
     useEffect(() => {
         if (ticketHashedId) {
@@ -95,21 +123,30 @@ const TicketTrackingPage = () => {
         );
     }
 
-    const { id, StatusInfo, createdAt, updatedAt, description } = ticket;
+    const { StatusInfo, createdAt, updatedAt, description } = ticket;
 
     return (
         <section className="app-section-ticket-tracking">
             <div className="tracking-header">
                 <div className='header-left'>
-                    <h1>Ticket Status Report</h1>
-                    <div className="header-left-dates">
-                        <span>
-                            Created: {createdAt ? new Date(createdAt).toLocaleDateString() + ' ' + new Date(createdAt).toLocaleTimeString() : 'Unknown'}
-                        </span>
-                        <span> | </span>
-                        <span>
-                            Last Update: {updatedAt ? new Date(updatedAt).toLocaleDateString() + ' ' + new Date(updatedAt).toLocaleTimeString() : 'Unknown'}
-                        </span>
+                    <div className='logo-container'>
+                        <img
+                            src={theme === 'dark' ? "/assets/logo-dark.png" : "/assets/logo-light.png"}
+                            alt="Company Logo"
+                            className="company-logo"
+                        />
+                    </div>
+                    <div className='ticket-title-and-dates'>
+                        <h1>Ticket Status Report</h1>
+                        <div className="header-left-dates">
+                            <span>
+                                Created: {createdAt ? new Date(createdAt).toLocaleDateString() + ' ' + new Date(createdAt).toLocaleTimeString() : 'Unknown'}
+                            </span>
+                            <span> | </span>
+                            <span>
+                                Last Update: {updatedAt ? new Date(updatedAt).toLocaleDateString() + ' ' + new Date(updatedAt).toLocaleTimeString() : 'Unknown'}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <span
@@ -117,6 +154,21 @@ const TicketTrackingPage = () => {
                     title={StatusInfo?.description}
                     style={{ backgroundColor: StatusInfo?.color }}
                 >
+                    {
+                        (StatusInfo?.name === "Open") && (
+                            <RiProgress1Line style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+                        )
+                    }
+                    {
+                        (StatusInfo?.name === "In Progress") && (
+                            <RiProgress6Line style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+                        )
+                    }
+                    {
+                        (StatusInfo?.name === "Completed") && (
+                            <RiProgress8Line style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+                        )
+                    }
                     {StatusInfo?.name || 'Status unavailable'}
                 </span>
             </div>
@@ -124,6 +176,55 @@ const TicketTrackingPage = () => {
             <div className="tracking-card">
                 <div>
                     <h2>{ticket.title}</h2>
+
+                    {
+                        ticket.ClientInfo?.firstName ? (
+                            <div className='client'>
+                                {
+                                    ticket.ClientInfo?.firstName ? (
+                                        <>
+                                            <div className='client-image'>
+                                                {
+                                                    ticket.ClientInfo?.profilePicUrl ? (
+                                                        <img
+                                                            src={ticket.ClientInfo?.profilePicUrl}
+                                                            alt={`${ticket.ClientInfo.firstName} ${ticket.ClientInfo.lastName}`}
+                                                            className="profile-image"
+                                                        />
+                                                    ) : (
+                                                        <BsFillPersonFill style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+                                                    )
+                                                }
+                                            </div>
+                                            <span>{ticket.ClientInfo.firstName} {ticket.ClientInfo.lastName}</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className='client-image'>
+                                                {
+                                                    ticket.ClientInfo?.profilePicUrl ? (
+                                                        <img
+                                                            src={ticket.ClientInfo?.profilePicUrl}
+                                                            alt={`${ticket.ClientInfo.firstName} ${ticket.ClientInfo.lastName}`}
+                                                            className="profile-image"
+                                                        />
+                                                    ) : (
+                                                        <BsFillPersonFill style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+                                                    )
+                                                }
+                                            </div>
+                                            <span>{ticket.ClientInfo.companyName}</span>
+                                        </>
+                                    )
+                                }
+                            </div>
+                        ) : (
+                            <div className='client-image'>
+                                <BsFillPersonFill style={{ verticalAlign: 'middle', marginRight: '6px' }} />
+                                <span>Anonymous Client</span>
+                            </div>
+                        )
+                    }
                 </div>
                 <div className="tracking-details">
                     <div className="tracking-field">
@@ -131,32 +232,9 @@ const TicketTrackingPage = () => {
                         <span>{description || 'No description available'}</span>
                     </div>
                 </div>
-                {/* {
-                    ticket.ClientInfo?.companyName === "" ?
-                        <div className="client">
-                            <div className="client-image">
-                                {ticket.ClientInfo?.profilePicUrl ?
-                                    <img src={ticket.ClientInfo?.profilePicUrl} alt="Client" /> :
-                                    <BsFillPersonFill />
-                                }
-                            </div>
-                            <div className="client-info">
-                                <div className="client-name">
-                                    {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
-                                </div>
-                            </div>
-                        </div> :
-                        <div className="client">
-                            <div className="client-image">
-                                <BsBuildingsFill />
-                            </div>
-                            <div className="client-info">
-                                <div className="client-name">
-                                    {ticket.ClientInfo?.companyName}
-                                </div>
-                            </div>
-                        </div>
-                } */}
+                <div className='download-pdf-report'>
+                    <DownloadPDFButton ticket={ticket} />
+                </div>
                 <TicketStatusLegend />
             </div>
         </section>

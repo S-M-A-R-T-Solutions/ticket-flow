@@ -4,7 +4,7 @@ const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, Tic
 
 const bcrypt = require('bcryptjs');
 
-const generateAlphanumericId = require('../../utils/randomGenerator');
+const generateAlphanumericId = require('@utils/randomGenerator');
 
 const { requireAuth } = require('@utils/auth');
 const { properUserValidation, properNoteValidation } = require('@utils/validation');
