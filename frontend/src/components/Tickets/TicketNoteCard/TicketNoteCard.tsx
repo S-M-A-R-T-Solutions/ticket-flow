@@ -45,10 +45,33 @@ export default function TicketNoteCard({ note, setDeleteNoteChecker }: TicketNot
                 <img src={user.profilePicUrl} alt="profile-pic" />
             </div>
 
-            <div className="ticket-note-card">
+            <div className={`ticket-note-card ${currentUser.id === note.userId ? 'own-note' : ''}`}>
                 <div className="note-header">
                     <div className="note-timestamp">
                         {new Date(note.createdAt).toLocaleString()}
+                    </div>
+
+                    <div className="note-actions">
+                        {currentUser.id === note.userId && (
+                            <>
+                                <OpenModalMenuItem
+                                    modalComponent={<EditNote setNoteChecker={setNoteChecker} note={note} />}
+                                    onModalClose={onModalClose}
+                                >
+                                    <button className="btn btn-action">
+                                        <FaPen className="btn-icon-icon" />
+                                    </button>
+                                </OpenModalMenuItem>
+
+                                <OpenModalMenuItem
+                                    modalComponent={<ConfirmDeleteNote setDeleteNoteChecker={setDeleteNoteChecker} note={note} />}
+                                >
+                                    <button className="btn btn-action btn-danger">
+                                        <FaTrash className="btn-icon-icon" />
+                                    </button>
+                                </OpenModalMenuItem>
+                            </>
+                        )}
                     </div>
                 </div>
 

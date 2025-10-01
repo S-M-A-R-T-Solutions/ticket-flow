@@ -35,6 +35,8 @@
     background-color: var(--surface-color);
     border-radius: 0 8px 8px 8px;
 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
     &::before {
         $pic-size: 10px;
 
@@ -48,12 +50,22 @@
 
         background: linear-gradient(45deg, transparent 50%, var(--surface-color) 0);
     }
+
+    &.own-note {
+        border-top: 2px solid var(--button-bg-color);
+
+        &::before {
+            top: -2px;
+            border-top: 2px solid var(--button-bg-color);
+            // background: linear-gradient(45deg, transparent 50%, var(--button-bg-color) 5%, var(--button-bg-color) 60%, var(--surface-color) 50%); // full border
+        }
+    }
 }
 
 .ticket-note-card {
     .note-header {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         justify-content: space-between;
         gap: 16px;
     }
@@ -61,5 +73,35 @@
     .note-timestamp {
         font-size: 12px;
         opacity: 0.7;
+    }
+
+    .note-actions {
+        display: flex;
+        align-items: center;
+
+        opacity: 0.6;
+        transition: all 0.3s ease;
+
+        .open-modal-menu-item {
+            padding: 0;
+
+            margin-top: -10px;
+        }
+
+        .btn-action {
+            width: 24px;
+            height: 24px;
+
+            .btn-icon-icon {
+                width: 14px;
+                height: 14px;
+            }
+        }
+    }
+
+    &:hover {
+        .note-actions {
+            opacity: 1;
+        }
     }
 }
