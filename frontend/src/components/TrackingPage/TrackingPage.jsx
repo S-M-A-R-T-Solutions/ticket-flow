@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTicketByHashThunk } from '../../store/tickets';
-import './TrackingPage.css';
+import './TrackingPage.scss';
 
 const TicketTrackingPage = () => {
     const { ticketHashedId } = useParams();
@@ -19,49 +19,72 @@ const TicketTrackingPage = () => {
 
     if (isLoading) {
         return (
-            <div className="loading">
-                <h1>Loading Ticket Information...</h1>
-                <div className="spinner"></div>
+            <div className="ticket-details-tab">
+                <span className="loader"></span>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="error">
-                <h1>Error Loading Ticket</h1>
-                <p>{error}</p>
-                <p>Please contact support if this issue persists.</p>
-            </div>
+            <section className="app-section ticket-tracking">
+                <div className="tracking-header">
+                    <h1>We hit a snag</h1>
+                </div>
+                <div className="tracking-card error">
+                    <p>{error}</p>
+                    <p>Please contact support if this issue persists.</p>
+                </div>
+            </section>
         );
     }
 
     if (!ticket) {
         return (
-            <div className="not-found">
-                <h1>Ticket Not Found</h1>
-                <p>It seems this ticket does not exist or the link is incorrect.</p>
-            </div>
+            <section className="app-section ticket-tracking">
+                <div className="tracking-header">
+                    <h1>Ticket Not Found</h1>
+                </div>
+                <div className="tracking-card not-found">
+                    <p>It seems this ticket does not exist or the link is incorrect.</p>
+                </div>
+            </section>
         );
     }
 
     const { id, StatusInfo, createdAt, updatedAt, description } = ticket;
 
-    console.log(ticket, "THIS IS A TICKET");
-
     return (
-        <div className="ticket-tracking">
-            <div className="ticket-card">
+        <section className="app-section ticket-tracking">
+            <div className="tracking-header">
                 <h1>Ticket Tracking</h1>
-                <div className="ticket-details">
-                    <p>Ticket ID: <span>{id}</span></p>
-                    <p>Status: <span>{StatusInfo?.name || 'Status unavailable'}</span></p>
-                    <p>Created On: <span>{createdAt ? new Date(createdAt).toLocaleDateString() : 'Unknown'}</span></p>
-                    <p>Last Updated: <span>{updatedAt ? new Date(updatedAt).toLocaleDateString() : 'Unknown'}</span></p>
-                    <p>Description: <span>{description || 'No description available'}</span></p>
+                <span
+                    className="ticket-status"
+                    title={StatusInfo?.description}
+                    style={{ backgroundColor: StatusInfo?.color }}
+                >
+                    {StatusInfo?.name || 'Status unavailable'}
+                </span>
+            </div>
+
+            <div className="tracking-card">
+                <h2>Ticket #{id}</h2>
+                <div className="tracking-details">
+                    <div className="tracking-field">
+                        <span className="label">Description:</span>
+                        <span>{description || 'No description available'}</span>
+                    </div>
+                    <div className="tracking-field">
+                        <span className="label">Created On:</span>
+                        <span>{createdAt ? new Date(createdAt).toLocaleDateString() : 'Unknown'}</span>
+                    </div>
+                    <div className="tracking-field">
+                        <span className="label">Last Updated:</span>
+                        <span>{updatedAt ? new Date(updatedAt).toLocaleDateString() : 'Unknown'}</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
