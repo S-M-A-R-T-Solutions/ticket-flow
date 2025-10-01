@@ -2,9 +2,12 @@ const express = require('express');
 
 const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, Signature } = require('@db/models');
 
+const bcrypt = require('bcryptjs');
+
+const generateAlphanumericId = require('../../utils/randomGenerator');
+
 const { requireAuth } = require('@utils/auth');
 const { properUserValidation, properNoteValidation } = require('@utils/validation');
-const { generateRandomPassword } = require('js-random-generator');
 
 const router = express.Router();
 
@@ -75,11 +78,11 @@ router.get('/track/:hashedId', async (req, res) => {
 
     const ClientInfo = await Client.findByPk(ticket.clientId);
 
-    const Parts = await Part.findAll({
-        where: {
-            ticketId: ticket.id
-        }
-    });
+    // const Parts = await Part.findAll({
+    //     where: {
+    //         ticketId: ticket.id
+    //     }
+    // });
 
     const StatusInfo = await Status.findByPk(ticket.statusId);
 
@@ -93,7 +96,7 @@ router.get('/track/:hashedId', async (req, res) => {
         updatedAt: ticket.updatedAt,
         CreatedBy,
         ClientInfo,
-        Parts,
+        // Parts,
         StatusInfo
     }
 
@@ -209,7 +212,7 @@ router.post('/', requireAuth, async (req, res, next) => {
             checkOut: null,
             clientId,
             statusId: 1,
-            hashedId: generateRandomPassword(10),
+            hashedId: generateAlphanumericId(10),
             createdBy: req.user.id
         });
 

@@ -1,19 +1,36 @@
-.app-section.ticket-tracking {
+.app-section-ticket-tracking {
     color: var(--text-color);
-    padding: 32px 0;
+    background: var(--surface-color);
+    border-radius: 12px;
+    padding: 32px;
     display: flex;
     flex-direction: column;
+    height: 100%;
     gap: 24px;
 
     .tracking-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 16px;
+        gap: 24px;
 
         h1 {
             font-size: 28px;
             font-weight: 600;
+            text-align: left;
+            padding: 0;
+            margin: 0;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .header-left-dates {
+                display: flex;
+                gap: 12px;
+            }
         }
 
         .ticket-status {
@@ -26,19 +43,104 @@
         }
     }
 
+    .perforated-zone {
+        --perforation-color: #e1d7e2;
+
+        position: relative;
+
+        display: flex;
+        align-items: center;
+
+        height: 24px;
+
+        margin: 12px -24px;
+
+        .perforated-line {
+            width: 100%;
+            border-top: 2px dashed var(--perforation-color);
+        }
+
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            z-index: 1;
+
+            height: 100%;
+            aspect-ratio: 1;
+
+            background-color: var(--background-color);
+            border-radius: 50%;
+        }
+
+        &::before {
+            left: -20px;
+            box-shadow: -1px 0 1px var(--card-shadow-color) inset;
+        }
+
+        &::after {
+            right: -20px;
+            box-shadow: 1px 0 1px var(--card-shadow-color) inset;
+        }
+    }
+
     .tracking-card {
-        background: var(--surface-color);
-        border-radius: 12px;
-        padding: 24px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         display: flex;
         flex-direction: column;
+        align-content: space-between;
         gap: 16px;
 
         h2 {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 12px;
+        }
+
+        .client {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+
+            .client-image {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: var(--surface-color-dark);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                svg {
+                    width: 24px;
+                    height: 24px;
+                    color: var(--text-color);
+                }
+            }
+
+            .client-info {
+                display: flex;
+                flex-direction: column;
+
+                .client-name {
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+
+                .client-company {
+                    font-size: 12px;
+                    opacity: 0.7;
+                }
+            }
         }
 
         .tracking-details {

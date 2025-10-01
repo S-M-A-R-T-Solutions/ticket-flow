@@ -105,7 +105,7 @@ export default function TicketDetails() {
                     </span>
                 </h1>
 
-                {ticket.ClientInfo.companyName === "" ?
+                {ticket.ClientInfo?.companyName === "" ?
                     <div className="client">
                         <div className="client-image">
                             {ticket.ClientInfo?.profilePicUrl ?
