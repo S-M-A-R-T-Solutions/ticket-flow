@@ -58,6 +58,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'Signatures';
-    await queryInterface.bulkDelete(options);
+    await queryInterface.dropTable(options);
   }
 };
