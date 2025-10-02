@@ -15,43 +15,43 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-}
-Signature.init({
-  ticketId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: "Tickets",
-      key: "id",
+
+  Signature.init({
+    ticketId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Tickets",
+        key: "id",
+      },
+      onDelete: "CASCADE",
     },
-    onDelete: "CASCADE",
-  },
-  employeeId: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: "Users",
-      key: "id",
+    employeeId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      onDelete: "SET NULL",
     },
-    onDelete: "SET NULL",
-  },
-  signedBy: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  signatureImageURL: {
-    type: DataTypes.STRING,
-    allowNull: false
-  }
-}, {
-  sequelize,
-  modelName: 'Signature',
-  indexes: [
-    {
-      unique: true,
-      fields: ["ticketId"],
+    signedBy: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
-  ],
-});
-return Signature;
+    signatureImageURL: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    modelName: 'Signature',
+    indexes: [
+      {
+        unique: true,
+        fields: ["ticketId"],
+      },
+    ],
+  });
+  return Signature;
 };
