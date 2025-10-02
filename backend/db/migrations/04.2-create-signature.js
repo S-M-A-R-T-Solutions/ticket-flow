@@ -21,15 +21,6 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      employeeId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
       signedBy: {
         type: Sequelize.STRING,
         allowNull: false
@@ -49,12 +40,6 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     }, options);
-    
-    await queryInterface.addConstraint("Signatures", {
-      fields: ["ticketId"],
-      type: "unique",
-      name: "unique_signature_per_ticket",
-    });
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'Signatures';

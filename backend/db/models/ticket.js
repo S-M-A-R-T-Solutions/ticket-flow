@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ticketId',
         onDelete: 'CASCADE'
       })
+      Ticket.hasMany(models.Signature, {
+        foreignKey: 'ticketId',
+        onDelete: 'CASCADE'
+      })
     }
   }
   Ticket.init({

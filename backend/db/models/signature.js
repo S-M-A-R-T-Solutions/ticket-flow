@@ -8,11 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       Signature.belongsTo(models.Ticket, {
         foreignKey: "ticketId",
         onDelete: "CASCADE"
-      });
-      Signature.belongsTo(models.User, {
-        foreignKey: "employeeId",
-        onDelete: "CASCADE"
-      });
+      })
     }
   }
 
@@ -22,15 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       references: {
         model: "Tickets",
-        key: "id",
-      },
-      onDelete: "CASCADE",
-    },
-    employeeId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Users",
         key: "id",
       },
       onDelete: "CASCADE",
@@ -45,8 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Signature',
-    
+    modelName: 'Signature'
   });
   return Signature;
 };

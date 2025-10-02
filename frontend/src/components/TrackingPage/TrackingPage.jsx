@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTicketByHashThunk } from '../../store/tickets';
-import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
+import { BsFillPersonFill } from "react-icons/bs";
 
-import { IoMdDownload } from "react-icons/io";
+// import { IoMdDownload } from "react-icons/io";
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 

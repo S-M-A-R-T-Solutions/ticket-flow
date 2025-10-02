@@ -52,12 +52,6 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     }, options);
-
-    await queryInterface.addConstraint('PartStocks', {
-      fields: ['partId', 'inventoryLocationId'],
-      type: 'unique',
-      name: 'unique_part_inventory_location'
-    });
   },
   
   async down(queryInterface, Sequelize) {
