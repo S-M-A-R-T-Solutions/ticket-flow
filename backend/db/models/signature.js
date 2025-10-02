@@ -27,8 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "SET NULL",
     },
     signedBy: {
-      type: DataTypes.ENUM,
-      values: ['employee', 'client'],
+      type: DataTypes.STRING,
       allowNull: false
     },
     signatureImageURL: {
