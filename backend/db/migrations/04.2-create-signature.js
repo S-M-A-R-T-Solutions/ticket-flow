@@ -28,7 +28,7 @@ module.exports = {
           model: "Users",
           key: "id",
         },
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
       },
       signedBy: {
         type: Sequelize.STRING,
