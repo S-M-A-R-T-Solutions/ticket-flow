@@ -21,15 +21,6 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      employeeId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
       signedBy: {
         type: Sequelize.STRING,
         allowNull: false

@@ -28,10 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'employeeId',
         onDelete: 'CASCADE'
       });
-      User.hasMany(models.Signature, {
-        foreignKey: 'employeeId',
-        onDelete: 'CASCADE'
-      });
     }
   }
   User.init({
