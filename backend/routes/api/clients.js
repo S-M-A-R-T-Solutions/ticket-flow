@@ -1,12 +1,13 @@
 const express = require('express');
-const { requireAuth } = require('../../utils/auth');
+const { requireAuth } = require('@utils/auth');
 
-const { Client, Ticket } = require('../../db/models');
-const { singleFileUpload, singleMulterUpload } = require('../../awsS3');
+const { Client, Ticket, Location, LocationPhoneNumber } = require('@db/models');
+const { singleFileUpload, singleMulterUpload } = require('@backend/awsS3');
+const { where } = require('sequelize');
 
 const router = express.Router();
 
-//Get All CLients
+//Get All Clients
 router.get('/', requireAuth, async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || null;
@@ -31,8 +32,22 @@ router.get('/', requireAuth, async (req, res, next) => {
 router.get('/:id', requireAuth, async (req, res, next) => {
     try {
         const client = await Client.findByPk(req.params.id);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
 
-        return res.json(client);
+        const locations = await Location.findAll({
+            where: { clientId: client.id }
+        });
+
+        for (const location of locations) {
+            const phoneNumbers = await LocationPhoneNumber.findAll({
+                where: { locationId: location.id }
+            });
+            location.dataValues.phoneNumbers = phoneNumbers;
+        }
+
+        return res.json({ ...client.toJSON(), locations });
     }
     catch (error) {
         next(error);
@@ -58,6 +73,54 @@ router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next
         });
 
         return res.json(client);
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Add a Location to a Client
+router.post('/:id/locations', async (req, res, next) => {
+    try {
+        const client = await Client.findByPk(req.params.id);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const { name, addressLine1, addressLine2, city, state, zipcode } = req.body;
+        const location = await Location.create({
+            name,
+            addressLine1,
+            addressLine2,
+            city,
+            state,
+            zipcode,
+            clientId: client.id
+        });
+
+        return res.status(201).json(location);
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Remove a Location from a Client
+router.delete('/:clientId/locations/:locationId', async (req, res, next) => {
+    try {
+        const { clientId, locationId } = req.params;
+
+        const client = await Client.findByPk(clientId);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const location = await Location.findByPk(locationId);
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }
+
+        await location.destroy();
+
+        return res.status(200).json({ message: 'Location removed from client' });
     } catch (error) {
         next(error);
     }

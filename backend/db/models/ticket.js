@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ticketId',
         onDelete: 'CASCADE'
       })
-      Ticket.hasMany(models.Part, {
+      Ticket.hasMany(models.TicketEmployee, {
         foreignKey: 'ticketId',
         onDelete: 'CASCADE'
       })

@@ -8,59 +8,41 @@
     /* min-height: 100vh; */
     background-color: var(--background-color);
     color: var(--text-color);
+    overflow-x: hidden;
+}
+
+.main-panel {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    padding-left: $sidebarWidth;
 }
 
 /* Header styles */
-.header {
-    background-color: var(--header-bg-color);
-    color: var(--header-text-color);
-    padding: 20px 20px 0 20px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-    z-index: 100;
+header.main-header {
     width: 100%;
+    padding: 32px;
 }
 
 /* Main content area */
 .main-zone {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 16px;
+
+    padding-inline: 32px;
+
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    padding: 0 20px 20px 20px;
-    background-color: var(--main-bg-color);
 }
 
-/* Left section for MyWork */
-.left-section-mm {
-    width: 30%;
-    /* Set the left section to take up 25% of the parent width */
-    background-color: var(--section-bg-color);
-    /* padding: 20px; */
-    border-radius: 12px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
+.section-container {
+    max-width: 100%;
+    min-width: 0;
 }
 
-/* Right section for Outlet */
-.right-section-mm {
-    width: 70%;
-    /* Set the right section to take up 75% of the parent width */
-    /* padding: 20px; */
-    border-radius: 12px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-}
-
-/* Ensure child components of the sections take full width */
-.left-section-mm>*,
-.right-section-mm>* {
-    width: 100%;
-    /* Force all child components to take the full width of their parent */
-}
+.my-work-panel {}
 
 /* Footer styles */
 footer {

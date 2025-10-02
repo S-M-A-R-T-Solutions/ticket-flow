@@ -1,0 +1,177 @@
+.app-section.ticket-details {
+    color: var(--text-color);
+    padding-bottom: 24px;
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        h1 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            span.ticket-status {
+                padding: 4px 8px;
+                border-radius: 8px;
+
+                background-color: var(--surface-color);
+                color: var(--text-color-inverted);
+                font-size: 18px;
+
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.ticket-details {
+    .ticket-details-container {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 24px;
+    }
+
+    .ticket-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .client {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        margin-top: 8px;
+
+        .client-image {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 24px;
+            height: 24px;
+
+            border-radius: 50%;
+            overflow: hidden;
+
+            &::before {
+                content: "";
+                position: absolute;
+
+                width: 100%;
+                height: 100%;
+
+                background-color: var(--text-color);
+                opacity: 0.05;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+
+        .client-info {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    }
+
+    .ticket-description {
+        .description-title {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+    }
+
+    .ticket-qr {
+        display: flex;
+        flex-direction: column;
+
+        width: 220px;
+
+        .qr {
+            padding: 10px;
+            border-radius: 10px;
+            background-color: var(--button-text-color);
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+
+    .notes-and-parts {
+        display: grid;
+        grid-template-columns: 1fr 418px;
+        gap: 24px;
+
+        margin-top: 24px;
+    }
+
+    .parts-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .parts-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        button.btn-add-part {
+            width: 32px;
+            height: 32px;
+
+            margin: 0;
+        }
+    }
+
+    .parts-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .no-parts-placeholder {
+        font-size: 14px;
+        opacity: 0.7;
+    }
+
+    .notes-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .notes-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        button.btn-add-note {
+            width: 32px;
+            height: 32px;
+
+            margin: 0;
+        }
+    }
+
+    .notes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .no-notes-placeholder {
+        font-size: 14px;
+        opacity: 0.7;
+    }
+}

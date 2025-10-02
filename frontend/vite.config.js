@@ -15,5 +15,12 @@ export default defineConfig(({ mode }) => ({
     proxy: {
       '/api': 'http://localhost:8000'
     },
-  }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "./src/styles/global.scss";`,
+      },
+    },
+  },
 }));

@@ -11,6 +11,7 @@ export default function AddPart({ ticketId, setPartsChecker }) {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [sku, setSku] = useState('');
     // const [imageUrl, setImageUrl] = useState('');
     const [errors, setErrors] = useState({});
 
@@ -25,6 +26,7 @@ export default function AddPart({ ticketId, setPartsChecker }) {
     useEffect(() => {
         setName('');
         setDescription('');
+        setSku('');
         // setImageUrl('');
         setErrors({});
         setPartImageURL('/assets/placeholder-image.jpg');
@@ -38,9 +40,14 @@ export default function AddPart({ ticketId, setPartsChecker }) {
         if (!name || name === '') {
             newErrors.name = "Please enter a valid part name";
         }
+
+        if (!sku || sku === '') {
+            newErrors.sku = "Please enter a valid SKU";
+        }
+
         setErrors(newErrors);
         setIsButtonDisabled(Object.keys(newErrors).length > 0);
-    }, [name]);
+    }, [name, sku]);
 
     const updateFile = e => {
         const file = e.target.files[0];
@@ -59,6 +66,7 @@ export default function AddPart({ ticketId, setPartsChecker }) {
         const newPart = {
             name: name,
             description: description,
+            sku: sku,
             imageUrl: selectedFile || partImageURL,
             ticketId: ticketId
         }
@@ -99,6 +107,16 @@ export default function AddPart({ ticketId, setPartsChecker }) {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
+                </div>
+                <div className="add-part-input">
+                    <label>SKU</label>
+                    <input
+                        type="text"
+                        name="sku"
+                        value={sku}
+                        onChange={(e) => setSku(e.target.value)}
+                    />
+                    {errors.sku && <div>{errors.sku}</div>}
                 </div>
                 <div className="add-part-input">
                     <img src={partImageURL} alt="user-avatar" className="part-image" />

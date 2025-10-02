@@ -2,20 +2,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import * as sessionActions from "./store/session";
 
-import './index.css'
+import './components/Splash/Splash.css'
+import './index.scss'
 
 import { useEffect } from "react";
 
 import LoginSignup from "./components/LoginSignup/LoginSignup";
-import Splash from "./components/Splash/Splash";
-import Navigation from "./components/Navigation/Navigation";
+import SideBar from "./components/Layout/SideBar";
+import TopBar from "./components/Layout/TopBar/TopBar";
 import Dashboard from "./components/Dashboard/Dashboard";
-import Footer from "./components/Splash/Footer";
 import Tickets from "./components/Tickets";
 import MyWork from "./components/MyWork";
-import TicketDetails from "./components/TicketDetails";
+import TicketDetailsOld from "./components/TicketDetails";
+import TicketDetails from "./components/Tickets/TicketDetails/TicketDetails";
 import Clients from "./components/Clients/Clients";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
+import Inventory from "./components/Inventory";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ function Layout() {
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser())
-      // .then(() => setIsLoaded(true));
+    // .then(() => setIsLoaded(true));
   }, [dispatch]);
 
   return (
@@ -35,21 +37,27 @@ function Layout() {
       {
         sessionUser ? (
           <>
-            <header className="header">
-              <Navigation />
-            </header>
-            <main className='main-zone'>
-              <div className="left-section-mm">
-                <MyWork myTickets={myTickets} status={status} />
-              </div>
-              <div className="right-section-mm">
-                <Outlet />
-              </div>
-            </main>
-            <Footer />
+            <SideBar />
+
+            <div className="main-panel">
+              <header className="main-header">
+                <TopBar />
+              </header>
+
+              <main className='main-zone'>
+                <div className="section-container">
+                  <Outlet />
+                </div>
+
+                <div className="my-work-panel">
+                  <MyWork myTickets={myTickets} status={status} />
+                </div>
+              </main>
+
+            </div>
           </>
         ) : (
-          <main className='main-zone'>
+          <main className='main-zone-login'>
             <Outlet />
           </main>
         )
@@ -64,12 +72,16 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Splash />
-      },
-      {
-        path: '/login',
         element: <LoginSignup />
       },
+      // {
+      //   path: '/',
+      //   element: <Splash />
+      // },
+      // {
+      //   path: '/login',
+      //   element: <LoginSignup />
+      // },
       {
         path: '/dashboard',
         element: <Dashboard />
@@ -83,12 +95,20 @@ const router = createBrowserRouter([
         element: <TicketDetails />
       },
       {
+        path: '/tickets/:ticketId/test',
+        element: <TicketDetailsOld />
+      },
+      {
         path: '/clients',
         element: <Clients />
       },
       {
         path: '/track/:ticketHashedId',
         element: <TrackingPage />
+      },
+      {
+        path: '/inventory',
+        element: <Inventory />
       }
     ]
   }

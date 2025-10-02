@@ -17,7 +17,8 @@ export default function MyWork({ myTickets, status }) {
     return (
         <section className="my-work-tab">
             <h1>My Work</h1>
-            <div>
+
+            <div className="my-work-section">
                 <h3>New</h3>
                 <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden", overflowY: "scroll", maxHeight: "400px" }}>
                     {
@@ -33,7 +34,8 @@ export default function MyWork({ myTickets, status }) {
                     }
                 </div>
             </div>
-            <div>
+
+            <div className="my-work-section">
                 <h3>In Progress</h3>
                 <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden", overflowY: "scroll", maxHeight: "400px" }}>
                     {
@@ -49,7 +51,8 @@ export default function MyWork({ myTickets, status }) {
                     }
                 </div>
             </div>
-            <div>
+
+            <div className="my-work-section">
                 <h3>Completed</h3>
                 <div style={{ display: "flex", flexDirection: "column", overflowX: "hidden", overflowY: "scroll", maxHeight: "400px" }}>
                     {

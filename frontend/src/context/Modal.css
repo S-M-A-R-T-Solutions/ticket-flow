@@ -4,6 +4,7 @@
     right: 0;
     left: 0;
     bottom: 0;
+    z-index: 100;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,4 +24,8 @@
     /* background-color: #67c6b8; */
     border-radius: 10px;
     width: 400px;
+}
+
+.dismisable #modal-background {
+    cursor: pointer;
 }
