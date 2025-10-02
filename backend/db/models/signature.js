@@ -5,45 +5,53 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Signature extends Model {
     static associate(models) {
+      Signature.belongsTo(models.Ticket, {
+        foreignKey: "ticketId",
+        onDelete: "CASCADE"
+      });
+      Signature.belongsTo(models.User, {
+        foreignKey: "employeeId",
+        onDelete: "SET NULL"
+      });
     }
   }
-  Signature.init({
-    ticketId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Tickets",
-        key: "id",
-      },
-      onDelete: "CASCADE",
+}
+Signature.init({
+  ticketId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "Tickets",
+      key: "id",
     },
-    employeeId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-      onDelete: "SET NULL",
+    onDelete: "CASCADE",
+  },
+  employeeId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: "Users",
+      key: "id",
     },
-    signedBy: {
-      type: DataTypes.ENUM,
-      values: ['employee', 'client'],
-      allowNull: false
+    onDelete: "SET NULL",
+  },
+  signedBy: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  signatureImageURL: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+}, {
+  sequelize,
+  modelName: 'Signature',
+  indexes: [
+    {
+      unique: true,
+      fields: ["ticketId"],
     },
-    signatureImageURL: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
-  }, {
-    sequelize,
-    modelName: 'Signature',
-    indexes: [
-      {
-        unique: true,
-        fields: ["ticketId"],
-      },
-    ],
-  });
-  return Signature;
+  ],
+});
+return Signature;
 };
