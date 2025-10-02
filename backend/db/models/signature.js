@@ -46,12 +46,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Signature',
-    indexes: [
-      {
-        unique: true,
-        fields: ["ticketId"],
-      },
-    ],
+    
   });
   return Signature;
 };
