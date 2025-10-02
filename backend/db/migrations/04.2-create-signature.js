@@ -35,7 +35,7 @@ module.exports = {
         allowNull: false
       },
       signatureImageURL: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING, //Changed from ENUM to STRING
         allowNull: false
       },
       createdAt: {
