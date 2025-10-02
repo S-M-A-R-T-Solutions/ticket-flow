@@ -23,7 +23,7 @@ module.exports = {
       },
       employeeId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "Users",
           key: "id",
