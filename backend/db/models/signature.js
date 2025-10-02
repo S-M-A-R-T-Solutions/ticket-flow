@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Signature.belongsTo(models.User, {
         foreignKey: "employeeId",
-        onDelete: "SET NULL"
+        onDelete: "CASCADE"
       });
     }
   }
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         model: "Users",
         key: "id",
       },
-      onDelete: "SET NULL",
+      onDelete: "CASCADE",
     },
     signedBy: {
       type: DataTypes.STRING,
