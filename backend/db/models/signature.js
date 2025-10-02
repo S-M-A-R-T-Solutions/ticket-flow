@@ -45,8 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Signature',
-    
+    modelName: 'Signature'
   });
   return Signature;
 };
