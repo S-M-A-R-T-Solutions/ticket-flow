@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import { getTicketByHashThunk } from '../../store/tickets';
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 
+import { IoMdDownload } from "react-icons/io";
+
 import { PDFDownloadLink } from '@react-pdf/renderer';
 
 import TrackingReport from './TrackingReport/TrackingReport';
@@ -41,7 +43,7 @@ const TICKET_STATUSES = [
 function TicketStatusLegend() {
     return (
         <div className="status-legend">
-            <h4 style={{ fontSize: '12px', fontWeight: '300' }}>What Do Ticket Statuses Mean?</h4>
+            <h4 style={{ fontSize: '12px', fontWeight: '300', marginBottom: '5px' }}>What Do Ticket Statuses Mean?</h4>
             <ul>
                 {TICKET_STATUSES.map((status, idx) => (
                     <li key={idx} className="status-item" style={{ listStyle: 'none', fontSize: '10px' }}>
@@ -142,7 +144,7 @@ const TicketTrackingPage = () => {
                             <span>
                                 Created: {createdAt ? new Date(createdAt).toLocaleDateString() + ' ' + new Date(createdAt).toLocaleTimeString() : 'Unknown'}
                             </span>
-                            <span> | </span>
+                            <span className="divider"> | </span>
                             <span>
                                 Last Update: {updatedAt ? new Date(updatedAt).toLocaleDateString() + ' ' + new Date(updatedAt).toLocaleTimeString() : 'Unknown'}
                             </span>
@@ -176,7 +178,6 @@ const TicketTrackingPage = () => {
             <div className="tracking-card">
                 <div>
                     <h2>{ticket.title}</h2>
-
                     {
                         ticket.ClientInfo?.firstName ? (
                             <div className='client'>
