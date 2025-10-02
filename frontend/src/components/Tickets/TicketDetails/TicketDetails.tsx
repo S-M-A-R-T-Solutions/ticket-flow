@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 import AddNote from "../../AddNote/AddNote";
 
-import { FaBuilding, FaUser, FaPen, FaPlus } from "react-icons/fa";
-import { FaTicketAlt } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
+// import { FaTicketAlt } from "react-icons/fa";
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 
 import { useEffect, useState } from "react";
@@ -14,8 +14,8 @@ import { getAllStatusThunk } from "../../../store/status";
 import { getAllNotesThunk } from "../../../store/notes";
 import { getAllPartsThunk } from "../../../store/parts";
 import TicketPartCard from "../TicketPartCard";
-import AddPart from "../../AddPart";
-import EditTicket from "../../EditTicket/EditTicket";
+// import AddPart from "../../AddPart";
+// import EditTicket from "../../EditTicket/EditTicket";
 import TicketQR from "./TicketQR";
 import TicketEmployees from "./TicketEmployees";
 import TicketNoteCard from "../TicketNoteCard/TicketNoteCard";
