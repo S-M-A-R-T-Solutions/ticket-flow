@@ -14,6 +14,7 @@ const assessmentsRouter = require('./assessments.js');
 const partsRouter = require('./parts.js');
 const inventoryRouter = require('./inventory.js');
 const stockRouter = require('./stock.js'); 
+const integrationsRouter = require('./integrations');
 
 
 const { restoreUser } = require("@utils/auth.js");
@@ -36,6 +37,7 @@ router.use('/assessments', assessmentsRouter);
 router.use('/parts', partsRouter);
 router.use('/inventory', inventoryRouter);
 router.use('/stock', stockRouter);
+router.use('/integrations', integrationsRouter);
 
 
 router.get('/require-auth', requireAuth, (req, res) => {

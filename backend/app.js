@@ -28,15 +28,22 @@ app.use(helmet.crossOriginResourcePolicy({
 })
 );
 
-app.use(
-    csurf({
-        cookie: {
-            secure: isProduction,
-            sameSite: isProduction && "Lax",
-            httpOnly: true
-        }
-    })
-);
+const csrfProtection = csurf({
+    cookie: {
+        secure: isProduction,
+        sameSite: isProduction && "Lax",
+        httpOnly: true
+    }
+});
+
+app.use((req, res, next) => {
+    // Skip CSRF for puiblic webhooks
+    const publicWebhookPaths = ['/api/integrations/twilio/callStatusWebhook'];
+    if (publicWebhookPaths.includes(req.path)) {
+        return next();
+    }
+    return csrfProtection(req, res, next);
+});
 
 app.use(routes);
 
@@ -60,7 +67,7 @@ app.use((err, _req, _res, next) => {
     next(err);
 });
 
-app.use((err, _req, res, _next) => { 
+app.use((err, _req, res, _next) => {
     res.status(err.status || 500);
     if (isProduction) {
         delete err.title;
