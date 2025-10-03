@@ -21,21 +21,12 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      employeeId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-        onDelete: "SET NULL",
-      },
       signedBy: {
-        type: Sequelize.ENUM('employee', 'client'),
+        type: Sequelize.STRING,
         allowNull: false
       },
       signatureImageURL: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING, //Changed from ENUM to STRING
         allowNull: false
       },
       createdAt: {
@@ -49,15 +40,9 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     }, options);
-    
-    await queryInterface.addConstraint("Signatures", {
-      fields: ["ticketId"],
-      type: "unique",
-      name: "unique_signature_per_ticket",
-    });
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'Signatures';
-    await queryInterface.bulkDelete(options);
+    await queryInterface.dropTable(options);
   }
 };

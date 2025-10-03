@@ -5,8 +5,13 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Signature extends Model {
     static associate(models) {
+      Signature.belongsTo(models.Ticket, {
+        foreignKey: "ticketId",
+        onDelete: "CASCADE"
+      })
     }
   }
+
   Signature.init({
     ticketId: {
       type: DataTypes.INTEGER,
@@ -17,18 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       onDelete: "CASCADE",
     },
-    employeeId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: "Users",
-        key: "id",
-      },
-      onDelete: "SET NULL",
-    },
     signedBy: {
-      type: DataTypes.ENUM,
-      values: ['employee', 'client'],
+      type: DataTypes.STRING,
       allowNull: false
     },
     signatureImageURL: {
@@ -37,13 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Signature',
-    indexes: [
-      {
-        unique: true,
-        fields: ["ticketId"],
-      },
-    ],
+    modelName: 'Signature'
   });
   return Signature;
 };

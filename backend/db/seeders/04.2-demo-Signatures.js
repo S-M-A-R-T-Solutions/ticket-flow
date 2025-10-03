@@ -10,13 +10,11 @@ module.exports = {
     await Signature.bulkCreate([
       {
         ticketId: 1,
-        employeeId: 1,
         signedBy: 'employee',
         signatureImageURL: 'https://www.morebusiness.com/wp-content/uploads/2020/09/handwritten-email-signature.jpg'
       },
       {
         ticketId: 2,
-        employeeId: 2,
         signedBy: 'client',
         signatureImageURL: 'https://signaturely.com/wp-content/uploads/2020/04/oprah-winfrey-signature-signaturely.png'
       }

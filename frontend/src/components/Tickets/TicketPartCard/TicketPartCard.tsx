@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 
-import { FaPen, FaTrash } from "react-icons/fa";
+// import { FaPen, FaTrash } from "react-icons/fa";
 
-import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
-import EditPart from "../../EditPart/EditPart";
+// import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
+// import EditPart from "../../EditPart/EditPart";
 
 import './TicketPartCard.scss';
 import { PiImageSquare } from "react-icons/pi";
