@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Part, PartStock } = require('@db/models');
+const { Part, PartImage, PartStock } = require('@db/models');
 const { requireAuth } = require('@utils/auth');
 
 const { singleMulterUpload, singleFileUpload } = require('@backend/awsS3');
@@ -78,7 +78,11 @@ router.post(
                 unit,
                 defaultPrice,
                 active,
-                imageUrl: finalImageUrl
+            });
+
+            const partImage = await PartImage.create({
+                partId: newPart.id,
+                partImageURL: finalImageUrl
             });
 
             return res.status(201).json(newPart);

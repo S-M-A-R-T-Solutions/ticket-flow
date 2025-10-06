@@ -65,15 +65,19 @@ export const getPartTotalStockThunk = async (partId) => {
 };
 
 export const addPartThunk = (part) => async (dispatch) => {
-    const { sku, name, description, ticketId, imageUrl } = part;
+    const { sku, name, description, brand, model, unit, defaultPrice, active, imageUrl} = part;
 
     try {
         const formData = new FormData();
         formData.append('sku', sku);
         formData.append('name', name);
         formData.append('description', description);
-        formData.append('ticketId', ticketId);
-        formData.append('image', imageUrl);
+        formData.append('brand', brand);
+        formData.append('model', model);
+        formData.append('unit', unit);
+        formData.append('defaultPrice', defaultPrice);
+        formData.append('active', active);
+        if (imageUrl) formData.append('image', imageUrl);
 
         const res = await csrfFetch('/api/parts', {
             method: "POST",
@@ -98,14 +102,15 @@ export const addPartThunk = (part) => async (dispatch) => {
 
 export const editPartThunk = (part) => async (dispatch) => {
 
-    const { name, description, ticketId, imageUrl } = part;
+    const { name, description, unit, defaultPrice, active} = part;
 
     try {
         const formData = new FormData();
         formData.append('name', name);
         formData.append('description', description);
-        formData.append('ticketId', ticketId);
-        formData.append('image', imageUrl);
+        formData.append('unit', unit);
+        formData.append('defaultPrice', defaultPrice);
+        formData.append('active', active);
 
         const options = {
             method: "PUT",
