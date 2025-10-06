@@ -80,9 +80,9 @@ router.post(
                 active,
             });
 
-            const partImage = await PartImage.create({
+            await PartImage.create({
                 partId: newPart.id,
-                partImageURL: finalImageUrl
+                partImageURL: finalImageUrl 
             });
 
             return res.status(201).json(newPart);
