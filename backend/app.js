@@ -38,7 +38,10 @@ const csrfProtection = csurf({
 
 app.use((req, res, next) => {
     // Skip CSRF for puiblic webhooks
-    const publicWebhookPaths = ['/api/integrations/twilio/callStatusWebhook'];
+    const publicWebhookPaths = [
+        '/api/integrations/twilio/callStart',
+        '/api/integrations/twilio/callStatus',
+    ];
     if (publicWebhookPaths.includes(req.path)) {
         return next();
     }
