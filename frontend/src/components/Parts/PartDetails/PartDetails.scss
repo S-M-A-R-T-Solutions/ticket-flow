@@ -1,0 +1,90 @@
+.part-details {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    h1 {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .part-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 20px;
+
+        .part-info-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 40%;
+
+        margin-bottom: 16px;
+
+            .part-img-slider {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                margin-bottom: 8px;
+                border-radius: 8px;
+
+                .left-arrow, .right-arrow {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    z-index: 1;
+                    top: 90px;
+                    width: 32px;
+                    height: 32px;
+                    background-color: var(--button-bg-color);
+                    border-radius: 50%;
+                    cursor: pointer;
+                    user-select: none;
+                    transition: background-color 0.3s ease;
+
+                    &:hover {
+                        background-color: var(--button-bg-color);
+                    }
+                }
+
+                .left-arrow {
+                    left: 35px
+                }
+
+                .right-arrow {
+                    right: 35px;
+                }
+
+                img {
+                    width: 100%;
+                    height: auto;
+                    max-height: 300px;
+                    object-fit: contain;
+                    border-radius: 8px;
+                }
+            }
+        }
+
+        .part-info-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 55%;
+            padding-left: 20px;
+
+            h2 {
+                margin-bottom: 10px;
+            }
+
+            p {
+                margin: 4px 0;
+            }
+        }
+    }
+}

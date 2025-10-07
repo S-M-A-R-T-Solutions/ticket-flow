@@ -30,6 +30,15 @@ module.exports = {
         unit: 'ea',
         defaultPrice: 249.99,
         active: true
+      },
+      {
+        sku: "UDM-Pro",
+        name: "Ubiquiti Dream Machine Pro",
+        description: "All-in-one network appliance",
+        brand: "Ubiquiti",
+        model: "UDM-Pro",
+        imageUrl: "https://cdn11.bigcommerce.com/s-2bh7dp4k3r/images/stencil/1280x1280/products/8313/23624/UDM-PRO-MAX_003__14746.1750190684.jpg",
+        unit: "unit",
       }
     ], options)
   },

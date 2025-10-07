@@ -47,6 +47,9 @@ router.get('/:id', requireAuth, async (req, res) => {
         part.dataValues.stocks = stocks;
         part.dataValues.totalStock = stocks.reduce((acc, stock) => acc + stock.quantity, 0);
 
+        const partImages = await PartImage.findAll({ where: { partId: part.id } });
+        part.dataValues.images = partImages;
+
         return res.json(part);
     } catch (error) {
         return res.status(500).json({ error: 'Error fetching part' });
