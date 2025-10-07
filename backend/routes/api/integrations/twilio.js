@@ -5,7 +5,7 @@ const config = require('../../../config');
 
 router.post('/callStart', (req, res) => {
     const { From, To, CallSid } = req.body;
-    console.log(`callStart: ${req.body}`);
+    console.log(`callStart: ${JSON.stringify(req.body)}`);
 
     const twiml = new twilio.twiml.VoiceResponse();
     const pbx = config.twilioConfig.pbxNumber;
@@ -17,7 +17,7 @@ router.post('/callStart', (req, res) => {
 
 router.post('/callStatus', (req, res) => {
     const { From, To, CallSid, CallStatus } = req.body;
-    console.log(`callStatus: ${req.body}`);
+    console.log(`callStatus: ${JSON.stringify(req.body)}`);
     return res.sendStatus(200);
 });
 
