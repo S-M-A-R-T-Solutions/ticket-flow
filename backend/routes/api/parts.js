@@ -61,13 +61,11 @@ router.post(
     singleMulterUpload("image"),   // 👈 este middleware parsea el FormData
     async (req, res, next) => {
         try {
-            const { sku, name, description, brand, model, unit, defaultPrice, active } = req.body;
+            const { sku, name, description, brand, model, unit, defaultPrice, active, imageUrl } = req.body;
 
-            // si hay archivo, se sube a S3
-            let finalImageUrl = req.body.imageUrl;
-            if (req.file) {
-                finalImageUrl = await singleFileUpload({ file: req.file, public: true });
-            }
+            const partImageURL = req.file ? await singleFileUpload({ file: req.file, public: true }) : null;
+
+            console.log(partImageURL, "<<< this is the part image URL");
 
             const newPart = await Part.create({
                 sku,
@@ -78,12 +76,16 @@ router.post(
                 unit,
                 defaultPrice,
                 active,
+                imageUrl: partImageURL || "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
             });
 
-            await PartImage.create({
+
+            const partImage = await PartImage.create({
                 partId: newPart.id,
-                partImageURL: finalImageUrl 
+                partImageURL: partImageURL || "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
             });
+
+            console.log(newPart, partImage, "<<< this is new part and part image");
 
             return res.status(201).json(newPart);
         } catch (error) {

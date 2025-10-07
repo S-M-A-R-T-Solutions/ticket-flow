@@ -2,14 +2,12 @@
   background-color: var(--surface-color);
   color: var(--text-color);
   border-radius: 16px;
-  // box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  // padding: 28px;
   width: 100%;
-  max-width: 820px;
+  // max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  // gap: 24px;
   animation: fadeIn 0.25s ease-in-out;
 }
 
@@ -36,31 +34,38 @@
 /* =============================== */
 .add-part-form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 28px;
+  // gap: 28px;
 
   @media (max-width: 760px) {
     flex-direction: column;
   }
 }
 
-.add-part-left {
-  flex: 0.8;
+.add-part-content {
   display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 760px) {
+    flex-direction: column;
+    // gap: 16px;
+  }
+}
+
+.add-part-left {
+  display: flex;
+  width: 40%;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 14px;
-  // border-right: 1px solid var(--box-bg-border);
-  padding-right: 24px;
 
   @media (max-width: 760px) {
     border-right: none;
-    // border-bottom: 1px solid var(--box-bg-border);
-    padding-right: 0;
-    padding-bottom: 18px;
   }
 
   input[type='file'] {
@@ -74,10 +79,10 @@
 }
 
 .part-image {
-  width: 220px;
-  height: 220px;
+  width: 300px;
+  height: 300px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 16px;
   // border: 1px solid var(--box-bg-border);
   // background-color: var(--box-bg);
   // padding: 8px;
@@ -93,16 +98,23 @@
 /* Right form section              */
 /* =============================== */
 .add-part-right {
-  flex: 1.4;
   display: flex;
-  flex-direction: column;
+  width: 50%;
+  flex-direction: row;
   gap: 16px;
-  // padding-left: 20px;
 
   @media (max-width: 760px) {
     padding-left: 0;
     padding-top: 16px;
   }
+}
+
+.add-part-right-left,
+.add-part-right-right {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  gap: 14px;
 }
 
 /* =============================== */
@@ -114,7 +126,7 @@
   gap: 5px;
 
   label {
-    font-size: 13px;
+    font-size: 12px;
     text-transform: uppercase;
     opacity: 0.7;
     letter-spacing: 0.5px;
@@ -123,18 +135,18 @@
   input,
   textarea,
   select {
-    padding: 10px 12px;
+    // padding: 10px 12px;
     border: 1px solid var(--box-bg-border);
     border-radius: 8px;
     // background-color: var(--box-bg);
     color: var(--text-color-inverted);
-    font-size: 14px;
+    font-size: 12px;
     transition: all 0.25s ease;
   }
 
   textarea {
     resize: vertical;
-    min-height: 70px;
+    min-height: 100px;
   }
 
   input:focus,
@@ -148,7 +160,6 @@
   div {
     font-size: 12px;
     color: var(--razzmatazz);
-    margin-top: -2px;
   }
 }
 
@@ -157,15 +168,15 @@
 /* =============================== */
 .brand-model {
   display: flex;
+  flex-direction: column;
   width: 100%;
-  flex-direction: row;
   gap: 10px;
 }
 
 .unit-price {
   display: flex;
   width: 100%;
-  flex-direction: row;
+  flex-direction: column;
   gap: 14px;
 
   .input-unit,
@@ -188,12 +199,14 @@
 /* =============================== */
 .add-part-buttons {
   display: flex;
-  justify-content: flex-end;
+  width: 100%;
+  justify-content: center;
   gap: 14px;
   margin-top: 8px;
 
   .btn-add-part,
   .btn-cancel {
+    width: 120px;
     padding: 10px 20px;
     border-radius: 8px;
     font-size: 14px;

@@ -58,14 +58,14 @@ export const getPartThunk = (partId) => async (dispatch) => {
     dispatch(getPart(part));
 };
 
-export const getPartTotalStockThunk = async (partId) => { 
+export const getPartTotalStockThunk = async (partId) => {
     const res = await csrfFetch(`/api/parts/${partId}`);
     const part = await res.json();
     return part.totalStock;
 };
 
 export const addPartThunk = (part) => async (dispatch) => {
-    const { sku, name, description, brand, model, unit, defaultPrice, active, imageUrl} = part;
+    const { sku, name, description, brand, model, unit, defaultPrice, active, imageUrl } = part;
 
     try {
         const formData = new FormData();
@@ -77,7 +77,9 @@ export const addPartThunk = (part) => async (dispatch) => {
         formData.append('unit', unit);
         formData.append('defaultPrice', defaultPrice);
         formData.append('active', active);
-        if (imageUrl) formData.append('image', imageUrl);
+        if (imageUrl) {
+            formData.append('image', imageUrl);
+        }
 
         const res = await csrfFetch('/api/parts', {
             method: "POST",
@@ -102,7 +104,7 @@ export const addPartThunk = (part) => async (dispatch) => {
 
 export const editPartThunk = (part) => async (dispatch) => {
 
-    const { name, description, unit, defaultPrice, active} = part;
+    const { name, description, unit, defaultPrice, active } = part;
 
     try {
         const formData = new FormData();
