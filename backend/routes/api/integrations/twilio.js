@@ -3,8 +3,10 @@ const router = express.Router();
 const twilio = require('twilio');
 const config = require('../../../config');
 
-router.post('/callStart', (req, res) => {
-    const { From, To, CallSid } = req.body;
+const urlencodedParser = express.urlencoded({ extended: true });
+
+router.post('/callStart', urlencodedParser, (req, res) => {
+    // const { From, To, CallSid } = req.body;
     console.log(`callStart: ${JSON.stringify(req.body)}`);
 
     const twiml = new twilio.twiml.VoiceResponse();
@@ -15,8 +17,8 @@ router.post('/callStart', (req, res) => {
     return res.send(twiml.toString());
 });
 
-router.post('/callStatus', (req, res) => {
-    const { From, To, CallSid, CallStatus } = req.body;
+router.post('/callStatus', urlencodedParser, (req, res) => {
+    // const { From, To, CallSid, CallStatus } = req.body;
     console.log(`callStatus: ${JSON.stringify(req.body)}`);
     return res.sendStatus(200);
 });
