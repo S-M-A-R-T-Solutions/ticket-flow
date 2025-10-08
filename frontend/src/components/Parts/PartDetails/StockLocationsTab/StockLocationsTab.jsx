@@ -1,20 +1,9 @@
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-
-import { getAllStockPerLocationThunk } from "../../../../store/stockLocations";
-
 import StockLocationCard from "./StockLocationCard";
 
 import "./StockLocationsTab.scss";
 
-export default function StockLocationsTab({ partId }) {
-    const dispatch = useDispatch();
+export default function StockLocationsTab({ stockLocations }) {
 
-    const stockLocations = useSelector((state) => state.stockLocations.stockLocations);
-
-    useEffect(() => {
-        dispatch(getAllStockPerLocationThunk(partId));
-    }, [dispatch, partId]);
 
     if (!stockLocations)
         return (
@@ -23,7 +12,7 @@ export default function StockLocationsTab({ partId }) {
             </section>
         );
 
-    console.log(stockLocations, "stockLocations");
+    // console.log(stockLocations, "stockLocations");
 
     return (
         <div className="stock-locations-wrapper">

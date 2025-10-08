@@ -2,10 +2,12 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getPartThunk } from "../../../store/parts";
+import { getAllStockPerLocationThunk } from "../../../store/stockLocations";
 
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 import "./PartDetails.scss";
+
 import StockLocationsTab from "./StockLocationsTab/StockLocationsTab";
 
 export default function PartDetails() {
@@ -13,10 +15,15 @@ export default function PartDetails() {
     const { partId } = useParams();
 
     const part = useSelector((state) => state.parts.part);
+    const stockLocations = useSelector((state) => state.stockLocations.stockLocations);
+
+
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     useEffect(() => {
         dispatch(getPartThunk(parseInt(partId)));
+        dispatch(getAllStockPerLocationThunk(partId));
+
         setCurrentImageIndex(0);
     }, [dispatch, partId]);
 
@@ -113,8 +120,13 @@ export default function PartDetails() {
                         </div>
                     </div>
                     <div className="part-stock-details">
-                        <h2>Stock Details</h2>
-                        <StockLocationsTab partId={part.id} />
+                        <div className="stock-details-header">
+                            <h2>Stock Details</h2>
+                            <div className="stock-total">
+                                {part.totalStock} in stock
+                            </div>
+                        </div>
+                        <StockLocationsTab stockLocations={stockLocations} />
                     </div>
                 </>
             ) : (

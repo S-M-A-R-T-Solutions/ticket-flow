@@ -188,13 +188,28 @@
         align-items: flex-start;
         width: 100%;
 
-        h2 {
+        .stock-details-header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+            width: 100%;
             margin-bottom: 10px;
+            gap: 16px;
+
+            .stock-total {
+                font-size: 14px;
+                background-color: var(--light-black);
+                padding: 4px 8px;
+                border-radius: 8px;
+            }
         }
+
 
         .no-stock-locations {
             font-size: 14px;
             opacity: 0.7;
+            background-color: var(--ultra-violet);
         }
     }
 }
