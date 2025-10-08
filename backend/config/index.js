@@ -7,6 +7,7 @@ module.exports = {
         expiresIn: process.env.JWT_EXPIRES_IN
     },
     twilioConfig: {
-        pbxNumber: process.env.PBX_NUMBER
+        pbxNumber: process.env.TWILIO_PBX_NUMBER,
+        answerMessage: process.env.TWILIO_ANSWER_MESSAGE,
     }
 };

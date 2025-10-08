@@ -11,6 +11,7 @@ router.post('/callStart', urlencodedParser, (req, res) => {
 
     const twiml = new twilio.twiml.VoiceResponse();
     const pbx = config.twilioConfig.pbxNumber;
+    twiml.say(config.twilioConfig.answerMessage);
     twiml.dial(pbx);
 
     res.type('text/xml');
