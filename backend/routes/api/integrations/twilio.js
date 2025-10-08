@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const twilio = require('twilio');
-const config = require('../../../config');
+const config = require('../../../config/twilio');
 
 const urlencodedParser = express.urlencoded({ extended: true });
 
@@ -10,8 +10,8 @@ router.post('/callStart', urlencodedParser, (req, res) => {
     console.log(`callStart: ${JSON.stringify(req.body)}`);
 
     const twiml = new twilio.twiml.VoiceResponse();
-    const pbx = config.twilioConfig.pbxNumber;
-    twiml.say(config.twilioConfig.answerMessage);
+    const pbx = config.pbxNumber;
+    twiml.say(config.answerMessage);
     twiml.dial(pbx);
 
     res.type('text/xml');
