@@ -6,6 +6,7 @@ import { getPartThunk } from "../../../store/parts";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 import "./PartDetails.scss";
+import StockLocationsTab from "./StockLocationsTab/StockLocationsTab";
 
 export default function PartDetails() {
     const dispatch = useDispatch();
@@ -37,50 +38,85 @@ export default function PartDetails() {
 
     return (
         <div className="part-details">
-            <h1>{part.name}</h1>
             {part ? (
-                <div className="part-header">
-                    <div className="part-info-left">
-                        <div className="part-img-slider">
-                            <button
-                                className="left-arrow"
-                                onClick={handlePrevImage}
-                                disabled={!part.images || part.images.length <= 1}
-                            >
-                                <FaAngleLeft />
-                            </button>
+                <>
+                    <div className="part-header">
+                        <div className="part-info-right">
+                            <div className="part-title">
+                                <div className="title-and-status">
+                                    <h1>{part.name}</h1>
+                                    <div className={`part-status-chip-${part.active ? "active" : "inactive"}`}>
+                                        <p>{part.active ? "Active" : "Inactive"}</p>
+                                    </div>
+                                </div>
+                                <div className="sku-chip">
+                                    <p>SKU: {part.sku}</p>
+                                </div>
+                            </div>
+                            <div className="part-description">
+                                <h3 className="description-title">
+                                    Description:
+                                </h3>
+                                <p>{part.description}</p>
+                            </div>
+                            <div className="brand-model-container">
+                                <div className="brand-container">
+                                    <h3 className="description-title">
+                                        Brand:
+                                    </h3>
+                                    <p>{part.brand}</p>
+                                </div>
+                                <div className="model-container">
+                                    <h3 className="description-title">
+                                        Model:
+                                    </h3>
+                                    <p>{part.model}</p>
+                                </div>
+                            </div>
+                            <div className="price-container">
+                                <h3 className="description-title">
+                                    Regular Price:
+                                </h3>
+                                <p>{part.defaultPrice ? `$${part.defaultPrice.toFixed(2)}` : "N/A"}</p>
+                            </div>
+                        </div>
+                        <div className="part-info-left">
+                            <div className="part-img-slider">
+                                <button
+                                    className="left-arrow"
+                                    onClick={handlePrevImage}
+                                    disabled={!part.images || part.images.length <= 1}
+                                >
+                                    <FaAngleLeft />
+                                </button>
 
-                            {part.images && part.images.length > 0 ? (
-                                <img
-                                    src={part.images[currentImageIndex]?.partImageURL}
-                                    alt={`Part image ${currentImageIndex + 1}`}
-                                />
-                            ) : (
-                                <img
-                                    src="/assets/placeholder-image.jpg"
-                                    alt="No image available"
-                                />
-                            )}
+                                {part.images && part.images.length > 0 ? (
+                                    <img
+                                        src={part.images[currentImageIndex]?.partImageURL}
+                                        alt={`Part image ${currentImageIndex + 1}`}
+                                    />
+                                ) : (
+                                    <img
+                                        src="/assets/placeholder-image.jpg"
+                                        alt="No image available"
+                                    />
+                                )}
 
-                            <button
-                                className="right-arrow"
-                                onClick={handleNextImage}
-                                disabled={!part.images || part.images.length <= 1}
-                            >
-                                <FaAngleRight />
-                            </button>
+                                <button
+                                    className="right-arrow"
+                                    onClick={handleNextImage}
+                                    disabled={!part.images || part.images.length <= 1}
+                                >
+                                    <FaAngleRight />
+                                </button>
+                            </div>
                         </div>
                     </div>
-
-                    <div className="part-info-right">
-                        <p><strong>SKU:</strong> {part.sku}</p>
-                        <p><strong>Description:</strong> {part.description}</p>
-                        <p><strong>Brand:</strong> {part.brand}</p>
-                        <p><strong>Model:</strong> {part.model}</p>
-                        <p><strong>Total Stock:</strong> {part.totalStock}</p>
-                        <p><strong>Status:</strong> {part.active ? "Active" : "Inactive"}</p>
+                    <div className="part-stock-details">
+                        <h2>Stock Details</h2>
+                        <StockLocationsTab partId={part.id} />
                     </div>
-                </div>
+                </>
             ) : (
                 <p>Loading...</p>
             )}

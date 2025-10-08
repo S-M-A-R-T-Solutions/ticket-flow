@@ -10,18 +10,13 @@ module.exports = {
     await PartImage.bulkCreate([
       {
         partId: 1,
-        partImageURL: 'https://example.com/image1.jpg',
+        partImageURL: 'https://upload.wikimedia.org/wikipedia/commons/6/61/EthernetCableGreen.jpg',
         description: 'Image 1 description'
       },
       {
         partId: 1,
-        partImageURL: 'https://example.com/image2.jpg',
+        partImageURL: 'https://www.cmple.com/content/images/thumbs/cat5e-ethernet-cable-10ft-green-utp-350-mhz-1gbps-rj45-lan-network-patch-cable_NID0009466.jpeg',
         description: 'Image 2 description'
-      },
-      {
-        partId: 2,
-        partImageURL: 'https://example.com/image3.jpg',
-        description: 'Image 3 description'
       },
       {
         partId: 3,

@@ -48,6 +48,7 @@ router.get('/', requireAuth, async (req, res, next) => {
     }
 });
 
+
 // GET /api/stock/movements
 // Get stock movements (history)
 router.get('/movements', requireAuth, async (req, res, next) => {

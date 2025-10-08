@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Part, PartImage, PartStock } = require('@db/models');
+const { Part, PartImage, PartStock, InventoryLocation } = require('@db/models');
 const { requireAuth } = require('@utils/auth');
 
 const { singleMulterUpload, singleFileUpload } = require('@backend/awsS3');
@@ -130,6 +130,22 @@ router.delete('/:id', requireAuth, async (req, res, next) => {
         }
         await part.destroy();
         return res.status(204).json({ message: 'Part deleted' });
+    } catch (error) {
+        return next(error);
+    }
+});
+
+//GET /api/parts/:partId/stock
+//Get the stock of a part per location
+router.get('/:partId/stock', requireAuth, async (req, res, next) => {
+    try {
+        const partId = req.params.partId;
+        const stock = await PartStock.findAll({
+            where: { partId },
+            include: [InventoryLocation],
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+        return res.json(stock);
     } catch (error) {
         return next(error);
     }

@@ -39,6 +39,7 @@ module.exports = {
         model: "UDM-Pro",
         imageUrl: "https://cdn11.bigcommerce.com/s-2bh7dp4k3r/images/stencil/1280x1280/products/8313/23624/UDM-PRO-MAX_003__14746.1750190684.jpg",
         unit: "unit",
+        active: false
       }
     ], options)
   },

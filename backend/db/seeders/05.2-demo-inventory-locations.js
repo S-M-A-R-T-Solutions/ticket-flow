@@ -11,14 +11,17 @@ module.exports = {
     await InventoryLocation.bulkCreate([
       {
         name: 'Warehouse A',
+        icon: "FaHouse",
         description: 'Main warehouse located in the city center.'
       },
       {
         name: 'Local Office',
+        icon: "FaBuilding",
         description: 'Storage at the local office building.'
       },
       {
         name: 'Van #1',
+        icon: "FaVanShuttle",
         description: 'Delivery van for local deliveries.'
       }
     ], options);
