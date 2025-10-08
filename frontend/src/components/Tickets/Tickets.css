@@ -2,15 +2,16 @@
 .tickets-tab {
     display: flex;
     width: 100%;
+    flex-grow: 1;
     flex-direction: column;
     align-content: space-between;
     justify-content: space-between;
-    flex: 1;
 }
 
 /* Tickets Header */
-.tickets-header {
+.tickets-section-header {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
@@ -18,7 +19,7 @@
     padding-right: 20px;
 }
 
-.tickets-header h1 {
+.section-header h1 {
     font-size: 2rem;
     color: var(--text-color);
     /* Adapt text color based on theme */
@@ -49,6 +50,7 @@
     gap: 16px;
 
     width: 100%;    
+    /* flex-grow: 1; */
 }
 
 /* Tickets Footer */

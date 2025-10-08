@@ -189,7 +189,7 @@ export default function TicketDetails() {
                         </button>
                     </div>
 
-                    {ticket.Parts.length > 0 ?
+                    {ticket.Parts?.length > 0 ?
                         <div className="parts-list">
                             {
                                 ticket.Parts.map((part: any) => (

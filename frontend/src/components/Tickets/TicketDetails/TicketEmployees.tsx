@@ -15,6 +15,10 @@ export default function TicketEmployees({ author, employees }: TicketEmployeesPr
         setExpanded(!expanded);
     };
 
+    if (!author && (!employees || employees.length === 0)) {
+        return null; // No employees to display
+    }
+
     return (
         <div className={`ticket-employees ${expanded ? 'expanded' : ''}`}>
             <div className="employees-title">Created by</div>

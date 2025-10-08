@@ -25,6 +25,15 @@
     --active-link-color: #bb86fc;
     --active-link-bg: #bb86fc1d;
     --link-hover-bg: #ffffff0d;
+
+    .sidebar{
+        .brand {
+            img {
+                margin-top: 20px;
+                content: url('/assets/logo-dark.png');
+            }
+        }
+    }
 }
 
 .sidebar {
@@ -40,19 +49,14 @@
         text-decoration: none;
 
         img {
-            height: 32px;
-            width: 32px;
+            content: url('/assets/logo-light.png');
+            width: 120px;
+            margin-top: 20px;
         }
 
         .title {
             font-size: 20px;
             font-weight: 600;
-        }
-
-        &:hover {
-            img {
-                transform: scale(1.2);
-            }
         }
     }
 

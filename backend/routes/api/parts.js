@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Part, PartStock } = require('@db/models');
+const { Part, PartImage, PartStock, InventoryLocation } = require('@db/models');
 const { requireAuth } = require('@utils/auth');
 
 const { singleMulterUpload, singleFileUpload } = require('@backend/awsS3');
@@ -47,6 +47,9 @@ router.get('/:id', requireAuth, async (req, res) => {
         part.dataValues.stocks = stocks;
         part.dataValues.totalStock = stocks.reduce((acc, stock) => acc + stock.quantity, 0);
 
+        const partImages = await PartImage.findAll({ where: { partId: part.id } });
+        part.dataValues.images = partImages;
+
         return res.json(part);
     } catch (error) {
         return res.status(500).json({ error: 'Error fetching part' });
@@ -61,13 +64,11 @@ router.post(
     singleMulterUpload("image"),   // 👈 este middleware parsea el FormData
     async (req, res, next) => {
         try {
-            const { sku, name, description, brand, model, unit, defaultPrice, active } = req.body;
+            const { sku, name, description, brand, model, unit, defaultPrice, active, imageUrl } = req.body;
 
-            // si hay archivo, se sube a S3
-            let finalImageUrl = req.body.imageUrl;
-            if (req.file) {
-                finalImageUrl = await singleFileUpload({ file: req.file, public: true });
-            }
+            const partImageURL = req.file ? await singleFileUpload({ file: req.file, public: true }) : null;
+
+            console.log(partImageURL, "<<< this is the part image URL");
 
             const newPart = await Part.create({
                 sku,
@@ -78,8 +79,16 @@ router.post(
                 unit,
                 defaultPrice,
                 active,
-                imageUrl: finalImageUrl
+                imageUrl: partImageURL || "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
             });
+
+
+            const partImage = await PartImage.create({
+                partId: newPart.id,
+                partImageURL: partImageURL || "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+            });
+
+            console.log(newPart, partImage, "<<< this is new part and part image");
 
             return res.status(201).json(newPart);
         } catch (error) {
@@ -121,6 +130,22 @@ router.delete('/:id', requireAuth, async (req, res, next) => {
         }
         await part.destroy();
         return res.status(204).json({ message: 'Part deleted' });
+    } catch (error) {
+        return next(error);
+    }
+});
+
+//GET /api/parts/:partId/stock
+//Get the stock of a part per location
+router.get('/:partId/stock', requireAuth, async (req, res, next) => {
+    try {
+        const partId = req.params.partId;
+        const stock = await PartStock.findAll({
+            where: { partId },
+            include: [InventoryLocation],
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+        return res.json(stock);
     } catch (error) {
         return next(error);
     }

@@ -28,21 +28,42 @@ header.main-header {
 
 /* Main content area */
 .main-zone {
-    display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 16px;
+    // display: grid;
+    // grid-template-columns: 1fr 350px;
+    // gap: 16px;
 
-    padding-inline: 32px;
+    // padding-inline: 32px;
 
+    // width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 32px;
     width: 100%;
+    flex-grow: 1;
 }
 
 .section-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
     max-width: 100%;
     min-width: 0;
 }
 
-.my-work-panel {}
+.my-work-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    width: 100%;
+    border-radius: 8px;
+    max-width: 20%;
+    min-width: 0;
+    background-color: var(--surface-color);
+}
 
 /* Footer styles */
 footer {
