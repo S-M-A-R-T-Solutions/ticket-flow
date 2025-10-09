@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const twilio = require('twilio');
-const config = require('@/config/twilio');
-const { Ticket, Client, TwilioCall } = require('@/db/models');
+const config = require('@config/twilio');
+const { Ticket, Client, TwilioCall } = require('@db/models');
 const generateAlphanumericId = require('@utils/randomGenerator');
 
 const urlencodedParser = express.urlencoded({ extended: true });
