@@ -34,7 +34,6 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
 
     const clientPhone = From === "" ? Caller : From;
 
-    // FIXME: phoneNumber should be string to accommodate for international numbers
     const clientByPhone = await Client.findOne({ where: { phoneNumber: clientPhone } });
 
     if (!clientByPhone) return res.sendStatus(200);
@@ -51,7 +50,7 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
                 clientId: clientByPhone.id,
                 statusId: 1,
                 hashedId: generateAlphanumericId(10),
-                createdBy: config.autoUserId, // TODO: Define a user for automatic tickets
+                createdBy: config.autoUserId,
             }, { transaction: t });
 
             await TwilioCall.create({

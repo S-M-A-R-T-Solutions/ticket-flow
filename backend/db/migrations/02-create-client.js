@@ -37,7 +37,7 @@ module.exports = {
         defaultValue: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
       },
       phoneNumber: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(32),
         unique: true
       },
       createdAt: {
