@@ -36,6 +36,8 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             return res.status(404).json({ message: 'Client not found' });
         }
 
+        console.log(client, "THIS IS CLIENT")
+
         const locations = await Location.findAll({
             where: { clientId: client.id }
         });
