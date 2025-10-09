@@ -30,12 +30,12 @@
                 font-size: 18px;
             }
 
-            .part-active-chip-inactive {
+            .part-status-chip-inactive {
                 padding: 4px 8px;
                 border-radius: 8px;
 
                 background-color: rgb(244,67,54);
-                color: var(--text-color-inverted);
+                color: var(--text-color);
                 font-size: 18px;
             }
         }
@@ -80,7 +80,7 @@
         flex-direction: column;
         align-items: center;
 
-        width: 30%;
+        width: 40%;
 
         margin-bottom: 16px;
 
@@ -99,7 +99,6 @@
                     justify-content: center;
                     position: relative;
                     z-index: 1;
-                    // top: 95px;
                     width: 32px;
                     height: 32px;
                     background-color: var(--button-bg-color);
@@ -110,6 +109,12 @@
 
                     &:hover {
                         background-color: var(--button-bg-color);
+                    }
+
+                    &:disabled {
+                        background-color: var(--box-bg);
+                        cursor: not-allowed;
+                        opacity: 0.5;
                     }
                 }
 
@@ -122,7 +127,7 @@
                 }
 
                 img {
-                    width: 100%;
+                    width: 300px;
                     height: 300px;
                     object-fit: cover;
                     border-radius: 8px;
@@ -135,7 +140,6 @@
             flex-direction: column;
             align-items: flex-start;
             width: 70%;
-            // padding-left: 20px;
 
             h2 {
                 margin-bottom: 10px;
@@ -200,11 +204,11 @@
             .stock-total {
                 font-size: 14px;
                 background-color: var(--light-black);
+                color: var(--light-white);
                 padding: 4px 8px;
                 border-radius: 8px;
             }
         }
-
 
         .no-stock-locations {
             font-size: 14px;

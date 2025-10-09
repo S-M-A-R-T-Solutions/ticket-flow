@@ -4,7 +4,6 @@ import "./StockLocationsTab.scss";
 
 export default function StockLocationsTab({ stockLocations }) {
 
-
     if (!stockLocations)
         return (
             <section className="stock-locations-tab">
@@ -12,12 +11,10 @@ export default function StockLocationsTab({ stockLocations }) {
             </section>
         );
 
-    // console.log(stockLocations, "stockLocations");
-
     return (
         <div className="stock-locations-wrapper">
             {stockLocations.length === 0 ? (
-                <div className="no-stock-locations">
+                <div className="no-stock-locations-wrapper">
                     No stock locations available.
                 </div>
             ) : (
