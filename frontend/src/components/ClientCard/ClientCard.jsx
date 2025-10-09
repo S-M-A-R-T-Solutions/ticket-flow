@@ -25,7 +25,7 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
             className={`client-card-${clientType}`}
         >
             <div className="client-card-left">
-                <div style={{display: "flex", flexDirection: "row", alignItems: "center", gap: "10px"}}>
+                <div style= {{display: "flex", flexDirection: "row", alignItems: "center", gap: "10px"}}>
                     <img className="client-profile" src={client.profilePicUrl} alt="profile-pic" />
                     {
                         client.companyName !== "" ? (
@@ -44,13 +44,21 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
             <div className="edit-ticket-btn-ticketcard">
                     <OpenModalMenuItem
                         itemText={<FaPen />}
-                        modalComponent={<EditClient client={client} setEditClientChecker={setEditClientChecker} />}
+                        modalComponent= {
+                            <EditClient 
+                                client={client} 
+                                setEditClientChecker={setEditClientChecker} 
+                            /> }
                     />
                 </div>
                 <div className="edit-ticket-btn-ticketcard" onClick={handleDeleteClick}>
                     <OpenModalMenuItem
                         itemText={<FaTrash />}
-                        modalComponent={<DeleteClient client={client} setDeleteClientChecker={setDeleteClientChecker} />}
+                        modalComponent= {
+                            <DeleteClient 
+                                client={client} 
+                                setDeleteClientChecker={setDeleteClientChecker} 
+                            /> }
                     />
                 </div>
             </div>
