@@ -2,13 +2,14 @@ import * as FaIcons from 'react-icons/fa';
 
 import { FaPenToSquare } from "react-icons/fa6";
 
+import StockMovementForm from '../StockMovementForm/StockMovementForm';
+import OpenModalMenuItem from '../../../../Navigation/OpenModalMenuItem';
+
 import "./StockLocationCard.scss";
 
 export default function StockLocationCard({ location }) {
 
     const IconComponent = FaIcons[location.InventoryLocation.icon] || FaIcons.FaBoxOpen;
-
-    console.log(IconComponent, "IconComponent");
 
     return (
         <div className="stock-location-card">
@@ -24,9 +25,14 @@ export default function StockLocationCard({ location }) {
                     <p>{location.quantity}</p>
                 </div>
             </div>
-            <div className="manage-stock-button">
-                <FaPenToSquare />
-            </div>
+            <OpenModalMenuItem
+                modalComponent={<StockMovementForm />}
+                dismisable={true}
+            >
+                <div className="manage-stock-button">
+                    <FaPenToSquare />
+                </div>
+            </OpenModalMenuItem>
         </div>
     );
 }

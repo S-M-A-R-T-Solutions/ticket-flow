@@ -92,12 +92,12 @@ export default function PartDetails() {
                                 <button
                                     className="left-arrow"
                                     onClick={handlePrevImage}
-                                    disabled={!part.images || part.images.length <= 1}
+                                    disabled={!part.images || part.images?.length <= 1}
                                 >
                                     <FaAngleLeft />
                                 </button>
 
-                                {part.images && part.images.length > 0 ? (
+                                {part.images && part.images?.length > 0 ? (
                                     <img
                                         src={part.images[currentImageIndex]?.partImageURL}
                                         alt={`Part image ${currentImageIndex + 1}`}

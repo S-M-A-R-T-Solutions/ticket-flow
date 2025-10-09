@@ -12,21 +12,6 @@ const getAllStockPerLocation = (stockLocations) => ({
     payload: stockLocations
 });
 
-// const getStockMovements = (movements) => ({
-//     type: GET_STOCK_MOVEMENTS,
-//     payload: movements
-// });
-
-// const increaseStockManually = (stockUpdate) => ({
-//     type: INCREASE_STOCK_MANUALLY,
-//     payload: stockUpdate
-// });
-
-// const adjustInventory = (adjustment) => ({
-//     type: ADJUST_INVENTORY,
-//     payload: adjustment
-// });
-
 //Thunks
 export const getAllStockPerLocationThunk = (partId) => async (dispatch) => {
     const res = await csrfFetch(`/api/parts/${partId}/stock`);
