@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ticketId',
         onDelete: 'CASCADE'
       })
+      Ticket.hasMany(models.TwilioCall, {
+        foreignKey: 'ticketId',
+        onDelete: 'CASCADE'
+      })
     }
   }
   Ticket.init({
