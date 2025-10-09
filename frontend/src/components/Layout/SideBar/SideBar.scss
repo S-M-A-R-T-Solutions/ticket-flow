@@ -4,12 +4,9 @@
     left: 0;
     bottom: 0;
     z-index: 10;
-
     width: $sidebarWidth;
     height: 100vh;
-
     background-color: var(--surface-color) !important;
-
     overflow-y: auto;
 }
 
@@ -25,6 +22,15 @@
     --active-link-color: #bb86fc;
     --active-link-bg: #bb86fc1d;
     --link-hover-bg: #ffffff0d;
+
+    .sidebar{
+        .brand {
+            img {
+                margin-top: 20px;
+                content: url('/assets/logo-dark.png');
+            }
+        }
+    }
 }
 
 .sidebar {
@@ -32,27 +38,19 @@
         display: flex;
         align-items: center;
         gap: 12px;
-
         width: 100%;
-
         padding: 16px 16px 16px 36px;
-
         text-decoration: none;
 
         img {
-            height: 32px;
-            width: 32px;
+            content: url('/assets/logo-light.png');
+            width: 120px;
+            margin-top: 20px;
         }
 
         .title {
             font-size: 20px;
             font-weight: 600;
-        }
-
-        &:hover {
-            img {
-                transform: scale(1.2);
-            }
         }
     }
 
@@ -64,18 +62,14 @@
 
     .nav-item {
         position: relative;
-
         display: flex;
         align-items: center;
         gap: 16px;
-
         padding: 16px;
         border-radius: 5px 0 0 5px;
-
         font-size: 16px;
         text-decoration: none;
         color: var(--link-color);
-
         transition: all 0.3s ease;
 
         .nav-icon {
@@ -93,12 +87,9 @@
             right: 0;
             top: 8px;
             bottom: 8px;
-
             display: none;
-
             width: 4px;
             border-radius: 4px 0 0 4px;
-
             background-color: var(--active-link-color);
         }
 

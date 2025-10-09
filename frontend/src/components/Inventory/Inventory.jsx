@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
@@ -15,6 +16,7 @@ import { getAllStatusThunk } from "../../store/status";
 
 export default function Inventory() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const allParts = useSelector((state) => state.parts.allParts);
     const totalParts = useSelector((state) => state.parts.totalPartsAmount);
@@ -53,6 +55,12 @@ export default function Inventory() {
         setEditPartChecker(true);
     }
 
+    const goToSpot = (e, part) => {
+        e.preventDefault();
+        e.stopPropagation();
+        return navigate(`/inventory/${part.id}`);
+    }
+
     return (
         <section className="app-section inventory-tab">
             <div className="section-header">
@@ -73,7 +81,9 @@ export default function Inventory() {
 
             <div className="inventory-container">
                 {allParts.map((part) => (
-                    <PartCard key={part.id} part={part} setEditPartChecker={setEditPartChecker} setDeletePartChecker={setEditPartChecker} />
+                    <div key={part.id} className="part-card-wrapper" onClick={(e) => goToSpot(e, part)}>
+                        <PartCard part={part} setEditPartChecker={setEditPartChecker} setDeletePartChecker={setEditPartChecker} />
+                    </div>
                 ))}
             </div>
 

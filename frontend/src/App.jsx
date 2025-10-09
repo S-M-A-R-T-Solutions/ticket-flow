@@ -18,6 +18,7 @@ import TicketDetails from "./components/Tickets/TicketDetails/TicketDetails";
 import Clients from "./components/Clients/Clients";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
 import Inventory from "./components/Inventory";
+import PartDetails from "./components/Parts/PartDetails";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: '/inventory',
         element: <Inventory />
+      },
+      {
+        path: '/inventory/:partId',
+        element: <PartDetails />
       }
     ]
   }

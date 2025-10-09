@@ -46,7 +46,8 @@
   "_moduleAliases": {
     "@db": "db",
     "@utils": "utils",
-    "@backend": "."
+    "@backend": ".",
+    "@config": "config"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",

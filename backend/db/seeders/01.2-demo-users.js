@@ -1,5 +1,6 @@
 const { User } = require('../models')
 const bcrypt = require("bcryptjs");
+const twilioConfig = require('../../config/twilio');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -68,6 +69,16 @@ module.exports = {
         username: "DemoEmp6",
         email: "steve3@aa.io",
         hashedPassword: bcrypt.hashSync("password"),
+      },
+      {
+        firstName: "Twilio",
+        lastName: "Auto user",
+        isActive: false,
+        profilePicUrl: "",
+        title: "NA",
+        username: "twilioautouser",
+        email: "autouser@thesmartsolution.net",
+        hashedPassword: bcrypt.hashSync(twilioConfig.autoUserPassword),
       }
     ], options);
   },

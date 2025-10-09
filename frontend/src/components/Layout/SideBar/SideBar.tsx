@@ -4,16 +4,13 @@ import { AiOutlineHome } from "react-icons/ai";
 import { LuTicket } from "react-icons/lu";
 import { HiOutlineUserGroup } from "react-icons/hi";
 
-
-
 import './SideBar.scss';
 
 export default function SideBar() {
     return (
         <nav className="sidebar">
             <NavLink to="/" className="brand">
-                <img src="/assets/logo-tf.png" className='logo-main' alt='logo'></img>
-                <span className="title">ticketFlow</span>
+                <img src="/assets/logo-dark.png" className='logo-main' alt='logo'></img>
             </NavLink>
 
             <ul className="nav-list">
