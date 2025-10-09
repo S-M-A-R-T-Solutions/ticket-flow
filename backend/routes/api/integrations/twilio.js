@@ -51,7 +51,7 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
                 clientId: clientByPhone.id,
                 statusId: 1,
                 hashedId: generateAlphanumericId(10),
-                createdBy: config.autoUserId,
+                createdBy: config.autoUserId, // TODO: Define a user for automatic tickets
             }, { transaction: t });
 
             await TwilioCall.create({
