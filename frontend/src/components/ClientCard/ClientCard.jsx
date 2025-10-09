@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { FaTrash, FaPen } from "react-icons/fa";
 import { useEffect } from "react";
 import { getOneClientThunk } from "../../store/clients";
@@ -9,6 +10,7 @@ import EditClient from "../EditClient/EditClient";
 
 export default function ClientCard({ client, setEditClientChecker, setDeleteClientChecker }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getOneClientThunk(client.id));
@@ -20,12 +22,17 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
         e.stopPropagation();
     };
 
+    const goToClientDetails = () => {
+        navigate(`/clients/${client.id}`);
+    }
+
     return (
         <div
             className={`client-card-${clientType}`}
+            onClick={goToClientDetails}
         >
             <div className="client-card-left">
-                <div style={{display: "flex", flexDirection: "row", alignItems: "center", gap: "10px"}}>
+                <div style= {{display: "flex", flexDirection: "row", alignItems: "center", gap: "10px"}}>
                     <img className="client-profile" src={client.profilePicUrl} alt="profile-pic" />
                     {
                         client.companyName !== "" ? (
@@ -44,13 +51,21 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
             <div className="edit-ticket-btn-ticketcard">
                     <OpenModalMenuItem
                         itemText={<FaPen />}
-                        modalComponent={<EditClient client={client} setEditClientChecker={setEditClientChecker} />}
+                        modalComponent= {
+                            <EditClient 
+                                client={client} 
+                                setEditClientChecker={setEditClientChecker} 
+                            /> }
                     />
                 </div>
                 <div className="edit-ticket-btn-ticketcard" onClick={handleDeleteClick}>
                     <OpenModalMenuItem
                         itemText={<FaTrash />}
-                        modalComponent={<DeleteClient client={client} setDeleteClientChecker={setDeleteClientChecker} />}
+                        modalComponent= {
+                            <DeleteClient 
+                                client={client} 
+                                setDeleteClientChecker={setDeleteClientChecker} 
+                            /> }
                     />
                 </div>
             </div>

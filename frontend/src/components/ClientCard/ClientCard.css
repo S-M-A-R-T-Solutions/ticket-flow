@@ -1,9 +1,9 @@
-/* General styles for the client card */
-.client-card-company, .client-card-individual {
+.client-card-company, 
+.client-card-individual {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--ticket-card-bg);
+    background-color: var(--surface-color);
     border-radius: 8px;
     padding: 16px;
     margin: 12px 0;
@@ -33,7 +33,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for left side (company and contact info) */
 .client-card-left {
     max-inline-size: 100%;
     width: 100%;

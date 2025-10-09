@@ -38,7 +38,7 @@ module.exports = {
       {
         "title": "Keyboard Not Responding",
         "createdBy": 4,
-        "clientId": 4,
+        "clientId": 3,
         "description": "My keyboard isn't working even after reconnecting it to my desktop.",
         "checkIn": "2021-06-01 09:00:00",
         "checkOut": "2021-06-01 11:00:00",
@@ -49,7 +49,7 @@ module.exports = {
       {
         "title": "Phone System Malfunction",
         "createdBy": 4,
-        "clientId": 5,
+        "clientId": 1,
         "description": "The office phone system is malfunctioning, can't make or receive calls.",
         "statusId": 1,
         hashedId: generateAlphanumericId(10)
@@ -57,7 +57,7 @@ module.exports = {
       {
         "title": "Printer Jamming Frequently",
         "createdBy": 5,
-        "clientId": 6,
+        "clientId": 3,
         "description": "The printer keeps jamming every time we print multiple pages.",
         "checkIn": "2024-09-10 08:30:00",
         "statusId": 2,
@@ -66,7 +66,7 @@ module.exports = {
       {
         "title": "Monitor Flickering",
         "createdBy": 5,
-        "clientId": 7,
+        "clientId": 2,
         "description": "My monitor flickers on and off randomly.",
         "checkIn": "2024-09-10 10:00:00",
         "checkOut": "2024-09-10 12:00:00",
@@ -76,7 +76,7 @@ module.exports = {
       {
         "title": "Wi-Fi Not Reaching All Areas",
         "createdBy": 5,
-        "clientId": 8,
+        "clientId": 1,
         "description": "The Wi-Fi signal is weak and not reaching all areas of the office.",
         "statusId": 1,
         hashedId: generateAlphanumericId(10)
@@ -84,7 +84,7 @@ module.exports = {
       {
         "title": "Computer Freezes During Work",
         "createdBy": 6,
-        "clientId": 9,
+        "clientId": 2,
         "description": "My computer freezes randomly while working, forcing me to restart.",
         "checkIn": "2024-09-11 13:00:00",
         "statusId": 2,
@@ -93,7 +93,7 @@ module.exports = {
       {
         "title": "Software Update Issues",
         "createdBy": 6,
-        "clientId": 10,
+        "clientId": 3,
         "description": "Unable to install the latest software update, getting error codes.",
         "checkIn": "2024-09-11 14:00:00",
         "checkOut": "2024-09-11 16:00:00",

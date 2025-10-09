@@ -36,8 +36,13 @@ module.exports = {
         allowNull: false,
         defaultValue: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
       },
+<<<<<<< HEAD
       phoneNumber: {
         type: Sequelize.STRING(32),
+=======
+      phone: {
+        type: Sequelize.STRING(15),
+>>>>>>> client-feature
         unique: true
       },
       createdAt: {

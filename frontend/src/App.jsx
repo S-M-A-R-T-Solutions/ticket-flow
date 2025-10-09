@@ -16,6 +16,7 @@ import MyWork from "./components/MyWork";
 import TicketDetailsOld from "./components/TicketDetails";
 import TicketDetails from "./components/Tickets/TicketDetails/TicketDetails";
 import Clients from "./components/Clients/Clients";
+import ClientDetails from "./components/Clients/ClientDetails";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
 import Inventory from "./components/Inventory";
 import PartDetails from "./components/Parts/PartDetails";
@@ -102,6 +103,10 @@ const router = createBrowserRouter([
       {
         path: '/clients',
         element: <Clients />
+      },
+      {
+        path: '/clients/:clientId',
+        element: <ClientDetails />
       },
       {
         path: '/track/:ticketHashedId',

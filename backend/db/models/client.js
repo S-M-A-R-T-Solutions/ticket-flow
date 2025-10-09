@@ -37,8 +37,13 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: true,
       },
     },
+<<<<<<< HEAD
     phoneNumber: {
       type: DataTypes.STRING(32),
+=======
+    phone: {
+      type: DataTypes.STRING(15),
+>>>>>>> client-feature
       unique: true
     },
     profilePicUrl: {
