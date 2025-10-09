@@ -5,7 +5,7 @@ const config = require('@config/twilio');
 const { Ticket, Client, TwilioCall } = require('@db/models');
 const generateAlphanumericId = require('@utils/randomGenerator');
 
-const sequelize = require('../../../config/database');
+const sequelize = require('../../../db/models').sequelize;
 
 const urlencodedParser = express.urlencoded({ extended: true });
 
