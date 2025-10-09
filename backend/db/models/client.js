@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     phoneNumber: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(32),
       unique: true
     },
     profilePicUrl: {
