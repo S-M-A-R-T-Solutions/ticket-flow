@@ -15,6 +15,9 @@ router.post('/callStart', urlencodedParser, (req, res) => {
     twiml.say(config.answerMessage);
     twiml.dial(pbx);
 
+    const url = req.protocol + '://' + req.get('host');
+    twiml.start().transcription({ statusCallbackUrl: `${url}/api/integrations/twilio/transcription`, statusCallbackMethod: 'POST' });
+
     res.type('text/xml');
     return res.send(twiml.toString());
 });
@@ -73,6 +76,13 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
     }
 
     return res.sendStatus(200);
+});
+
+router.post('/transcription', urlencodedParser, (req, res) => {
+    // Handle transcription callback here
+    console.info(JSON.stringify(req.body));
+
+    res.sendStatus(200);
 });
 
 module.exports = router;
