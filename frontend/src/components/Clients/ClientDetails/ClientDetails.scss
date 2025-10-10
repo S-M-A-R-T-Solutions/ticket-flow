@@ -1,0 +1,103 @@
+.client-details {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    .client-title {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        margin-bottom: 20px;
+        column-gap: 20px;
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .title-and-company {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            row-gap: 4px;
+
+            .company-tag {
+                font-size: 14px;
+                opacity: 0.7;
+                background-color: var(--jonquil);
+            }
+
+            .individual-tag {
+                width: fit-content;
+                font-size: 14px;
+                opacity: 0.7;
+                background-color: var(--ultra-violet);
+                padding: 5px 8px;
+                border-radius: 8px;
+            }
+        }
+    }
+
+    .client-details-info {
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        gap: 16px;
+        margin-bottom: 20px;
+        background-color: var(--surface-color);
+        padding: 20px;
+
+        .phone-number, .email-address {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            width: fit-content;
+            align-items: center;
+            justify-content: start;
+            gap: 8px;
+            padding: 0px 8px;
+            cursor: pointer;
+
+            &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--text-color);
+            border-radius: 50px;
+            opacity: 0.08;
+            z-index: -1;
+            }
+
+            &:hover {
+                &::before {
+                    opacity: 0.12;
+                }
+            }
+
+            .phone-button, .email-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 100%;
+                margin-left: 0px;
+                padding: 10px;
+                font-size: 16px;
+                background-color: var(--button-bg-color);
+                color: var(--button-text-color);
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+        }
+    }
+}
