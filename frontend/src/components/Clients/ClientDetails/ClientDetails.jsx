@@ -2,9 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+import LocationCard from "./LocationCard";
+
 import { getOneClientThunk } from "../../../store/clients";
 
-import { FaPhone, FaEnvelope } from "react-icons/fa6";
+import { FaPhone, FaEnvelope, FaPen } from "react-icons/fa6";
 
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
@@ -54,31 +56,46 @@ export default function ClientDetails() {
                                 </div>
                             )}
                         </div>
+                        <div className="edit-client-button">
+                            <FaPen />
+                        </div>
                     </div>
-                    <div className="client-details-info">
-                        <h2>Contact Information</h2>
-                        {client.phone && (
-                            <div className="phone-number" onClick={() => {
+                    <div className="client-details-body">
+                        <div className="client-details-info">
+                            <h2>Contact Information</h2>
+                            {client.phone && (
+                                <div className="phone-number" onClick={() => {
                                     window.location.href = `tel:${client.phone}`;
-                            }}>
-                                <div className="phone-button">
-                                    <FaPhone />
+                                }}>
+                                    <div className="phone-button">
+                                        <FaPhone />
+                                    </div>
+                                    {formatPhoneNumber(client.phone)}
                                 </div>
-                                {formatPhoneNumber(client.phone)}
-                            </div>
-                        )}
-                        {client.email && (
-                            <div className="email-address" onClick={() => {
+                            )}
+                            {client.email && (
+                                <div className="email-address" onClick={() => {
                                     window.location.href = `mailto:${client.email}`;
-                            }}>
-                                <div className="email-button">
-                                    <FaEnvelope />
+                                }}>
+                                    <div className="email-button">
+                                        <FaEnvelope />
+                                    </div>
+                                    {client.email || "No email provided"}
                                 </div>
-                                {client.email || "No email provided"}
-                            </div>
-                        )}
+                            )}
+                        </div>
+                        {/* TODO: Add additional client details here (LOCATIONS INFO, and TICKETS RELATED TO THIS CLIENT*/}
+                        <div className="locations-section">
+                            <h2>Locations</h2>
+                            {client.locations && client.locations.length > 0 ? (
+                                client.locations.map(location => (
+                                    <LocationCard key={location.id} location={location} />
+                                ))
+                            ) : (
+                                <p>No locations available for this client.</p>
+                            )}
+                        </div>
                     </div>
-                    {/* TODO: Add additional client details here (LOCATIONS INFO, and TICKETS RELATED TO THIS CLIENT*/}
                 </>
             ) : (
                 <p>Loading...</p>

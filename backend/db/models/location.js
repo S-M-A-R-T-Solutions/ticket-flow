@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'locationId',
         onDelete: 'CASCADE'
       });
+      Location.hasMany(models.locationEmail, {
+        foreignKey: 'locationId',
+        onDelete: 'CASCADE'
+      });
       Location.hasMany(models.Assessment, {
         foreignKey: 'locationId',
         onDelete: 'CASCADE'
