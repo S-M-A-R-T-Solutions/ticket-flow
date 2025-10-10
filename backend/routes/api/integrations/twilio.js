@@ -39,7 +39,7 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
 
     const clientPhone = From === "" ? Caller : From;
 
-    const clientByPhone = await Client.findOne({ where: { phoneNumber: clientPhone } });
+    const clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
 
     if (!clientByPhone) return res.sendStatus(200);
 
