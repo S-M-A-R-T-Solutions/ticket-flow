@@ -56,6 +56,36 @@ router.get('/:id', requireAuth, async (req, res, next) => {
     }
 });
 
+//Get all Locations of a Client by clientId
+router.get('/:id/locations', requireAuth, async (req, res, next) => {
+    try {
+        const client = await Client.findByPk(req.params.id);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const locations = await Location.findAll({
+            where: { clientId: client.id }
+        });
+
+        for (const location of locations) {
+            const phoneNumbers = await LocationPhoneNumber.findAll({
+                where: { locationId: location.id }
+            });
+            location.dataValues.phoneNumbers = phoneNumbers;
+
+            const emails = await LocationEmail.findAll({
+                where: { locationId: location.id }
+            });
+            location.dataValues.emails = emails;
+        }
+
+        return res.json(locations);
+    } catch (error) {
+        next(error);
+    }
+});
+
 //Add a Client
 router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next) => {
     try {
