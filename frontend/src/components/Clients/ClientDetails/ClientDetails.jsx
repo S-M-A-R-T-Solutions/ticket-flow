@@ -6,7 +6,7 @@ import LocationCard from "./LocationCard";
 
 import { getOneClientThunk } from "../../../store/clients";
 
-import { FaPhone, FaEnvelope, FaPen } from "react-icons/fa6";
+import { FaPhone, FaEnvelope, FaPen, FaCirclePlus } from "react-icons/fa6";
 
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
@@ -86,14 +86,24 @@ export default function ClientDetails() {
                         </div>
                         {/* TODO: Add additional client details here (LOCATIONS INFO, and TICKETS RELATED TO THIS CLIENT*/}
                         <div className="locations-section">
-                            <h2>Locations</h2>
-                            {client.locations && client.locations.length > 0 ? (
-                                client.locations.map(location => (
-                                    <LocationCard key={location.id} location={location} />
-                                ))
-                            ) : (
-                                <p>No locations available for this client.</p>
-                            )}
+                            <div className="locations-header">
+                                <h2>Locations</h2>
+                                <div className="add-location-button">
+                                    <FaCirclePlus /> 
+                                    <div>
+                                        Add Location
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="locations-list">
+                                {client.locations && client.locations.length > 0 ? (
+                                    client.locations.map(location => (
+                                        <LocationCard key={location.id} location={location} />
+                                    ))
+                                ) : (
+                                    <p>No locations available for this client.</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </>

@@ -1,0 +1,141 @@
+.location-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 16px;
+    transition: transform 0.2s ease-in;
+
+    &:hover {
+        border: 1px solid var(--tiffany-blue);
+        transform: scale(1.02);
+    }
+    
+    .location-name {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--text-color);
+        
+        .location-name-and-edit {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            .edit-location-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 100%;
+                padding: 10px 10px;
+                font-size: 14px;
+                gap: 4px;
+                background-color: var(--button-bg-color);
+                color: var(--button-text-color);
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: var(--tiffany-blue);
+                }
+            }
+        }
+
+        
+        .location-address {
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    }
+    .divider {
+        padding-bottom: 10px;
+        border-bottom: 2px dashed var(--text-color);
+        opacity: 0.7;
+    }
+
+    .location-contact-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .contact-info-details {
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            align-items: center;
+            gap: 16px;
+
+            .contact-phone-number-list, .contact-email-list {
+                display: flex;
+                flex-direction: column;
+                // width: 50%;
+                align-items: center;
+                gap: 8px;
+
+                font-size: 14px;
+                color: var(--text-color);
+                opacity: 0.8;
+
+                .phone-number, .email-address {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 4px;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    background-color: var(--surface-color);
+
+                    &:hover {
+                        background-color: var(--tiffany-blue);
+                        cursor: pointer;
+                    }
+
+                    .phone-button, .email-button {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 100%;
+                        padding: 6px;
+                        font-size: 20px;
+                        color: var(--text-color);
+                        opacity: 1;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                    }
+
+                    .phone-number-and-title, .email-address-and-title {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: start;
+                        gap: 6px;
+
+                        font-weight: 600;
+                        color: var(--text-color);
+                        opacity: 1;
+
+                        .phone-type-label, .email-type-label {
+                            font-size: 12px;
+                            font-weight: 500;
+                            color: var(--text-color);
+                            opacity: 0.6;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.no-contact-info {
+    font-size: 14px;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-style: italic;
+    padding: 8px 16px;
+}

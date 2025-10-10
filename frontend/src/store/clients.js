@@ -135,6 +135,9 @@ const clientsReducer = (state = initialState, action) => {
         case GET_ONE_CLIENT: {
             return { ...state, client: action.payload };
         }
+        case GET_ALL_LOCATIONS_OF_A_CLIENT: {
+            return { ...state, client: { ...state.client, locations: action.payload } };
+        }
         case ADD_CLIENT: {
             return { ...state, allClients: [...state.allClients, action.payload] };
         }
