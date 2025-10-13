@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--ticket-card-bg);
+    background-color: var(--surface-color);
     border-radius: 8px;
     padding: 16px;
     margin: 12px 0;
@@ -61,7 +61,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--ticket-card-bg);
+    background-color: var(--background-color);
     /* background-color: #f9f9f9; */
     border-radius: 8px;
     padding: 16px;
@@ -83,7 +83,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--ticket-card-bg);
+    background-color: var(--background-color);
     border-radius: 8px;
     padding: 16px;
     gap: 15px;
@@ -103,8 +103,8 @@
     /* Closed ticket */
     display: flex;
     justify-content: space-between;
+    background-color: var(--background-color);
     align-items: center;
-    background-color: var(--ticket-card-bg);
     border-radius: 8px;
     padding: 16px;
     gap: 15px;

@@ -1,0 +1,27 @@
+.client-tickets {
+    margin-top: 30px;
+
+    h2 {
+        // font-size: 20px;
+        // font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .tickets-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+    }
+}
+
+.client-tickets {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    .tickets-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+    }
+}

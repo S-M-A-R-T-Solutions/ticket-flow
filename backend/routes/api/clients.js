@@ -1,7 +1,7 @@
 const express = require('express');
 const { requireAuth } = require('@utils/auth');
 
-const { Client, Ticket, Location, LocationPhoneNumber } = require('@db/models');
+const { Client, Ticket, Location, LocationPhoneNumber, locationEmail } = require('@db/models');
 const { singleFileUpload, singleMulterUpload } = require('@backend/awsS3');
 const { where } = require('sequelize');
 
@@ -47,7 +47,18 @@ router.get('/:id', requireAuth, async (req, res, next) => {
                 where: { locationId: location.id }
             });
             location.dataValues.phoneNumbers = phoneNumbers;
+
+            const emails = await locationEmail.findAll({
+                where: { locationId: location.id }
+            });
+            location.dataValues.emails = emails;
         }
+
+        const clientTickets = await Ticket.findAll({
+            where: { clientId: client.id }
+        });
+
+        client.dataValues.tickets = clientTickets;
 
         return res.json({ ...client.toJSON(), locations });
     }
@@ -74,7 +85,7 @@ router.get('/:id/locations', requireAuth, async (req, res, next) => {
             });
             location.dataValues.phoneNumbers = phoneNumbers;
 
-            const emails = await LocationEmail.findAll({
+            const emails = await locationEmail.findAll({
                 where: { locationId: location.id }
             });
             location.dataValues.emails = emails;
