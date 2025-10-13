@@ -100,7 +100,7 @@ router.get('/:id/locations', requireAuth, async (req, res, next) => {
 //Add a Client
 router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next) => {
     try {
-        const { firstName, lastName, companyName, email, phoneNumber } = req.body;
+        const { firstName, lastName, companyName, email, phone } = req.body;
 
         const profilePicUrl = req.file
             ? await singleFileUpload({ file: req.file, public: true })
@@ -111,7 +111,7 @@ router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next
             lastName,
             companyName,
             email,
-            phoneNumber,
+            phone,
             profilePicUrl
         });
 

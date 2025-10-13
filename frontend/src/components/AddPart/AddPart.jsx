@@ -66,7 +66,7 @@ export default function AddPart({ ticketId, setPartsChecker }) {
             setSelectedFile(file);
             const fileURL = URL.createObjectURL(file);
             setPartImageURL(fileURL);
-            console.log(fileURL, "THIS IS THE FILE URL");
+            // console.log(fileURL, "THIS IS THE FILE URL");
         }
     }
 

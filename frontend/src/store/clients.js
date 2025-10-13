@@ -86,7 +86,7 @@ export const addClientThunk = (client) => async (dispatch) => {
     if (client.lastName) formData.append('lastName', client.lastName); else formData.append('lastName', '');
     if (client.companyName) formData.append('companyName', client.companyName); else formData.append('companyName', '');
     if (client.email) formData.append('email', client.email);
-    if (client.phoneNumber) formData.append('phoneNumber', client.phoneNumber);
+    if (client.phone) formData.append('phone', client.phone);
 
     // Append the profile picture (file) if it exists
     if (client.profilePicUrl) {
