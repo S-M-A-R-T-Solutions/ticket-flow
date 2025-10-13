@@ -11,6 +11,7 @@ import { FaPhone, FaEnvelope, FaPen, FaCirclePlus } from "react-icons/fa6";
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
 import './ClientDetails.scss';
+import ClientTickets from "./ClientTickets/ClientTickets";
 
 export default function ClientDetails() {
     const dispatch = useDispatch();
@@ -105,6 +106,9 @@ export default function ClientDetails() {
                                 )}
                             </div>
                         </div>
+                    </div>
+                    <div className="client-tickets-section">
+                        <ClientTickets tickets={client.tickets} />
                     </div>
                 </>
             ) : (

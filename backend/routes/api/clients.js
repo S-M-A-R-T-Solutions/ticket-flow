@@ -54,6 +54,12 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             location.dataValues.emails = emails;
         }
 
+        const clientTickets = await Ticket.findAll({
+            where: { clientId: client.id }
+        });
+
+        client.dataValues.tickets = clientTickets;
+
         return res.json({ ...client.toJSON(), locations });
     }
     catch (error) {
