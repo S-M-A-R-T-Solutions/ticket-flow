@@ -34,7 +34,7 @@ export default function LocationCard({ location }) {
                                         </div>
                                         <div className="phone-number-and-title">
                                             <span className="phone-type-label">{phone.phoneType}</span>
-                                            <span>{formatPhoneNumber(phone.phoneNumber)}</span>
+                                            <span className="phone-number-label">{formatPhoneNumber(phone.phoneNumber)}</span>
                                         </div>
                                     </div>
                                 ))
@@ -53,7 +53,7 @@ export default function LocationCard({ location }) {
                                         </div>
                                         <div className="email-address-and-title">
                                             <span className="email-type-label">{email.emailType}</span>
-                                            <span>{email.email}</span>
+                                            <span className="email-label">{email.email}</span>
                                         </div>
                                     </div>
                                 ))

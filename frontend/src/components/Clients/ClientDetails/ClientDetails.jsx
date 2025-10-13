@@ -30,80 +30,86 @@ export default function ClientDetails() {
         <div className="client-details">
             {client ? (
                 <>
-                    <div className="client-details-header">
-                        <div className="client-title">
-                            <div className="client-image">
-                                {client.profilePicUrl ? (
-                                    <img src={client.profilePicUrl} alt="Client Profile" />
-                                ) : (
-                                    <div className="placeholder-image">
-                                        <span>{client.firstName ? client.firstName.charAt(0).toUpperCase() : ''}{client.lastName ? client.lastName.charAt(0).toUpperCase() : ''}</span>
+                    <div className="client-wrapper">
+                        <div className="client-details-header">
+                            <div className="client-title-and-edit">
+                                <div className="client-title">
+                                    <div className="title-and-company-section">
+                                        <div className="client-image">
+                                            {client.profilePicUrl ? (
+                                                <img src={client.profilePicUrl} alt="Client Profile" />
+                                            ) : (
+                                                <div className="placeholder-image">
+                                                    <span>{client.firstName ? client.firstName.charAt(0).toUpperCase() : ''}{client.lastName ? client.lastName.charAt(0).toUpperCase() : ''}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        {client.companyName ? (
+                                            <div className="title-and-company">
+                                                <h1>{client.companyName}</h1>
+                                                <div className="company-tag">
+                                                    COMPANY
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="title-and-company">
+                                                <h1>{client.firstName} {client.lastName}</h1>
+                                                <div className="individual-tag">
+                                                    INDIVIDUAL
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="edit-client-button">
+                                    <FaPen />
+                                </div>
+                            </div>
+                            <div className="divider"></div>
+                            <div className="client-contact-info-header">
+                                <h2>Contact Information</h2>
+                                {client.phone && (
+                                    <div className="phone-number" onClick={() => {
+                                        window.location.href = `tel:${client.phone}`;
+                                    }}>
+                                        <div className="phone-button" >
+                                            <FaPhone />
+                                        </div>
+                                        {formatPhoneNumber(client.phone)}
+                                    </div>
+                                )}
+                                {client.email && (
+                                    <div className="email-address" onClick={() => {
+                                        window.location.href = `mailto:${client.email}`;
+                                    }}>
+                                        <div className="email-button">
+                                            <FaEnvelope />
+                                        </div>
+                                        {client.email || "No email provided"}
                                     </div>
                                 )}
                             </div>
-                            {client.companyName ? (
-                                <div className="title-and-company">
-                                    <h1>{client.companyName}</h1>
-                                    <div className="company-tag">
-                                        COMPANY
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="title-and-company">
-                                    <h1>{client.firstName} {client.lastName}</h1>
-                                    <div className="individual-tag">
-                                        INDIVIDUAL
-                                    </div>
-                                </div>
-                            )}
                         </div>
-                        <div className="edit-client-button">
-                            <FaPen />
-                        </div>
-                    </div>
-                    <div className="client-details-body">
-                        <div className="client-details-info">
-                            <h2>Contact Information</h2>
-                            {client.phone && (
-                                <div className="phone-number" onClick={() => {
-                                    window.location.href = `tel:${client.phone}`;
-                                }}>
-                                    <div className="phone-button">
-                                        <FaPhone />
-                                    </div>
-                                    {formatPhoneNumber(client.phone)}
-                                </div>
-                            )}
-                            {client.email && (
-                                <div className="email-address" onClick={() => {
-                                    window.location.href = `mailto:${client.email}`;
-                                }}>
-                                    <div className="email-button">
-                                        <FaEnvelope />
-                                    </div>
-                                    {client.email || "No email provided"}
-                                </div>
-                            )}
-                        </div>
-                        {/* TODO: Add additional client details here (LOCATIONS INFO, and TICKETS RELATED TO THIS CLIENT*/}
-                        <div className="locations-section">
-                            <div className="locations-header">
-                                <h2>Locations</h2>
-                                <div className="add-location-button">
-                                    <FaCirclePlus /> 
-                                    <div>
-                                        Add Location
+                        <div className="client-details-body">
+                            <div className="locations-section">
+                                <div className="locations-header">
+                                    <h2>Locations</h2>
+                                    <div className="add-location-button">
+                                        <FaCirclePlus />
+                                        <div>
+                                            Add Location
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="locations-list">
-                                {client.locations && client.locations.length > 0 ? (
-                                    client.locations.map(location => (
-                                        <LocationCard key={location.id} location={location} />
-                                    ))
-                                ) : (
-                                    <p>No locations available for this client.</p>
-                                )}
+                                <div className="locations-list">
+                                    {client.locations && client.locations.length > 0 ? (
+                                        client.locations.map(location => (
+                                            <LocationCard key={location.id} location={location} />
+                                        ))
+                                    ) : (
+                                        <p>No locations available for this client.</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

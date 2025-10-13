@@ -10,8 +10,8 @@
     transition: transform 0.2s ease-in;
 
     &:hover {
-        border: 1px solid var(--tiffany-blue);
-        transform: scale(1.02);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     
     .location-name {
@@ -69,15 +69,20 @@
             justify-content: start;
             align-items: center;
             gap: 16px;
+            //Add a scroller if too many items
+            max-height: 400px;
+            overflow-y: auto;
 
             .contact-phone-number-list, .contact-email-list {
                 display: flex;
                 flex-direction: column;
-                // width: 50%;
+                width: 50%;
                 align-items: center;
                 gap: 8px;
+                padding: 0px 20px;
 
-                font-size: 14px;
+
+                font-size: 10px;
                 color: var(--text-color);
                 opacity: 0.8;
 
@@ -92,7 +97,7 @@
                     background-color: var(--surface-color);
 
                     &:hover {
-                        background-color: var(--tiffany-blue);
+                        border: 1px solid var(--tiffany-blue);
                         cursor: pointer;
                     }
 
@@ -102,7 +107,7 @@
                         justify-content: center;
                         border-radius: 100%;
                         padding: 6px;
-                        font-size: 20px;
+                        font-size: 12px;
                         color: var(--text-color);
                         opacity: 1;
                         cursor: pointer;
@@ -120,10 +125,17 @@
                         opacity: 1;
 
                         .phone-type-label, .email-type-label {
-                            font-size: 12px;
+                            font-size: 10px;
                             font-weight: 500;
                             color: var(--text-color);
                             opacity: 0.6;
+                        }
+
+                        .phone-number-label, .email-label {
+                            font-size: 10px;
+                            font-weight: 600;
+                            color: var(--text-color);
+                            opacity: 0.9;
                         }
                     }
                 }
