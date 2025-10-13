@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import LocationCard from "./LocationCard";
@@ -9,6 +9,9 @@ import { getOneClientThunk } from "../../../store/clients";
 import { FaPhone, FaEnvelope, FaPen, FaCirclePlus } from "react-icons/fa6";
 
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
+
+import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
+import AddLocation from "./AddLocation";
 
 import './ClientDetails.scss';
 import ClientTickets from "./ClientTickets/ClientTickets";
@@ -20,9 +23,11 @@ export default function ClientDetails() {
 
     const client = useSelector(state => state.clients.client)
 
+    const [locationAddedChecker, setLocationAddedChecker] = useState(false);
+
     useEffect(() => {
         dispatch(getOneClientThunk(clientId));
-    }, [dispatch, clientId]);
+    }, [dispatch, clientId, locationAddedChecker]);
 
     console.log("CLIENT DETAILS CLIENT: ", client);
 
@@ -94,12 +99,18 @@ export default function ClientDetails() {
                             <div className="locations-section">
                                 <div className="locations-header">
                                     <h2>Locations</h2>
-                                    <div className="add-location-button">
-                                        <FaCirclePlus />
-                                        <div>
-                                            Add Location
+                                    <OpenModalMenuItem
+                                        modalComponent={<AddLocation setLocationAddedChecker={setLocationAddedChecker} clientId={client.id} />}
+                                        onModalClose={() => setLocationAddedChecker(true)}
+                                        dismisable={false}
+                                    >
+                                        <div className="add-location-button">
+                                            <FaCirclePlus />
+                                            <div>
+                                                Add Location
+                                            </div>
                                         </div>
-                                    </div>
+                                    </OpenModalMenuItem>
                                 </div>
                                 <div className="locations-list">
                                     {client.locations && client.locations.length > 0 ? (

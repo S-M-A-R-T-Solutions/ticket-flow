@@ -1,0 +1,187 @@
+.add-location-form {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border-radius: 16px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.25s ease-in-out;
+    padding: 20px 28px;
+
+    h2 {
+        font-size: 22px;
+        font-weight: 600;
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: 12px;
+
+        &::after {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 3px;
+        background-color: var(--special-btn);
+        border-radius: 2px;
+        margin: 8px auto 0 auto;
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 16px;
+    }
+
+    .form-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* =============================== */
+    /* Input structure                 */
+    /* =============================== */
+    .add-location-input {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        label {
+        font-size: 12px;
+        text-transform: uppercase;
+        opacity: 0.7;
+        letter-spacing: 0.5px;
+        }
+
+        input,
+        select {
+        border: 1px solid var(--box-bg-border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        color: var(--light-black);
+        font-size: 12px;
+        transition: all 0.25s ease;
+        background-color: var(--text-color);
+        }
+
+        input:focus,
+        select:focus {
+        outline: none;
+        border-color: var(--special-btn);
+        box-shadow: 0 0 0 2px var(--special-btn)33;
+        }
+
+        .error-message {
+        font-size: 12px;
+        color: var(--razzmatazz);
+        }
+    }
+
+    /* =============================== */
+    /* Address layout                  */
+    /* =============================== */
+    .address-lines {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        .add-location-input {
+        flex: 1;
+        min-width: 250px;
+        }
+    }
+
+    .city-state-zip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+
+        .add-location-input {
+        flex: 1;
+        min-width: 150px;
+        }
+
+        select {
+        cursor: pointer;
+        border: 1px solid var(--box-bg-border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        color: var(--light-black);
+        font-size: 12px;
+        transition: all 0.25s ease;
+        background-color: var(--text-color);
+        }
+    }
+
+    /* =============================== */
+    /* Buttons                         */
+    /* =============================== */
+    .form-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 8px;
+
+        .submit-button,
+        .cancel-button {
+        width: 120px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        }
+
+        .submit-button {
+        background-color: var(--special-btn);
+        color: var(--text-color-inverted);
+        border: none;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+
+        &:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        &:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        }
+
+        .cancel-button {
+        background-color: transparent;
+        border: 1px solid var(--box-bg-border);
+        color: var(--text-color);
+
+        &:hover {
+            background-color: var(--box-bg);
+        }
+        }
+    }
+
+    /* =============================== */
+    /* Animation & dark mode tweaks    */
+    /* =============================== */
+    @keyframes fadeIn {
+        from {
+        opacity: 0;
+        transform: translateY(-10px);
+        }
+        to {
+        opacity: 1;
+        transform: translateY(0);
+        }
+    }
+
+    .dark-mode & {
+        .cancel-button {
+        border-color: var(--surface-color);
+        }
+    }
+}

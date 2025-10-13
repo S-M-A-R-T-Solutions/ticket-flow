@@ -6,6 +6,7 @@ const GET_TOTAL_CLIENTS_AMOUNT = 'clients/getTotalClientsAmount';
 const GET_ALL_LOCATIONS_OF_A_CLIENT = 'clients/getAllLocationsOfAClient';
 const GET_ONE_CLIENT = 'clients/getOneClient';
 const ADD_CLIENT = 'clients/addClient';
+const ADD_LOCATION_TO_A_CLIENT = 'clients/addLocationToAClient';
 const EDIT_CLIENT = 'clients/editClient';
 const DELETE_CLIENT = 'clients/deleteClient';
 
@@ -33,6 +34,11 @@ const getAllLocationsOfAClient = (locations) => ({
 const addClient = (client) => ({
     type: ADD_CLIENT,
     payload: client
+});
+
+const addLocationToClient = (location) => ({
+    type: ADD_LOCATION_TO_A_CLIENT,
+    payload: location
 });
 
 const editClient = (client) => ({
@@ -99,6 +105,19 @@ export const addClientThunk = (client) => async (dispatch) => {
     dispatch(addClient(newClient));
 };
 
+export const addLocationToAClientThunk = (clientId, location) => async (dispatch) => {
+    const res = await csrfFetch(`/api/clients/${clientId}/locations`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(location)
+    });
+
+    const newLocation = await res.json();
+    dispatch(addLocationToClient(newLocation));
+};
+
 export const editClientThunk = (clientId, formData) => async (dispatch) => {
     const res = await csrfFetch(`/api/clients/${clientId}`, {
         method: 'PUT',
@@ -140,6 +159,9 @@ const clientsReducer = (state = initialState, action) => {
         }
         case ADD_CLIENT: {
             return { ...state, allClients: [...state.allClients, action.payload] };
+        }
+        case ADD_LOCATION_TO_A_CLIENT: {
+            return { ...state, client: { ...state.client, locations: [...(state.client.locations || []), action.payload] } };
         }
         case EDIT_CLIENT: {
             return {
