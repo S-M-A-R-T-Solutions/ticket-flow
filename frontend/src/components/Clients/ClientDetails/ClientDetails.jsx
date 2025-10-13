@@ -99,6 +99,7 @@ export default function ClientDetails() {
                             <div className="locations-section">
                                 <div className="locations-header">
                                     <h2>Locations</h2>
+                                    {/* TODO: ADD Horizontal Scroller to Locations */}
                                     <OpenModalMenuItem
                                         modalComponent={<AddLocation setLocationAddedChecker={setLocationAddedChecker} clientId={client.id} />}
                                         onModalClose={() => setLocationAddedChecker(true)}
@@ -115,6 +116,7 @@ export default function ClientDetails() {
                                 <div className="locations-list">
                                     {client.locations && client.locations.length > 0 ? (
                                         client.locations.map(location => (
+                                            // Add Modal to Open Location's Contact Phones and Emails, then add "Add Contact Information" inside that modal
                                             <LocationCard key={location.id} location={location} />
                                         ))
                                     ) : (
