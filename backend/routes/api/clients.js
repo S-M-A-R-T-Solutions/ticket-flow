@@ -104,7 +104,7 @@ router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next
 
         const profilePicUrl = req.file
             ? await singleFileUpload({ file: req.file, public: true })
-            : null;
+            : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
         const client = await Client.create({
             firstName,
