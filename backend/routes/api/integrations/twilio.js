@@ -91,9 +91,21 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
     return res.sendStatus(200);
 });
 
-router.post('/transcription', urlencodedParser, (req, res) => {
-    // Handle transcription callback here
+const getTwilioTranscription = async (transcriptionSid) => {
+    const transcription = await config.client.transcriptions(transcriptionSid)
+        .fetch();
+    return transcription;
+};
+
+router.post('/transcription', urlencodedParser, async (req, res) => {
+    const { TranscriptionSid, TranscriptionEvent, CallSid, AccountSid } = req.body;
+
     console.info(JSON.stringify(req.body));
+
+    if (TransitionEvent === 'transcription-stopped') {
+        const transcription = await getTwilioTranscription(TranscriptionSid);
+        console.info(JSON.stringify(transcription));
+    }
 
     res.sendStatus(200);
 });
