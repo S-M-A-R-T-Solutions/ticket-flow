@@ -14,9 +14,13 @@ router.post('/callStart', urlencodedParser, (req, res) => {
     const pbx = config.pbxNumber;
     const url = req.protocol + '://' + req.get('host') + '/api/integrations/twilio/transcription';
 
-    twiml.record({ transcribe: true, transcribeCallback: url, method: 'POST' });
+    // twiml.record({ transcribe: true, transcribeCallback: url, playBeep: false });
 
-    // twiml.start().transcription({ statusCallbackUrl: url, statusCallbackMethod: 'POST' });
+    twiml.start().transcription({
+        statusCallbackUrl: url,
+        statusCallbackMethod: 'POST',
+        track: 'both_tracks',
+    });
 
     twiml.say(config.answerMessage);
     twiml.dial(pbx);
