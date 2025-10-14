@@ -24,10 +24,11 @@ export default function ClientDetails() {
     const client = useSelector(state => state.clients.client)
 
     const [locationAddedChecker, setLocationAddedChecker] = useState(false);
+    const [locationChecker, setLocationChecker] = useState(false);
 
     useEffect(() => {
         dispatch(getOneClientThunk(clientId));
-    }, [dispatch, clientId, locationAddedChecker]);
+    }, [dispatch, clientId, locationAddedChecker, locationChecker]);
 
     console.log("CLIENT DETAILS CLIENT: ", client);
 
@@ -115,9 +116,9 @@ export default function ClientDetails() {
                                 </div>
                                 <div className="locations-list">
                                     {client.locations && client.locations.length > 0 ? (
-                                        client.locations.map(location => (
+                                        client.locations.map((location, index) => (
                                             // Add Modal to Open Location's Contact Phones and Emails, then add "Add Contact Information" inside that modal
-                                            <LocationCard key={location.id} location={location} clientId={client.id} />
+                                            <LocationCard key={location.id} clientId={client.id} locationIndex={index} location={location} setLocationChecker={setLocationChecker} />
                                         ))
                                     ) : (
                                         <p>No locations available for this client.</p>

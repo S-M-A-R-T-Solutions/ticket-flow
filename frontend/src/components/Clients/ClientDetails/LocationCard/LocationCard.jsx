@@ -1,11 +1,19 @@
 import { FaPen, FaAddressBook } from "react-icons/fa6";
 
+import { useState, useEffect } from "react";
+
 import OpenModalMenuItem from "../../../Navigation/OpenModalMenuItem";
 import LocationContactInfo from "./LocationContactInfo";
+import EditLocation from "./EditLocation";
 
 import "./LocationCard.scss";
 
-export default function LocationCard({ location}) {
+export default function LocationCard({ location, setLocationChecker, locationIndex, clientId }) {
+
+    useEffect(() => {
+        // This effect runs when setLocationChecker changes, can be used to trigger re-fetching location data if needed
+    }, [setLocationChecker]);
+
     return (
         <div className="location-card">
             <div className="location-name">
@@ -22,7 +30,7 @@ export default function LocationCard({ location}) {
                         </div>
                         <div className="edit-location-button">
                             <OpenModalMenuItem
-                                modalComponent={<LocationContactInfo contactInfo={{ phoneNumbers: location.phoneNumbers, emails: location.emails }} />}
+                                modalComponent={<EditLocation locationIndex={locationIndex} setLocationChecker={setLocationChecker} clientId={clientId} />}
                                 dismisable={true}
                             >
                                 <FaPen />

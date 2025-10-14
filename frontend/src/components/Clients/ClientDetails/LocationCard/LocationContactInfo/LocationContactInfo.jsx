@@ -4,8 +4,6 @@ import { formatPhoneNumber } from "../../../../../utils/helperFunctions";
 
 import "./LocationContactInfo.scss";
 
-import { FaPen, FaTrash } from "react-icons/fa";
-
 export default function LocationContactInfo({ contactInfo }) {
 
     const phones = contactInfo?.phoneNumbers;

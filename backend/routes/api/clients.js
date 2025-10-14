@@ -209,4 +209,79 @@ router.delete('/:id', requireAuth, async (req, res, next) => {
     }
 });
 
+//Get a Location by locationId for a specific Client
+router.get('/:clientId/locations/:locationId', requireAuth, async (req, res, next) => {
+    try {
+        const { clientId, locationId } = req.params;
+
+        const client = await Client.findByPk(clientId);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const location = await Location.findOne({
+            where: {
+                id: locationId,
+                clientId: client.id
+            }
+        });
+
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found for this client' });
+        }
+
+        const phoneNumbers = await LocationPhoneNumber.findAll({
+            where: { locationId: location.id }
+        });
+        location.dataValues.phoneNumbers = phoneNumbers;
+
+        const emails = await locationEmail.findAll({
+            where: { locationId: location.id }
+        });
+        location.dataValues.emails = emails;
+
+        return res.json(location);
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Edit a Location of a Client
+router.put('/:clientId/locations/:locationId', requireAuth, async (req, res, next) => {
+    try {
+        const { clientId, locationId } = req.params;
+
+        const client = await Client.findByPk(clientId);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const location = await Location.findOne({
+            where: {
+                id: locationId,
+                clientId: client.id
+            }
+        });
+
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found for this client' });
+        }
+
+        const { name, addressLine1, addressLine2, city, state, zipcode } = req.body;
+
+        location.name = name || location.name;
+        location.addressLine1 = addressLine1 || location.addressLine1;
+        location.addressLine2 = addressLine2 || location.addressLine2;
+        location.city = city || location.city;
+        location.state = state || location.state;
+        location.zipcode = zipcode || location.zipcode;
+
+        await location.save();
+
+        return res.json(location);
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;
