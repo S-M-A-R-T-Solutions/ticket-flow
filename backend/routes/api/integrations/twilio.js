@@ -4,6 +4,7 @@ const twilio = require('twilio');
 const config = require('@config/twilio');
 const { Ticket, Client, TwilioCall } = require('@db/models');
 const generateAlphanumericId = require('@utils/randomGenerator');
+const env = require('../../../config').environment;
 
 const sequelize = require('../../../db/models').sequelize;
 
@@ -12,7 +13,8 @@ const urlencodedParser = express.urlencoded({ extended: true });
 router.post('/callStart', urlencodedParser, (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
     const pbx = config.pbxNumber;
-    const url = req.protocol + '://' + req.get('host') + '/api/integrations/twilio/transcription';
+    const protocol = env === 'production' ? 'https' : 'http';
+    const url = protocol + '://' + req.get('host') + '/api/integrations/twilio/transcription';
 
     // twiml.record({ transcribe: true, transcribeCallback: url, playBeep: false });
 
