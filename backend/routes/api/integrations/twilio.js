@@ -12,11 +12,12 @@ const urlencodedParser = express.urlencoded({ extended: true });
 router.post('/callStart', urlencodedParser, (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
     const pbx = config.pbxNumber;
-    twiml.record({ transcribe: true });
-    
-    const url = req.protocol + '://' + req.get('host');
-    twiml.start().transcription({ statusCallbackUrl: `${url}/api/integrations/twilio/transcription`, statusCallbackMethod: 'POST' });
-    
+    const url = req.protocol + '://' + req.get('host') + '/api/integrations/twilio/transcription';
+
+    twiml.record({ transcribe: true, transcribeCallback: url, method: 'POST' });
+
+    // twiml.start().transcription({ statusCallbackUrl: url, statusCallbackMethod: 'POST' });
+
     twiml.say(config.answerMessage);
     twiml.dial(pbx);
 
