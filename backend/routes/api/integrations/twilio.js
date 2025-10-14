@@ -102,7 +102,7 @@ router.post('/transcription', urlencodedParser, async (req, res) => {
 
     console.info(JSON.stringify(req.body));
 
-    if (TransitionEvent === 'transcription-stopped') {
+    if (TranscriptionEvent === 'transcription-stopped') {
         const transcription = await getTwilioTranscription(TranscriptionSid);
         console.info(JSON.stringify(transcription));
     }
