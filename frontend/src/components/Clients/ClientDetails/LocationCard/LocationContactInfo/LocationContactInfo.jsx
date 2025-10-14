@@ -31,10 +31,6 @@ export default function LocationContactInfo({ contactInfo }) {
                                             <span className="phone-number-label">{formatPhoneNumber(phone.phoneNumber)}</span>
                                         </div>
                                     </div>
-                                    <div className="edit-delete-buttons">
-                                        <div className="phone-contact-edit-button"><FaPen /></div>
-                                        <div className="phone-contact-delete-button"><FaTrash /></div>
-                                    </div>
                                 </div>
                             ))
                         ) : (
