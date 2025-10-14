@@ -18,8 +18,7 @@ router.post('/callStart', urlencodedParser, (req, res) => {
 
     twiml.start().transcription({
         statusCallbackUrl: url,
-        statusCallbackMethod: 'POST',
-        track: 'both_tracks',
+        statusCallbackMethod: "POST",
     });
 
     twiml.say(config.answerMessage);
