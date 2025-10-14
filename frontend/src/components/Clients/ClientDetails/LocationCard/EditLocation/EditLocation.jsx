@@ -201,7 +201,7 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
                     </div>
                     <div className="form-buttons">
                         <button type="submit" className="submit-button" disabled={disabled}>Save Changes</button>
-                        <button type="button" className="cancel-button" onClick={() => { setLocationAddedChecker(false); closeModal(); }}>Cancel</button>
+                        <button type="button" className="cancel-button" onClick={() => { closeModal(); }}>Cancel</button>
                     </div>
                 </form>
             </div>

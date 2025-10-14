@@ -1,6 +1,6 @@
 import { FaPen, FaAddressBook } from "react-icons/fa6";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import OpenModalMenuItem from "../../../Navigation/OpenModalMenuItem";
 import LocationContactInfo from "./LocationContactInfo";
