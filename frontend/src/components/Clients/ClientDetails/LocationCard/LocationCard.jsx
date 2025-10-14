@@ -5,7 +5,7 @@ import LocationContactInfo from "./LocationContactInfo";
 
 import "./LocationCard.scss";
 
-export default function LocationCard({ location }) {
+export default function LocationCard({ location}) {
     return (
         <div className="location-card">
             <div className="location-name">
@@ -14,7 +14,7 @@ export default function LocationCard({ location }) {
                     <div className="spacer">
                         <div className="location-contact-info">
                             <OpenModalMenuItem
-                                modalComponent={<LocationContactInfo contactInfo={{ emails: location.emails, phoneNumbers: location.phoneNumbers }} />}
+                                modalComponent={<LocationContactInfo contactInfo={{ phoneNumbers: location.phoneNumbers, emails: location.emails }} />}
                                 dismisable={true}
                             >
                                 <FaAddressBook />
@@ -22,7 +22,7 @@ export default function LocationCard({ location }) {
                         </div>
                         <div className="edit-location-button">
                             <OpenModalMenuItem
-                                modalComponent={<LocationContactInfo contactInfo={{ emails: location.emails, phoneNumbers: location.phoneNumbers }} />}
+                                modalComponent={<LocationContactInfo contactInfo={{ phoneNumbers: location.phoneNumbers, emails: location.emails }} />}
                                 dismisable={true}
                             >
                                 <FaPen />

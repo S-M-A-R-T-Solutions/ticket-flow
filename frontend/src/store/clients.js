@@ -7,6 +7,7 @@ const GET_ALL_LOCATIONS_OF_A_CLIENT = 'clients/getAllLocationsOfAClient';
 const GET_ONE_CLIENT = 'clients/getOneClient';
 const ADD_CLIENT = 'clients/addClient';
 const ADD_LOCATION_TO_A_CLIENT = 'clients/addLocationToAClient';
+
 const EDIT_CLIENT = 'clients/editClient';
 const DELETE_CLIENT = 'clients/deleteClient';
 
@@ -117,6 +118,8 @@ export const addLocationToAClientThunk = (clientId, location) => async (dispatch
     const newLocation = await res.json();
     dispatch(addLocationToClient(newLocation));
 };
+
+
 
 export const editClientThunk = (clientId, formData) => async (dispatch) => {
     const res = await csrfFetch(`/api/clients/${clientId}`, {

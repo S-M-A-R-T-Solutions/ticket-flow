@@ -117,7 +117,7 @@ export default function ClientDetails() {
                                     {client.locations && client.locations.length > 0 ? (
                                         client.locations.map(location => (
                                             // Add Modal to Open Location's Contact Phones and Emails, then add "Add Contact Information" inside that modal
-                                            <LocationCard key={location.id} location={location} />
+                                            <LocationCard key={location.id} location={location} clientId={client.id} />
                                         ))
                                     ) : (
                                         <p>No locations available for this client.</p>

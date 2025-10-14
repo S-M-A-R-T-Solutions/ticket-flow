@@ -4,35 +4,47 @@ import { formatPhoneNumber } from "../../../../../utils/helperFunctions";
 
 import "./LocationContactInfo.scss";
 
+import { FaPen, FaTrash } from "react-icons/fa";
+
 export default function LocationContactInfo({ contactInfo }) {
+
+    const phones = contactInfo?.phoneNumbers;
+    const emails = contactInfo?.emails;
+
     return (
-        <div className="location-contact-info">
-            <h4>Contact Information</h4>
-            {(contactInfo.emails && contactInfo.emails.length > 0) || (contactInfo.phoneNumbers && contactInfo.phoneNumbers.length > 0) ? (
+        <div className="location-contact-info-wrapper">
+            <h1>Contact Information</h1>
+            {(emails && emails.length > 0) || (phones && phones.length > 0) ? (
                 <div className="contact-info-details">
                     <div className="contact-phone-number-list">
-                        {contactInfo.phoneNumbers && contactInfo.phoneNumbers.length > 0 ? (
-                            contactInfo.phoneNumbers.map((phone, index) => (
-                                <div className="phone-number" key={index} onClick={() => {
+                        {phones && phones.length > 0 ? (
+                            phones.map((phone, index) => (
+                                <div className="phone-number-element" key={index} onClick={() => {
                                     window.location.href = `tel:${phone.phoneNumber}`;
                                 }}>
-                                    <div className="phone-button">
-                                        <FaPhone />
+                                    <div className="phone-section">
+                                        <div className="phone-button">
+                                            <FaPhone />
+                                        </div>
+                                        <div className="phone-number-and-title">
+                                            <span className="phone-type-label">{phone.phoneType}</span>
+                                            <span className="phone-number-label">{formatPhoneNumber(phone.phoneNumber)}</span>
+                                        </div>
                                     </div>
-                                    <div className="phone-number-and-title">
-                                        <span className="phone-type-label">{phone.phoneType}</span>
-                                        <span className="phone-number-label">{formatPhoneNumber(phone.phoneNumber)}</span>
+                                    <div className="edit-delete-buttons">
+                                        <div className="phone-contact-edit-button"><FaPen /></div>
+                                        <div className="phone-contact-delete-button"><FaTrash /></div>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p></p>
+                            <p>No Phone Numbers</p>
                         )}
                     </div>
                     <div className="contact-email-list">
-                        {contactInfo.emails && contactInfo.emails.length > 0 ? (
-                            contactInfo.emails.map((email, index) => (
-                                <div className="email-address" key={index} onClick={() => {
+                        {emails && emails.length > 0 ? (
+                            emails.map((email, index) => (
+                                <div className="email-address-element" key={index} onClick={() => {
                                     window.location.href = `mailto:${email.email}`;
                                 }}>
                                     <div className="email-button">
@@ -45,7 +57,7 @@ export default function LocationContactInfo({ contactInfo }) {
                                 </div>
                             ))
                         ) : (
-                            <p></p>
+                            <p>No Email Adresses</p>
                         )}
                     </div>
                 </div>
