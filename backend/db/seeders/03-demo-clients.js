@@ -40,6 +40,13 @@ module.exports = {
         "companyName": "SmartTech",
         "email": "david.martinez@smarttech.net",
         "phone": "+16549873210"
+      },
+      {
+        "firstName": "Michel",
+        "lastName": "García",
+        "companyName": "",
+        "email": "michelgr@smarttech.net",
+        "phone": "+13059541866"
       }
     ], options)
   },
@@ -53,6 +60,7 @@ module.exports = {
           "janesmith@techsolutions.com", "mjohnson@itinnovators.io", "emilydavis@aa.io",
           "david.martinez@smarttech.net", "sarahlee@innovativesolutions.org", "jamesbrown@aa.io",
           "lindagarcia@techhub.com", "robertwilson@aa.io", "jtaylor@nextgentech.co", "wanderson@futureit.com",
+          "michelgr@smarttech.net",
         ]
       }
     })

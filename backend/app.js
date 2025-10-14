@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { ValidationError } = require('sequelize');
 require('express-async-errors');
+const publicWebhookPaths = require('./routes/api/integrations/twilio').publicWebhookPaths;
 
 const { environment } = require('./config');
 const routes = require('./routes');
@@ -38,10 +39,6 @@ const csrfProtection = csurf({
 
 app.use((req, res, next) => {
     // Skip CSRF for puiblic webhooks
-    const publicWebhookPaths = [
-        '/api/integrations/twilio/callStart',
-        '/api/integrations/twilio/callStatus',
-    ];
     if (publicWebhookPaths.includes(req.path)) {
         return next();
     }

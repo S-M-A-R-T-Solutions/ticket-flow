@@ -10,6 +10,12 @@ const sequelize = require('../../../db/models').sequelize;
 
 const urlencodedParser = express.urlencoded({ extended: true });
 
+const publicWebhookPaths = [
+    '/api/integrations/twilio/callStart',
+    '/api/integrations/twilio/callStatus',
+    '/api/integrations/twilio/transcription',
+];
+
 router.post('/callStart', urlencodedParser, (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
     const pbx = config.pbxNumber;
@@ -92,4 +98,4 @@ router.post('/transcription', urlencodedParser, (req, res) => {
     res.sendStatus(200);
 });
 
-module.exports = router;
+module.exports = { router, publicWebhookPaths };
