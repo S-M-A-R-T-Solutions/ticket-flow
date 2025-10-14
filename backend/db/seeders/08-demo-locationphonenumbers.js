@@ -13,17 +13,17 @@ module.exports = {
     await LocationPhoneNumber.bulkCreate([
       {
         locationId: 1,
-        phoneNumber: '555-1234',
+        phoneNumber: '+11234567890',
         phoneType: 'Office'
       },
       {
         locationId: 1,
-        phoneNumber: '555-5678',
+        phoneNumber: '+15555556789',
         phoneType: 'Fax'
       },
       {
         locationId: 2,
-        phoneNumber: '555-8765',
+        phoneNumber: '+15555876543',
         phoneType: 'Office'
       }
     ], options)

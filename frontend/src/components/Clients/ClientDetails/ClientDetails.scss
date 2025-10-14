@@ -4,6 +4,14 @@
 
     width: 100%;
 
+    .client-details-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
     .client-title {
         display: flex;
         flex-direction: row;
@@ -33,70 +41,147 @@
 
             .company-tag {
                 font-size: 14px;
-                opacity: 0.7;
                 background-color: var(--jonquil);
+                padding: 5px 8px;
+                border-radius: 8px;
+                color: var(--text-color-inverted);
+                width: fit-content;
             }
 
             .individual-tag {
                 width: fit-content;
                 font-size: 14px;
-                opacity: 0.7;
                 background-color: var(--ultra-violet);
                 padding: 5px 8px;
                 border-radius: 8px;
+                color: var(--light-white);
+                width: fit-content;
             }
         }
     }
 
-    .client-details-info {
+    .edit-client-button {
         display: flex;
-        flex-direction: column;
-        border-radius: 8px;
-        gap: 16px;
-        margin-bottom: 20px;
-        background-color: var(--surface-color);
-        padding: 20px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        margin-left: 0px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: var(--button-bg-color);
+        color: var(--button-text-color);
+        cursor: pointer;
+        transition: background-color 0.3s ease;
 
-        .phone-number, .email-address {
-            position: relative;
-            z-index: 1;
+        &:hover {
+            background-color: var(--tiffany-blue);
+        }
+    }
+
+    .client-details-body {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+
+        .client-details-info {
             display: flex;
-            width: fit-content;
-            align-items: center;
-            justify-content: start;
-            gap: 8px;
-            padding: 0px 8px;
-            cursor: pointer;
+            flex-direction: column;
+            border-radius: 8px;
+            gap: 16px;
+            margin-bottom: 20px;
+            background-color: var(--surface-color);
+            padding: 20px;
 
-            &::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: var(--text-color);
-            border-radius: 50px;
-            opacity: 0.08;
-            z-index: -1;
-            }
+            .phone-number, .email-address {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                width: fit-content;
+                align-items: center;
+                justify-content: start;
+                gap: 8px;
+                padding: 0px 10px 0px 0px;
+                cursor: pointer;
 
-            &:hover {
                 &::before {
-                    opacity: 0.12;
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: var(--text-color);
+                border-radius: 50px;
+                opacity: 0.08;
+                z-index: -1;
+                }
+
+                &:hover {
+                    &::before {
+                        opacity: 0.12;
+                    }
+                }
+
+                .phone-button, .email-button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 100%;
+                    margin-left: 0px;
+                    padding: 10px;
+                    font-size: 16px;
+                    background-color: var(--button-bg-color);
+                    color: var(--button-text-color);
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+
+                    &:hover {
+                        background-color: var(--tiffany-blue);
+                    }
+                }
+            }
+        }
+
+        .locations-section {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            border-radius: 8px;
+            gap: 16px;
+            margin-bottom: 20px;
+            background-color: var(--surface-color);
+            padding: 16px 20px 20px 20px;
+
+            .locations-header {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0;
+                margin-bottom: 10px;
+
+                .add-location-button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 8px;
+                    margin-left: 0px;
+                    padding: 10px;
+                    gap: 8px;
+                    font-size: 16px;
+                    background-color: var(--button-bg-color);
+                    color: var(--button-text-color);
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+
+                    &:hover {
+                        background-color: var(--tiffany-blue);
+                    }
                 }
             }
 
-            .phone-button, .email-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 100%;
-                margin-left: 0px;
-                padding: 10px;
-                font-size: 16px;
-                background-color: var(--button-bg-color);
-                color: var(--button-text-color);
-                cursor: pointer;
-                transition: background-color 0.3s ease;
+            .locations-list {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(250px, 1fr));
+                gap: 16px;
             }
         }
     }

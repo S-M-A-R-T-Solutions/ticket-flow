@@ -3,6 +3,7 @@ import { csrfFetch } from './csrf';
 //Constants
 const GET_ALL_CLIENTS = 'clients/getAllClients';
 const GET_TOTAL_CLIENTS_AMOUNT = 'clients/getTotalClientsAmount';
+const GET_ALL_LOCATIONS_OF_A_CLIENT = 'clients/getAllLocationsOfAClient';
 const GET_ONE_CLIENT = 'clients/getOneClient';
 const ADD_CLIENT = 'clients/addClient';
 const EDIT_CLIENT = 'clients/editClient';
@@ -22,6 +23,11 @@ const getTotalClientsAmount = (amount) => ({
 const getOneClient = (client) => ({
     type: GET_ONE_CLIENT,
     payload: client
+});
+
+const getAllLocationsOfAClient = (locations) => ({
+    type: GET_ALL_LOCATIONS_OF_A_CLIENT,
+    payload: locations
 });
 
 const addClient = (client) => ({
@@ -56,6 +62,12 @@ export const getOneClientThunk = (clientId) => async (dispatch) => {
     const res = await csrfFetch(`/api/clients/${clientId}`);
     const client = await res.json();
     dispatch(getOneClient(client));
+};
+
+export const getAllLocationsOfAClientThunk = (clientId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/clients/${clientId}/locations`);
+    const locations = await res.json();
+    dispatch(getAllLocationsOfAClient(locations));
 };
 
 export const addClientThunk = (client) => async (dispatch) => {
@@ -122,6 +134,9 @@ const clientsReducer = (state = initialState, action) => {
         }
         case GET_ONE_CLIENT: {
             return { ...state, client: action.payload };
+        }
+        case GET_ALL_LOCATIONS_OF_A_CLIENT: {
+            return { ...state, client: { ...state.client, locations: action.payload } };
         }
         case ADD_CLIENT: {
             return { ...state, allClients: [...state.allClients, action.payload] };
