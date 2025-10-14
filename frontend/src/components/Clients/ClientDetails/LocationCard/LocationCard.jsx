@@ -1,6 +1,4 @@
-import { FaPen, FaPhone, FaEnvelope } from "react-icons/fa6";
-
-import { formatPhoneNumber } from "../../../../utils/helperFunctions";
+import { FaPen, FaAddressBook } from "react-icons/fa6";
 
 import OpenModalMenuItem from "../../../Navigation/OpenModalMenuItem";
 import LocationContactInfo from "./LocationContactInfo";
@@ -13,8 +11,23 @@ export default function LocationCard({ location }) {
             <div className="location-name">
                 <div className="location-name-and-edit">
                     <h3>{location.name}</h3>
-                    <div className="edit-location-button">
-                        <FaPen />
+                    <div className="spacer">
+                        <div className="location-contact-info">
+                            <OpenModalMenuItem
+                                modalComponent={<LocationContactInfo contactInfo={{ emails: location.emails, phoneNumbers: location.phoneNumbers }} />}
+                                dismisable={true}
+                            >
+                                <FaAddressBook />
+                            </OpenModalMenuItem>
+                        </div>
+                        <div className="edit-location-button">
+                            <OpenModalMenuItem
+                                modalComponent={<LocationContactInfo contactInfo={{ emails: location.emails, phoneNumbers: location.phoneNumbers }} />}
+                                dismisable={true}
+                            >
+                                <FaPen />
+                            </OpenModalMenuItem>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -22,19 +35,6 @@ export default function LocationCard({ location }) {
                 <p>{location.addressLine1} {location.addressLine2 && `, ${location.addressLine2}`} {location.city}, {location.state} {location.zipcode}</p>
             </div>
             <div className="divider"></div>
-            <div className="location-contact-info">
-                <OpenModalMenuItem
-                    style={{ maxWidth: '400px' }}
-                    modalComponent={<LocationContactInfo contactInfo={{ emails: location.emails, phoneNumbers: location.phoneNumbers }} />}
-                    dismisable={true}
-                >
-                    <div className="see-contact-info-button">
-                        <div>
-                            Contact Information
-                        </div>
-                    </div>
-                </OpenModalMenuItem>
-            </div>
         </div>
     );
 }
