@@ -1,88 +1,9 @@
-.location-card {
+.location-contact-info {
     display: flex;
     flex-direction: column;
-    background-color: var(--background-color);
-    border-radius: 8px;
-    padding: 16px;
-    margin: 12px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    gap: 16px;
-    transition: transform 0.2s ease-in;
+    gap: 8px;
 
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .location-name {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 4px;
-        color: var(--text-color);
-        
-        .location-name-and-edit {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-
-            .edit-location-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 100%;
-                padding: 10px 10px;
-                font-size: 14px;
-                gap: 4px;
-                background-color: var(--button-bg-color);
-                color: var(--button-text-color);
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-
-                &:hover {
-                    background-color: var(--tiffany-blue);
-                }
-            }
-        }
-
-        
-        .location-address {
-            font-size: 14px;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-    }
-    .divider {
-        padding-bottom: 10px;
-        border-bottom: 2px dashed var(--text-color);
-        opacity: 0.7;
-    }
-
-    .location-contact-info {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-
-        .see-contact-info-button {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: fit-content;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 16px;
-            background-color: var(--button-bg-color);
-            color: var(--button-text-color);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-
-            &:hover {
-                background-color: var(--tiffany-blue);
-            }
-                        
-        }
-
-        .contact-info-details {
+    .contact-info-details {
             display: flex;
             flex-direction: row;
             justify-content: start;
@@ -160,13 +81,12 @@
                 }
             }
         }
-    }
-}
 
-.no-contact-info {
-    font-size: 14px;
-    color: var(--text-color);
-    opacity: 0.7;
-    font-style: italic;
-    padding: 8px 16px;
+    .no-contact-info {
+        font-size: 14px;
+        color: var(--text-color);
+        opacity: 0.7;
+        font-style: italic;
+        padding: 8px 16px;
+    }
 }

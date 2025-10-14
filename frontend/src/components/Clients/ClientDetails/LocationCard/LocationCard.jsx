@@ -2,6 +2,9 @@ import { FaPen, FaPhone, FaEnvelope } from "react-icons/fa6";
 
 import { formatPhoneNumber } from "../../../../utils/helperFunctions";
 
+import OpenModalMenuItem from "../../../Navigation/OpenModalMenuItem";
+import LocationContactInfo from "./LocationContactInfo";
+
 import "./LocationCard.scss";
 
 export default function LocationCard({ location }) {
@@ -20,51 +23,17 @@ export default function LocationCard({ location }) {
             </div>
             <div className="divider"></div>
             <div className="location-contact-info">
-                <h4>Contact Information</h4>
-                {(location.emails && location.emails.length > 0) || (location.phoneNumbers && location.phoneNumbers.length > 0) ? (
-                    <div className="contact-info-details">
-                        <div className="contact-phone-number-list">
-                            {location.phoneNumbers && location.phoneNumbers.length > 0 ? (
-                                location.phoneNumbers.map((phone, index) => (
-                                    <div className="phone-number" key={index} onClick={() => {
-                                        window.location.href = `tel:${phone.phoneNumber}`;
-                                    }}>
-                                        <div className="phone-button">
-                                            <FaPhone />
-                                        </div>
-                                        <div className="phone-number-and-title">
-                                            <span className="phone-type-label">{phone.phoneType}</span>
-                                            <span className="phone-number-label">{formatPhoneNumber(phone.phoneNumber)}</span>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p></p>
-                            )}
-                        </div>
-                        <div className="contact-email-list">
-                            {location.emails && location.emails.length > 0 ? (
-                                location.emails.map((email, index) => (
-                                    <div className="email-address" key={index} onClick={() => {
-                                        window.location.href = `mailto:${email.emailAddress}`;
-                                    }}>
-                                        <div className="email-button">
-                                            <FaEnvelope />
-                                        </div>
-                                        <div className="email-address-and-title">
-                                            <span className="email-type-label">{email.emailType}</span>
-                                            <span className="email-label">{email.email}</span>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p></p>
-                            )}
+                <OpenModalMenuItem
+                    style={{ maxWidth: '400px' }}
+                    modalComponent={<LocationContactInfo contactInfo={{ emails: location.emails, phoneNumbers: location.phoneNumbers }} />}
+                    dismisable={true}
+                >
+                    <div className="see-contact-info-button">
+                        <div>
+                            Contact Information
                         </div>
                     </div>
-                ) : (
-                    <p className="no-contact-info">No contact information available for this location.</p>
-                )}
+                </OpenModalMenuItem>
             </div>
         </div>
     );

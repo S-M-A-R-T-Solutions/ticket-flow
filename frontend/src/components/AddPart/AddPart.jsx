@@ -6,7 +6,7 @@ import './AddPart.scss';
 
 import { addPartThunk } from "../../store/parts";
 
-export default function AddPart({ ticketId, setPartsChecker }) {
+export default function AddPart({ setPartsChecker }) {
     const dispatch = useDispatch();
 
     const [name, setName] = useState('');
