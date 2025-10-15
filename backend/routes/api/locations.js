@@ -46,8 +46,8 @@ router.post('/:locationId/phone-numbers', async (req, res, next) => {
 
         const newPhoneNumber = await LocationPhoneNumber.create({
             locationId,
-            phoneNumber,
-            phoneType
+            phoneNumber: phoneNumber,
+            phoneType: phoneType
         });
 
         return res.status(201).json(newPhoneNumber);

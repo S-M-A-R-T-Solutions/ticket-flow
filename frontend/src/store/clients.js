@@ -193,30 +193,30 @@ export const editLocationThunk = (clientId, locationId, location) => async (disp
     dispatch(editLocation(updatedLocation));
 };
 
-export const addPhoneNumberToALocationThunk = (locationId, phoneNumber) => async (dispatch) => {
+export const addPhoneNumberToALocationThunk = (locationId, phoneInfo) => async (dispatch) => {
     const res = await csrfFetch(`/api/locations/${locationId}/phone-numbers`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(phoneNumber)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(phoneInfo)
     });
 
     const newPhoneNumber = await res.json();
-    dispatch(addPhoneNumberToALocation(newPhoneNumber));
+
+    // 👇 attach locationId so reducer can match correctly
+    dispatch(addPhoneNumberToALocation({ ...newPhoneNumber, locationId }));
 };
 
 export const addEmailToALocationThunk = (locationId, email) => async (dispatch) => {
     const res = await csrfFetch(`/api/locations/${locationId}/emails`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(email)
     });
 
     const newEmail = await res.json();
-    dispatch(addEmailToALocation(newEmail));
+
+    // 👇 attach locationId so reducer knows where to add it
+    dispatch(addEmailToALocation({ ...newEmail, locationId }));
 };
 
 export const deletePhoneNumberFromALocationThunk = (phoneNumberId) => async (dispatch) => {
