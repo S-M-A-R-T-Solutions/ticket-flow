@@ -47,7 +47,7 @@ export default function LocationContactInfo({ locationId }) {
     };
 
     const handleDeletePhoneNumber = (phoneId) => {
-        dispatch(deletePhoneNumberFromALocationThunk(phoneId));
+        dispatch(deletePhoneNumberFromALocationThunk(locationId, phoneId));
     };
 
     const handleAddEmail = (e) => {

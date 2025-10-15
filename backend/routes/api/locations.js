@@ -56,7 +56,7 @@ router.post('/:locationId/phone-numbers', async (req, res, next) => {
     }
 });
 
-//Remove a Phone Number of a Location
+// Remove a Phone Number of a Location
 router.delete('/:locationId/phone-numbers/:phoneNumberId', async (req, res, next) => {
     const { locationId, phoneNumberId } = req.params;
 
@@ -73,7 +73,11 @@ router.delete('/:locationId/phone-numbers/:phoneNumberId', async (req, res, next
 
         await phoneNumber.destroy();
 
-        return res.status(200).json({ message: 'Phone number removed from location' });
+        // ✅ Return data your reducer needs
+        return res.status(200).json({
+            id: phoneNumber.id,
+            locationId: Number(locationId),
+        });
     } catch (error) {
         next(error);
     }

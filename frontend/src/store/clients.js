@@ -219,12 +219,15 @@ export const addEmailToALocationThunk = (locationId, email) => async (dispatch) 
     dispatch(addEmailToALocation({ ...newEmail, locationId }));
 };
 
-export const deletePhoneNumberFromALocationThunk = (phoneNumberId) => async (dispatch) => {
-    const res = await csrfFetch(`/api/locations/phone-numbers/${phoneNumberId}`, {
+export const deletePhoneNumberFromALocationThunk = (locationId, phoneNumberId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/locations/${locationId}/phone-numbers/${phoneNumberId}`, {
         method: 'DELETE'
     });
+
     const deletedPhoneNumber = await res.json();
-    dispatch(deletePhoneNumberFromALocation(deletedPhoneNumber));
+
+    // 👇 Attach locationId so the reducer can match correctly
+    dispatch(deletePhoneNumberFromALocation({ ...deletedPhoneNumber, locationId }));
 };
 
 export const deleteEmailFromALocationThunk = (emailId) => async (dispatch) => {
