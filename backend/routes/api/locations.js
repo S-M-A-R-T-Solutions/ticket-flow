@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Location, LocationPhoneNumber } = require('@db/models');
+const { Location, LocationPhoneNumber, locationEmail } = require('@db/models');
 
 const router = express.Router();
 
@@ -73,9 +73,59 @@ router.delete('/:locationId/phone-numbers/:phoneNumberId', async (req, res, next
 
         await phoneNumber.destroy();
 
-        // ✅ Return data your reducer needs
+        // ✅ Return data the reducer needs
         return res.status(200).json({
             id: phoneNumber.id,
+            locationId: Number(locationId),
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Add an Email to a Location
+router.post('/:locationId/emails', async (req, res, next) => {
+    const { locationId } = req.params;
+    const { email, emailType } = req.body;
+
+    try {
+        const location = await Location.findByPk(locationId);
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }
+
+        const newEmail = await locationEmail.create({
+            locationId,
+            email,
+            emailType
+        });
+
+        return res.status(201).json(newEmail);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Remove an Email from a Location
+router.delete('/:locationId/emails/:emailId', async (req, res, next) => {
+    const { locationId, emailId } = req.params;
+
+    try {
+        const location = await Location.findByPk(locationId);
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }
+
+        const email = await location.getEmails({ where: { id: emailId } });
+        if (!email || email.length === 0) {
+            return res.status(404).json({ message: 'Email not found' });
+        }
+
+        await email[0].destroy();
+
+        // ✅ Return data the reducer needs
+        return res.status(200).json({
+            id: email[0].id,
             locationId: Number(locationId),
         });
     } catch (error) {

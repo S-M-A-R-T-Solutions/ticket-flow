@@ -54,7 +54,7 @@ export default function LocationContactInfo({ locationId }) {
         e.preventDefault();
         if (!email || !emailType) return;
 
-        dispatch(addEmailToALocationThunk({ locationId, email, emailType }));
+        dispatch(addEmailToALocationThunk(locationId, {email, emailType }));
         setEmail("");
         setEmailType("");
         setShowAddEmail(false);
