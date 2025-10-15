@@ -2,7 +2,7 @@
     background-color: var(--surface-color);
     color: var(--text-color);
     border-radius: 16px;
-    width: 400px;
+    width: 800px;
     margin: 0 auto;
     padding: 20px 28px;
     animation: fadeIn 0.25s ease-in-out;
@@ -21,27 +21,30 @@
             height: 3px;
             background-color: var(--special-btn);
             border-radius: 2px;
-            margin: 8px auto 0 auto;
+            margin: 8px auto 0;
         }
-    }
-
-    .no-contact-info {
-        text-align: center;
-        font-size: 14px;
-        opacity: 0.8;
-        margin-top: 10px;
     }
 
     .contact-info-details {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 20px;
 
+        // --- Common section style (Phones & Emails)
         .contact-phone-number-list,
         .contact-email-list {
             display: flex;
             flex-direction: column;
+            width: 50%;
             gap: 10px;
+
+            h3 {
+                text-align: center;
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--text-color);
+                margin-bottom: 4px;
+            }
 
             p {
                 text-align: center;
@@ -50,111 +53,75 @@
                 opacity: 0.7;
             }
 
-            .add-phone-number-button,
-            .add-email-address-button {
+            .add-button {
                 display: flex;
-                flex-direction: column;
-                width: fit-content;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
                 background-color: transparent;
-                border: none;
+                border: 1px solid var(--tiffany-blue);
                 color: var(--tiffany-blue);
                 font-size: 14px;
                 cursor: pointer;
                 margin: 10px auto;
-                padding: 8px 12px;
+                padding: 8px 14px;
                 border-radius: 8px;
-                transition: background-color 0.3s ease;
-                
+                transition: background-color 0.3s ease, color 0.3s ease;
+
                 &:hover {
-                    border: solid 1px var(--tiffany-blue);
+                    background-color: var(--tiffany-blue);
+                    color: white;
                 }
 
-                &:focus {
-                    outline: none;
+                svg {
+                    font-size: 16px;
                 }
             }
         }
 
+        // --- Phone & Email item elements
         .phone-number-element,
         .email-address-element {
             position: relative;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            padding: 15px;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 12px;
             cursor: pointer;
-            z-index: 1;
+            transition: background-color 0.3s ease;
 
-            &::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background-color: var(--text-color);
-                border-radius: 50px;
-                opacity: 0.08;
-                z-index: -1;
-                transition: opacity 0.3s ease;
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.05);
             }
 
-            &:hover::before {
-                opacity: 0.12;
-            }
-
-            .phone-section, .email-section {
+            .phone-section,
+            .email-section {
+                width: 90%;
                 display: flex;
                 align-items: center;
                 gap: 12px;
                 flex-grow: 1;
-            }
 
-            .edit-delete-buttons {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                color: var(--text-color);
-                transition: opacity 0.3s ease;
-                
-                
-                .phone-contact-edit-button, .phone-contact-delete-button,
-                .email-contact-edit-button, .email-contact-delete-button {
+                .phone-button,
+                .email-button {
+                    background-color: var(--button-bg-color);
+                    color: var(--light-white);
+                    padding: 10px;
+                    border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    border-radius: 100%;
-                    padding: 6px;
-                    font-size: 12px;
-                    color: var(--text-color);
-                    opacity: 0.7;
-                    cursor: pointer;
-                    transition: background-color 0.3s ease;
-                    
+                    font-size: 14px;
+                    min-width: 36px;
+                    min-height: 36px;
+                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+                    transition: transform 0.2s ease, background-color 0.2s ease;
+
                     &:hover {
-                        // background-color: var(--tiffany-blue);
-                        opacity: 1;
-                        color: var(--light-white);
+                        background-color: var(--tiffany-blue);
+                        transform: scale(1.1);
                     }
-                }
-
-            }
-
-            .phone-button,
-            .email-button {
-                background-color: var(--button-bg-color);
-                color: var(--light-white);
-                padding: 10px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
-                min-width: 36px;
-                min-height: 36px;
-                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-
-                &:hover {
-                    background-color: var(--tiffany-blue);
-                    transform: scale(1.1);
                 }
             }
 
@@ -163,12 +130,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 2px;
-                
-                span {
-                    font-size: 13px;
-                    color: var(--light-black);
-                }
-                
+
                 .phone-type-label,
                 .email-type-label {
                     font-size: 11px;
@@ -177,11 +139,87 @@
                     opacity: 0.6;
                     letter-spacing: 0.5px;
                 }
-                
+
                 .phone-number-label,
                 .email-label {
+                    font-size: 13px;
                     font-weight: 500;
                     color: var(--dark-text, var(--text-color));
+                }
+            }
+
+            .delete-button {
+                width: 10%;
+                background: transparent;
+                border: none;
+                color: var(--danger-color, #c33);
+                font-size: 18px;
+                cursor: pointer;
+                padding: 4px;
+                border-radius: 6px;
+                transition: background-color 0.2s ease;
+
+                &:hover {
+                    background-color: rgba(255, 0, 0, 0.1);
+                }
+            }
+        }
+
+        // --- Add forms (for phone/email)
+        .add-phone-form,
+        .add-email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px;
+            background-color: var(--surface-lighter, rgba(0, 0, 0, 0.03));
+            border-radius: 12px;
+
+            input {
+                background-color: var(--light-white);
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                padding: 8px 10px;
+                font-size: 14px;
+                color: var(--text-color);
+                outline: none;
+
+                &:focus {
+                    border-color: var(--tiffany-blue);
+                }
+            }
+
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+
+                button {
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 14px;
+                    font-weight: 500;
+
+                    &:first-child {
+                        background-color: var(--tiffany-blue);
+                        color: white;
+
+                        &:hover {
+                            opacity: 0.9;
+                        }
+                    }
+
+                    &:last-child {
+                        background-color: transparent;
+                        color: var(--text-color);
+                        border: 1px solid var(--light-black);
+
+                        &:hover {
+                            background-color: rgba(0, 0, 0, 0.05);
+                        }
+                    }
                 }
             }
         }
@@ -198,12 +236,8 @@
         }
     }
 
-    /* Dark mode adjustments */
+    /* Optional dark mode overrides */
     .dark-mode & {
         background-color: var(--surface-dark);
-        .phone-number,
-        .email-address {
-            background-color: var(--box-bg);
-        }
     }
 }

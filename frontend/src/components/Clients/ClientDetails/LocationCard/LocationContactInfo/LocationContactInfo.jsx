@@ -1,6 +1,11 @@
 import { FaPhone, FaEnvelope } from "react-icons/fa6";
+import { MdOutlineAddIcCall } from "react-icons/md";
+import { LuMailPlus } from "react-icons/lu";
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { IoTrashOutline } from "react-icons/io5";
+
 import {
     addPhoneNumberToALocationThunk,
     deletePhoneNumberFromALocationThunk,
@@ -8,7 +13,9 @@ import {
     deleteEmailFromALocationThunk,
     getLocationThunk
 } from "../../../../../store/clients";
+
 import { tryFormatPhoneNumber, formatPhoneNumber } from "../../../../../utils/helperFunctions";
+
 import "./LocationContactInfo.scss";
 
 export default function LocationContactInfo({ locationId }) {
@@ -91,7 +98,7 @@ export default function LocationContactInfo({ locationId }) {
                                         handleDeletePhoneNumber(phone.id);
                                     }}
                                 >
-                                    Delete
+                                    <IoTrashOutline />
                                 </button>
                             </div>
                         ))
@@ -101,7 +108,7 @@ export default function LocationContactInfo({ locationId }) {
 
                     {!showAddPhone ? (
                         <button className="add-button" onClick={() => setShowAddPhone(true)}>
-                            + Add Phone Number
+                            <MdOutlineAddIcCall /> Add Phone
                         </button>
                     ) : (
                         <form className="add-phone-form" onSubmit={handleAddPhoneNumber}>
@@ -151,7 +158,7 @@ export default function LocationContactInfo({ locationId }) {
                                         handleDeleteEmail(emailObj.id);
                                     }}
                                 >
-                                    Delete
+                                    <IoTrashOutline />
                                 </button>
                             </div>
                         ))
@@ -161,7 +168,7 @@ export default function LocationContactInfo({ locationId }) {
 
                     {!showAddEmail ? (
                         <button className="add-button" onClick={() => setShowAddEmail(true)}>
-                            + Add Email Address
+                            <LuMailPlus /> Add Email
                         </button>
                     ) : (
                         <form className="add-email-form" onSubmit={handleAddEmail}>
