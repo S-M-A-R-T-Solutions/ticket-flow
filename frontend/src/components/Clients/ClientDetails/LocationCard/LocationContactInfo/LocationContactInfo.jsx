@@ -61,7 +61,7 @@ export default function LocationContactInfo({ locationId }) {
     };
 
     const handleDeleteEmail = (emailId) => {
-        dispatch(deleteEmailFromALocationThunk(emailId));
+        dispatch(deleteEmailFromALocationThunk(locationId, emailId));
     };
 
     return (

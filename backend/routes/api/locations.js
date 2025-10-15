@@ -116,16 +116,16 @@ router.delete('/:locationId/emails/:emailId', async (req, res, next) => {
             return res.status(404).json({ message: 'Location not found' });
         }
 
-        const email = await location.getEmails({ where: { id: emailId } });
+        const email = await locationEmail.findByPk(emailId);
         if (!email || email.length === 0) {
             return res.status(404).json({ message: 'Email not found' });
         }
 
-        await email[0].destroy();
+        await email.destroy();
 
         // ✅ Return data the reducer needs
         return res.status(200).json({
-            id: email[0].id,
+            id: email.id,
             locationId: Number(locationId),
         });
     } catch (error) {

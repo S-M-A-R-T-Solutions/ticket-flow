@@ -230,8 +230,8 @@ export const deletePhoneNumberFromALocationThunk = (locationId, phoneNumberId) =
     dispatch(deletePhoneNumberFromALocation({ ...deletedPhoneNumber, locationId }));
 };
 
-export const deleteEmailFromALocationThunk = (emailId) => async (dispatch) => {
-    const res = await csrfFetch(`/api/locations/emails/${emailId}`, {
+export const deleteEmailFromALocationThunk = (locationId, emailId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/locations/${locationId}/emails/${emailId}`, {
         method: 'DELETE'
     });
     const deletedEmail = await res.json();
