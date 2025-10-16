@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ticketId',
         onDelete: 'CASCADE'
       })
+      TwilioCall.hasMany(models.TwilioTranscription, {
+        foreignKey: 'callId',
+        onDelete: 'CASCADE'
+      })
     }
   }
   TwilioCall.init({
@@ -32,7 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     callSid: {
       type: DataTypes.STRING(64),
-      allowNull: false
+      allowNull: false,
+      unique: true,
     },
     to: {
       type: DataTypes.STRING(32),
@@ -48,7 +53,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     callDuration: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0,
+    },
+    callStatus: {
+      type: DataTypes.STRING(64),
+      allowNull: false,
+      defaultValue: 'started'
     },
     accountSid: {
       type: DataTypes.STRING(64),

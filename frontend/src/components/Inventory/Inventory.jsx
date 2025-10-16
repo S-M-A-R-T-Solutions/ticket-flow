@@ -69,6 +69,7 @@ export default function Inventory() {
                 <div className="spacer"></div>
 
                 <OpenModalMenuItem
+                    // style={{ width: "100%",maxWidth: '400px' }}
                     modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
                     onModalClose={onModalClose}
                     dismisable={false}

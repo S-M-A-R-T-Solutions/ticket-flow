@@ -10,7 +10,7 @@ import "./Clients.css";
 
 import { getAllClientsThunk, getTotalClientsAmountThunk } from "../../store/clients";
 import ClientCard from '../ClientCard/ClientCard';
-import AddClient from "../AddClient";
+import AddClient from "./AddClient"
 import { getMyTicketsThunk } from "../../store/tickets";
 import { getAllStatusThunk } from "../../store/status";
 
@@ -65,6 +65,7 @@ export default function Clients() {
                 <OpenModalMenuItem
                     modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
                     onModalClose={onModalClose}
+                    dismisable={false}
                 >
                     <button className="btn btn-add-item">
                         <FaCirclePlus /> Add Client

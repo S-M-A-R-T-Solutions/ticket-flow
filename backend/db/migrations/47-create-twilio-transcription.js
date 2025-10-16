@@ -8,58 +8,51 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('TwilioCalls', {
+    await queryInterface.createTable('TwilioTranscriptions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ticketId: {
+      callId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Tickets',
+          model: 'TwilioCalls',
           key: 'id'
         },
-        onDelete: 'CASCADE'
+        onDelete: "CASCADE"
       },
-      called: {
-        type: Sequelize.STRING(32),
-        allowNull: false
+      transcriptionSid: {
+        type: Sequelize.STRING(64),
+        allowNull: false,
       },
       callSid: {
         type: Sequelize.STRING(64),
-        allowNull: false,
-        unique: true,
-      },
-      to: {
-        type: Sequelize.STRING(32),
-        allowNull: false
-      },
-      callStatus: {
-        type: Sequelize.STRING(24),
-        allowNull: false
-      },
-      from: {
-        type: Sequelize.STRING(32),
-        allowNull: false
-      },
-      callDuration: {
-        type: Sequelize.INTEGER,
         allowNull: false
       },
       accountSid: {
         type: Sequelize.STRING(64),
         allowNull: false
       },
-      applicationSid: {
+      timestamp: {
         type: Sequelize.STRING(64),
-        allowNull: false
       },
-      caller: {
-        type: Sequelize.STRING(32),
-        allowNull: false
+      sequenceId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      transcriptionData: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        defaultValue: '',
+      },
+      final: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
@@ -74,7 +67,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = 'TwilioCalls';
+    options.tableName = 'TwilioTranscriptions';
     await queryInterface.dropTable(options);
   }
 };
