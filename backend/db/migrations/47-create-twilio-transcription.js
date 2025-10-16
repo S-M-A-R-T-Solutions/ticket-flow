@@ -26,7 +26,8 @@ module.exports = {
       },
       transcriptionSid: {
         type: Sequelize.STRING(64),
-        allowNull: false
+        allowNull: false,
+        unique: true,
       },
       callSid: {
         type: Sequelize.STRING(64),

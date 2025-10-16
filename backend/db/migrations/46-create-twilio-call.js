@@ -30,7 +30,8 @@ module.exports = {
       },
       callSid: {
         type: Sequelize.STRING(64),
-        allowNull: false
+        allowNull: false,
+        unique: true,
       },
       to: {
         type: Sequelize.STRING(32),

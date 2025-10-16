@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     transcriptionSid: {
       type: DataTypes.STRING(64),
-      allowNull: false
+      allowNull: false,
+      unique: true,
     },
     callSid: {
       type: DataTypes.STRING(64),

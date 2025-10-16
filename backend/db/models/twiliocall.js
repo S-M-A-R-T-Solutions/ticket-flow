@@ -36,7 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     callSid: {
       type: DataTypes.STRING(64),
-      allowNull: false
+      allowNull: false,
+      unique: true,
     },
     to: {
       type: DataTypes.STRING(32),
