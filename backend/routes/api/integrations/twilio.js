@@ -103,6 +103,8 @@ router.post('/callStart', urlencodedParser, async (req, res) => {
 
     twiml.start().transcription({
         statusCallbackUrl: url,
+        inboundTrackLabel: 'inbound',
+        outboundTrackLabel: 'outbound',
     });
 
     twiml.say(config.answerMessage);
@@ -146,6 +148,7 @@ async function insertTranscription(req) {
             callSid: CallSid,
             accountSid: AccountSid,
             timestamp: Timestamp,
+            transcriptionEvent: TranscriptionEvent,
             sequenceId: Number(SequenceId) || 0,
             transcriptionData: TranscriptionData || '',
             final: Final === 'true' ? true : false,

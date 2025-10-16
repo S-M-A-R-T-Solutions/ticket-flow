@@ -39,6 +39,9 @@ module.exports = {
       timestamp: {
         type: Sequelize.STRING(64),
       },
+      transcriptionEvent: {
+        type: Sequelize.STRING(64),
+      },
       sequenceId: {
         type: Sequelize.INTEGER,
         allowNull: false,
