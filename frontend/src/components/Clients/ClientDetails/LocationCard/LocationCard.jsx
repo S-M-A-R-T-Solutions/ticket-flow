@@ -22,7 +22,7 @@ export default function LocationCard({ location, setLocationChecker, locationInd
                     <div className="spacer">
                         <div className="location-contact-info">
                             <OpenModalMenuItem
-                                modalComponent={<LocationContactInfo contactInfo={{ phoneNumbers: location.phoneNumbers, emails: location.emails }} />}
+                                modalComponent={<LocationContactInfo locationId={location.id} contactInfo={{ phoneNumbers: location.phoneNumbers, emails: location.emails }} />}
                                 dismisable={true}
                             >
                                 <FaAddressBook />
