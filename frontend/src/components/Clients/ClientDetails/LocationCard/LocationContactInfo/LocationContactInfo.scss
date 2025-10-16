@@ -1,0 +1,185 @@
+.location-contact-info-wrapper {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border-radius: 16px;
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px 28px;
+    animation: fadeIn 0.25s ease-in-out;
+
+    h1 {
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: 24px;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background-color: var(--special-btn);
+            border-radius: 2px;
+            margin: 8px auto 0 auto;
+        }
+    }
+
+    .no-contact-info {
+        text-align: center;
+        font-size: 14px;
+        opacity: 0.8;
+        margin-top: 10px;
+    }
+
+    .contact-info-details {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .contact-phone-number-list,
+        .contact-email-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            p {
+                text-align: center;
+                font-size: 14px;
+                color: var(--light-black);
+                opacity: 0.7;
+            }
+        }
+
+        .phone-number-element,
+        .email-address-element {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            padding: 15px;
+            cursor: pointer;
+            z-index: 1;
+
+            &::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background-color: var(--text-color);
+                border-radius: 50px;
+                opacity: 0.08;
+                z-index: -1;
+                transition: opacity 0.3s ease;
+            }
+
+            &:hover::before {
+                opacity: 0.12;
+            }
+
+            .phone-section, .email-section {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-grow: 1;
+            }
+
+            .edit-delete-buttons {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: var(--text-color);
+                transition: opacity 0.3s ease;
+                
+                
+                .phone-contact-edit-button, .phone-contact-delete-button,
+                .email-contact-edit-button, .email-contact-delete-button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 100%;
+                    padding: 6px;
+                    font-size: 12px;
+                    color: var(--text-color);
+                    opacity: 0.7;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    
+                    &:hover {
+                        // background-color: var(--tiffany-blue);
+                        opacity: 1;
+                        color: var(--light-white);
+                    }
+                }
+
+            }
+
+            .phone-button,
+            .email-button {
+                background-color: var(--button-bg-color);
+                color: var(--light-white);
+                padding: 10px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                min-width: 36px;
+                min-height: 36px;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+
+                &:hover {
+                    background-color: var(--tiffany-blue);
+                    transform: scale(1.1);
+                }
+            }
+
+            .phone-number-and-title,
+            .email-address-and-title {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                
+                span {
+                    font-size: 13px;
+                    color: var(--light-black);
+                }
+                
+                .phone-type-label,
+                .email-type-label {
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    color: var(--light-white);
+                    opacity: 0.6;
+                    letter-spacing: 0.5px;
+                }
+                
+                .phone-number-label,
+                .email-label {
+                    font-weight: 500;
+                    color: var(--dark-text, var(--text-color));
+                }
+            }
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Dark mode adjustments */
+    .dark-mode & {
+        background-color: var(--surface-dark);
+        .phone-number,
+        .email-address {
+            background-color: var(--box-bg);
+        }
+    }
+}
