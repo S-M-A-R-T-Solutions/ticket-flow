@@ -7,21 +7,28 @@
     padding: 20px 28px;
     animation: fadeIn 0.25s ease-in-out;
 
-    h1 {
-        font-size: 20px;
-        font-weight: 600;
+    .contact-info-header {
         text-align: center;
-        color: var(--text-color);
-        margin-bottom: 24px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-        &::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 3px;
-            background-color: var(--special-btn);
-            border-radius: 2px;
-            margin: 8px auto 0;
+        h1 {
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-color);
+            margin: 10px 0px;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.7;
+            // margin-top: 6px;
+            font-style: italic;
+            margin-bottom: 20px;
         }
     }
 
@@ -35,12 +42,16 @@
         .contact-email-list {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             width: 50%;
             gap: 10px;
+            padding: 20px;
+            border-radius: 16px;
+            background-color: var(--background-color, rgba(0, 0, 0, 0.02));
 
             h3 {
                 text-align: center;
-                font-size: 16px;
+                font-size: 18px;
                 font-weight: 600;
                 color: var(--text-color);
                 margin-bottom: 4px;
@@ -49,7 +60,8 @@
             p {
                 text-align: center;
                 font-size: 14px;
-                color: var(--light-black);
+                font-style: italic;
+                color: var(--text-color);
                 opacity: 0.7;
             }
 
@@ -69,7 +81,7 @@
                 transition: background-color 0.3s ease, color 0.3s ease;
 
                 &:hover {
-                    background-color: var(--tiffany-blue);
+                    background-color: rgba(29, 161, 242, 0.1);
                     color: white;
                 }
 
@@ -80,87 +92,97 @@
         }
 
         // --- Phone & Email item elements
-        .phone-number-element,
-        .email-address-element {
-            position: relative;
+        .phone-number-elements,
+        .email-address-elements {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            flex-direction: column;
+            height: 300px;
+            max-height: 300px;
+            overflow-y: scroll;
+            row-gap: 10px;
 
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.05);
-            }
-
-            .phone-section,
-            .email-section {
-                width: 90%;
+            .phone-number-element,
+            .email-address-element {
+                position: relative;
                 display: flex;
                 align-items: center;
-                gap: 12px;
-                flex-grow: 1;
-
-                .phone-button,
-                .email-button {
-                    background-color: var(--button-bg-color);
-                    color: var(--light-white);
-                    padding: 10px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 14px;
-                    min-width: 36px;
-                    min-height: 36px;
-                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-                    transition: transform 0.2s ease, background-color 0.2s ease;
-
-                    &:hover {
-                        background-color: var(--tiffany-blue);
-                        transform: scale(1.1);
-                    }
-                }
-            }
-
-            .phone-number-and-title,
-            .email-address-and-title {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-
-                .phone-type-label,
-                .email-type-label {
-                    font-size: 11px;
-                    text-transform: uppercase;
-                    color: var(--light-white);
-                    opacity: 0.6;
-                    letter-spacing: 0.5px;
-                }
-
-                .phone-number-label,
-                .email-label {
-                    font-size: 13px;
-                    font-weight: 500;
-                    color: var(--dark-text, var(--text-color));
-                }
-            }
-
-            .delete-button {
-                width: 10%;
-                background: transparent;
-                border: none;
-                color: var(--danger-color, #c33);
-                font-size: 18px;
+                gap: 10px;
+                padding: 12px 20px;
+                background-color: #FFFFFF10;
+                border-radius: 12px;
                 cursor: pointer;
-                padding: 4px;
-                border-radius: 6px;
-                transition: background-color 0.2s ease;
+                transition: background-color 0.3s ease;
 
                 &:hover {
-                    background-color: rgba(255, 0, 0, 0.1);
+                    background-color: #FFFFFF16;
+                }
+
+                .phone-section,
+                .email-section {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    flex-grow: 1;
+
+                    .phone-button,
+                    .email-button {
+                        background-color: var(--button-bg-color);
+                        color: var(--light-white);
+                        padding: 10px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        min-width: 36px;
+                        min-height: 36px;
+                        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+                        transition: transform 0.2s ease, background-color 0.2s ease;
+
+                        &:hover {
+                            background-color: var(--tiffany-blue);
+                            transform: scale(1.1);
+                        }
+                    }
+                }
+
+                .phone-number-and-title,
+                .email-address-and-title {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+
+                    .phone-type-label,
+                    .email-type-label {
+                        font-size: 11px;
+                        text-transform: uppercase;
+                        color: var(--light-white);
+                        opacity: 0.6;
+                        letter-spacing: 0.5px;
+                    }
+
+                    .phone-number-label,
+                    .email-label {
+                        font-size: 13px;
+                        font-weight: 500;
+                        color: var(--dark-text, var(--text-color));
+                    }
+                }
+
+                .delete-button {
+                    width: 10%;
+                    background: transparent;
+                    border: none;
+                    color: var(--danger-color, #c33);
+                    font-size: 18px;
+                    cursor: pointer;
+                    padding: 4px;
+                    border-radius: 6px;
+                    transition: background-color 0.2s ease;
+
+                    &:hover {
+                        background-color: rgba(255, 0, 0, 0.1);
+                    }
                 }
             }
         }
@@ -171,36 +193,67 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            padding: 12px;
-            background-color: var(--surface-lighter, rgba(0, 0, 0, 0.03));
+            padding: 20px;
+            background-color: var(--surface-color);
+            opacity: 0.95;
             border-radius: 12px;
+            border: 1px solid var(--tiffany-blue);
 
-            input {
-                background-color: var(--light-white);
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                padding: 8px 10px;
-                font-size: 14px;
+            .form-header {
+                font-size: 16px;
                 color: var(--text-color);
-                outline: none;
+                margin-bottom: 10px;
+                text-align: center;
+            }
 
-                &:focus {
-                    border-color: var(--tiffany-blue);
+            .input-group {
+                display: flex;
+                flex-direction: row;
+                gap: 12px;
+
+                .input-field {
+                    // flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    width: 50%;
+
+                    label {
+                        font-size: 10px;
+                        color: var(--text-color);
+                        opacity: 0.8;
+                    }
+                    
+                    input {
+                    width: 100%;
+                    background-color: var(--light-white);
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    padding: 8px 10px;
+                    font-size: 12px;
+                    color: var(--light-black);
+                    outline: none;
+
+                    &:focus {
+                        border-color: var(--tiffany-blue);
+                    }
                 }
+            }
             }
 
             .form-actions {
                 display: flex;
                 justify-content: flex-end;
-                gap: 10px;
+                gap: 12px;
 
                 button {
+                    width: 50%;
                     padding: 6px 12px;
                     border-radius: 8px;
                     border: none;
                     cursor: pointer;
                     font-size: 14px;
-                    font-weight: 500;
+                    // font-weight: 500;
 
                     &:first-child {
                         background-color: var(--tiffany-blue);
@@ -214,11 +267,23 @@
                     &:last-child {
                         background-color: transparent;
                         color: var(--text-color);
-                        border: 1px solid var(--light-black);
 
                         &:hover {
-                            background-color: rgba(0, 0, 0, 0.05);
+                            background-color: #FFFFFF16;
                         }
+                    }
+                }
+
+                .submit-button-add, .cancel-button-add {
+                    width: 50%;
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 14px;
+
+                    &:hover {
+                        opacity: 0.9;
                     }
                 }
             }
