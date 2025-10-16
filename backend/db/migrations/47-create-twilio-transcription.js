@@ -52,6 +52,9 @@ module.exports = {
         allowNull: false,
         defaultValue: '',
       },
+      track: {
+        type: Sequelize.STRING(32),
+      },
       final: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
