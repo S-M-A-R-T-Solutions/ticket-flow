@@ -59,7 +59,7 @@ export default function AddClient({ setClientsChecker }) {
             newErrors.phoneNumber = "Please enter a valid phone number";
         }
 
-        if(!profilePicUrl || profilePicUrl === '') {
+        if (!profilePicUrl || profilePicUrl === '') {
             newErrors.profilePicUrl = "Please upload a valid profile picture";
         }
 
@@ -102,7 +102,7 @@ export default function AddClient({ setClientsChecker }) {
     return (
         <div className="add-client-container">
             <div className="add-client-header">
-                <h2>Add Client</h2>
+                <h1>Add Client</h1>
             </div>
             <form className="add-client-form" onSubmit={handleSubmit}>
                 <div className="add-client-left">
@@ -141,7 +141,7 @@ export default function AddClient({ setClientsChecker }) {
                     {
                         clientType === 'company' ? (
                             <div className="add-client-input">
-                                <label>Company Name</label>
+                                <label>Company Name*</label>
                                 <input
                                     type="text"
                                     name="companyName"
@@ -153,7 +153,7 @@ export default function AddClient({ setClientsChecker }) {
                         ) : (
                             <div className="client-name-inputs">
                                 <div className="add-client-input">
-                                    <label>First Name</label>
+                                    <label>First Name*</label>
                                     <input
                                         type="text"
                                         name="firstName"
@@ -163,7 +163,7 @@ export default function AddClient({ setClientsChecker }) {
                                     {errors.firstName && <span className="error">{errors.firstName}</span>}
                                 </div>
                                 <div className="add-client-input">
-                                    <label>Last Name</label>
+                                    <label>Last Name*</label>
                                     <input
                                         type="text"
                                         name="lastName"
@@ -175,39 +175,39 @@ export default function AddClient({ setClientsChecker }) {
                             </div>
                         )
                     }
-                    <div className="add-client-input">
-                        <label>Email</label>
-                        <input
-                            type="text"
-                            name="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        {errors.email && <span className="error">{errors.email}</span>}
-                    </div>
-                    <div className="add-client-input">
-                        <label>Phone Number</label>
-                        <input
-                            type="text"
-                            name="phoneNumber"
-                            maxLength={14}
-                            value={tryFormatPhoneNumber(phoneNumber)}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
-                        {errors.phoneNumber && <span className="error">{errors.phoneNumber}</span>}
+                    <div className="client-contact-inputs" >
+                        <div className="add-client-input">
+                            <label>Email*</label>
+                            <input
+                                type="text"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            {errors.email && <span className="error">{errors.email}</span>}
+                        </div>
+                        <div className="add-client-input">
+                            <label>Phone Number*</label>
+                            <input
+                                type="text"
+                                name="phoneNumber"
+                                maxLength={14}
+                                value={tryFormatPhoneNumber(phoneNumber)}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                            {errors.phoneNumber && <span className="error">{errors.phoneNumber}</span>}
+                        </div>
                     </div>
                 </div>
                 <div className="add-client-buttons">
                     <button
-                        type="submit"
-                        className={`btn btn-submit ${isButtonDisabled ? 'disabled' : ''}`}
+                        className="btn-submit-add-client"
                         disabled={isButtonDisabled}
                     >
                         Create Client
                     </button>
                     <button
-                        type="button"
-                        className="btn btn-cancel"
+                        className="btn-cancel-add-client"
                         onClick={closeModal}
                     >
                         Cancel

@@ -6,7 +6,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
-import "./Clients.css";
+import "./Clients.scss";
 
 import { getAllClientsThunk, getTotalClientsAmountThunk } from "../../store/clients";
 import ClientCard from '../ClientCard/ClientCard';
@@ -67,7 +67,7 @@ export default function Clients() {
                     onModalClose={onModalClose}
                     dismisable={false}
                 >
-                    <button className="btn btn-add-item">
+                    <button className="btn-add-client-button">
                         <FaCirclePlus /> Add Client
                     </button>
                 </OpenModalMenuItem>
