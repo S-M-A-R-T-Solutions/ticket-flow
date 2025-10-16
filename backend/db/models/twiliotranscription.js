@@ -54,6 +54,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: '',
     },
+    track: {
+      type: DataTypes.STRING(32),
+    },
     final: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

@@ -103,8 +103,6 @@ router.post('/callStart', urlencodedParser, async (req, res) => {
 
     twiml.start().transcription({
         statusCallbackUrl: url,
-        inboundTrackLabel: 'inbound',
-        outboundTrackLabel: 'outbound',
     });
 
     twiml.say(config.answerMessage);
@@ -132,6 +130,7 @@ async function insertTranscription(req) {
         SequenceId,
         Final,
         TranscriptionData,
+        Track,
     } = req.body;
 
     const call = await TwilioCall.findOne({ where: { callSid: CallSid } });
@@ -151,6 +150,7 @@ async function insertTranscription(req) {
             transcriptionEvent: TranscriptionEvent,
             sequenceId: Number(SequenceId) || 0,
             transcriptionData: TranscriptionData || '',
+            track: Track || null,
             final: Final === 'true' ? true : false,
         });
     }
