@@ -142,8 +142,8 @@ export default function LocationContactInfo({ locationId }) {
                                 </div>
                             </div>
                             <div className="form-actions">
-                                <button type="submit">Add</button>
-                                <button type="button" onClick={() => setShowAddPhone(false)}>
+                                <button type="submit-button-add">Add</button>
+                                <button type="cancel-button-add" onClick={() => setShowAddPhone(false)}>
                                     Cancel
                                 </button>
                             </div>

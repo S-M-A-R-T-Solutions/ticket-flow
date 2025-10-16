@@ -108,13 +108,13 @@
                 align-items: center;
                 gap: 10px;
                 padding: 12px 20px;
-                background-color: #FFFFFF10;
+                background-color: var(--surface-color);
                 border-radius: 12px;
                 cursor: pointer;
-                transition: background-color 0.3s ease;
+                transition: box-shadow 0.2s ease;
 
                 &:hover {
-                    background-color: #FFFFFF16;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }
 
                 .phone-section,
@@ -156,7 +156,7 @@
                     .email-type-label {
                         font-size: 11px;
                         text-transform: uppercase;
-                        color: var(--light-white);
+                        color: var(--text-color);
                         opacity: 0.6;
                         letter-spacing: 0.5px;
                     }
