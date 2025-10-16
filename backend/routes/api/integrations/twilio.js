@@ -5,6 +5,9 @@ const config = require('@config/twilio');
 const { Ticket, Client, TwilioCall, TwilioTranscription } = require('@db/models');
 const generateAlphanumericId = require('@utils/randomGenerator');
 const env = require('../../../config').environment;
+const openaiApiKey = require('../../../config').openaiApiKey;
+const { OpenAI } = require('openai');
+const { where, Op } = require('sequelize');
 
 const sequelize = require('../../../db/models').sequelize;
 
@@ -162,13 +165,118 @@ async function insertTranscription(req) {
     return true;
 }
 
+async function getCompletedTranscriptions(callSid) {
+    const transcriptions = await TwilioTranscription.findAll({
+        where: {
+            callSid: callSid,
+            transcriptionData: { [Op.ne]: null },
+            transcriptionData: { [Op.ne]: '' },
+        },
+        order: [['sequenceId', 'ASC']],
+    });
+
+    if (transcriptions.length === 0) {
+        console.info('No transcriptions found for callSid: ' + callSid);
+        return null;
+    }
+
+    const completed = transcriptions.reduce((acc, curr) => {
+        return `${acc}${curr.track}:${curr.transcriptionData}\n`;
+    });
+
+    console.info('getCompletedTranscriptions:\n' + completed);
+
+    return completed.trim();
+}
+
+async function getTitleAndDescription(callSid) {
+    const transcription = await getCompletedTranscriptions(callSid);
+
+    if (transcription === null || transcription.length === 0) {
+        return { title: 'Missed Call', description: 'No transcription available for this call due to missing or incomplete data. Please, contact as soon as possible.' };
+    }
+
+    const client = new OpenAI({ apiKey: openaiApiKey });
+
+    const response = await client.responses.create({
+        model: "gpt-5",
+        input: [
+            {
+                role: "system",
+                content: "Generate a concise title (max 10 words) and a detailed description (max 100 words) for a support ticket based on the following conversation transcription. Format the response json as '{title, description}'. Give only the json response without any additional text.",
+            },
+            {
+                role: "user",
+                content: transcription,
+            },
+        ],
+    });
+
+    console.info('getTitleAndDescription:\n' + response.choices[0].message.content);
+
+    try {
+        const { title, description } = JSON.parse(response.choices[0].message.content);
+        return { title, description };
+    } catch (error) {
+        console.error('Error parsing OpenAI response:', error);
+    }
+
+    return { title: '', description: '' };
+}
+
+async function updateTicketWithTranscription(callSid) {
+    const call = await TwilioCall.findOne({ where: { callSid: callSid } });
+
+    if (!call) {
+        console.error(`Call with SID ${callSid} not found`);
+        return false;
+    }
+
+    const ticket = await Ticket.findOne({ where: { id: call.ticketId } });
+
+    if (!ticket) {
+        console.error(`Ticket with ID ${call.ticketId} not found`);
+        return false;
+    }
+
+    const { title, description } = await getTitleAndDescription(callSid);
+
+    try {
+        await ticket.update({
+            title: title || 'No Title',
+            description: description || 'No Description',
+        });
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+
+    return true;
+}
+
 router.post('/transcription', urlencodedParser, async (req, res) => {
     console.info(JSON.stringify(req.body));
+
+    const {
+        TranscriptionSid,
+        TranscriptionEvent,
+        CallSid,
+        Timestamp,
+        AccountSid,
+        SequenceId,
+        Track,
+        Final,
+        TranscriptionData,
+    } = req.body;
 
     // if (TranscriptionEvent === 'transcription-content' && TranscriptionData) {}
     // else if (TranscriptionEvent === 'transcription-stopped') {// }
 
     const result = await insertTranscription(req);
+
+    if (TranscriptionEvent === 'transcription-stopped') {
+        await updateTicketWithTranscription(CallSid);
+    }
 
     return res.sendStatus(200);
 });
