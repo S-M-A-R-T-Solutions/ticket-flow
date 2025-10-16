@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { Location, LocationPhoneNumber } = require('@db/models');
+const { Location, LocationPhoneNumber, locationEmail } = require('@db/models');
 
 const router = express.Router();
 
@@ -46,8 +46,8 @@ router.post('/:locationId/phone-numbers', async (req, res, next) => {
 
         const newPhoneNumber = await LocationPhoneNumber.create({
             locationId,
-            phoneNumber,
-            phoneType
+            phoneNumber: phoneNumber,
+            phoneType: phoneType
         });
 
         return res.status(201).json(newPhoneNumber);
@@ -56,7 +56,7 @@ router.post('/:locationId/phone-numbers', async (req, res, next) => {
     }
 });
 
-//Remove a Phone Number of a Location
+// Remove a Phone Number of a Location
 router.delete('/:locationId/phone-numbers/:phoneNumberId', async (req, res, next) => {
     const { locationId, phoneNumberId } = req.params;
 
@@ -73,7 +73,61 @@ router.delete('/:locationId/phone-numbers/:phoneNumberId', async (req, res, next
 
         await phoneNumber.destroy();
 
-        return res.status(200).json({ message: 'Phone number removed from location' });
+        // ✅ Return data the reducer needs
+        return res.status(200).json({
+            id: phoneNumber.id,
+            locationId: Number(locationId),
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Add an Email to a Location
+router.post('/:locationId/emails', async (req, res, next) => {
+    const { locationId } = req.params;
+    const { email, emailType } = req.body;
+
+    try {
+        const location = await Location.findByPk(locationId);
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }
+
+        const newEmail = await locationEmail.create({
+            locationId,
+            email,
+            emailType
+        });
+
+        return res.status(201).json(newEmail);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Remove an Email from a Location
+router.delete('/:locationId/emails/:emailId', async (req, res, next) => {
+    const { locationId, emailId } = req.params;
+
+    try {
+        const location = await Location.findByPk(locationId);
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }
+
+        const email = await locationEmail.findByPk(emailId);
+        if (!email || email.length === 0) {
+            return res.status(404).json({ message: 'Email not found' });
+        }
+
+        await email.destroy();
+
+        // ✅ Return data the reducer needs
+        return res.status(200).json({
+            id: email.id,
+            locationId: Number(locationId),
+        });
     } catch (error) {
         next(error);
     }
