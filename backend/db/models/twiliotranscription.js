@@ -41,6 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     timestamp: {
       type: DataTypes.STRING(64),
     },
+    transcriptionEvent: {
+      type: DataTypes.STRING(64),
+    },
     sequenceId: {
       type: DataTypes.INTEGER,
       allowNull: false,
