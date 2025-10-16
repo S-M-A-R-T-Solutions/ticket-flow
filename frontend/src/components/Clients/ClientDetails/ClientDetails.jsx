@@ -117,7 +117,6 @@ export default function ClientDetails() {
                                 <div className="locations-list">
                                     {client.locations && client.locations.length > 0 ? (
                                         client.locations.map((location, index) => (
-                                            // Add Modal to Open Location's Contact Phones and Emails, then add "Add Contact Information" inside that modal
                                             <LocationCard key={location.id} clientId={client.id} locationIndex={index} location={location} setLocationChecker={setLocationChecker} />
                                         ))
                                     ) : (
@@ -128,7 +127,7 @@ export default function ClientDetails() {
                         </div>
                     </div>
                     <div className="client-tickets-section">
-                        <ClientTickets tickets={client.tickets} />
+                        <ClientTickets tickets={client.tickets} clientId={client.id} />
                     </div>
                 </>
             ) : (

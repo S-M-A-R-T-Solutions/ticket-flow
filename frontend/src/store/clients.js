@@ -5,6 +5,7 @@ const GET_ALL_CLIENTS = 'clients/getAllClients';
 const GET_TOTAL_CLIENTS_AMOUNT = 'clients/getTotalClientsAmount';
 const GET_ALL_LOCATIONS_OF_A_CLIENT = 'clients/getAllLocationsOfAClient';
 const GET_ONE_CLIENT = 'clients/getOneClient';
+const GET_CLIENT_TICKETS = 'clients/getClientTickets';
 const ADD_CLIENT = 'clients/addClient';
 const ADD_LOCATION_TO_A_CLIENT = 'clients/addLocationToAClient';
 const EDIT_CLIENT = 'clients/editClient';
@@ -32,6 +33,11 @@ const getTotalClientsAmount = (amount) => ({
 const getOneClient = (client) => ({
     type: GET_ONE_CLIENT,
     payload: client
+});
+
+const getClientTickets = (tickets) => ({
+    type: GET_CLIENT_TICKETS,
+    payload: tickets
 });
 
 const getAllLocationsOfAClient = (locations) => ({
@@ -106,6 +112,12 @@ export const getOneClientThunk = (clientId) => async (dispatch) => {
     const res = await csrfFetch(`/api/clients/${clientId}`);
     const client = await res.json();
     dispatch(getOneClient(client));
+};
+
+export const getClientTicketsThunk = (clientId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/clients/${clientId}/tickets`);
+    const tickets = await res.json();
+    dispatch(getClientTickets(tickets));
 };
 
 export const getAllLocationsOfAClientThunk = (clientId) => async (dispatch) => {
@@ -255,6 +267,9 @@ const clientsReducer = (state = initialState, action) => {
         }
         case GET_ONE_CLIENT: {
             return { ...state, client: action.payload };
+        }
+        case GET_CLIENT_TICKETS: {
+            return { ...state, client: { ...state.client, tickets: action.payload } };
         }
         case GET_ALL_LOCATIONS_OF_A_CLIENT: {
             return { ...state, client: { ...state.client, locations: action.payload } };

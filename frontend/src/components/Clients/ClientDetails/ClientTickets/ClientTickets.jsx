@@ -1,28 +1,62 @@
 import { FaCirclePlus } from 'react-icons/fa6';
 
 import TicketCard from '../../../MyWork/MyWorkTicketCards';
+import OpenModalMenuItem from '../../../Navigation/OpenModalMenuItem';
+import AddTicket from '../../../AddTicket';
+
+import { getClientTicketsThunk } from '../../../../store/clients';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import './ClientTickets.scss';
 
-export default function ClientTickets({ tickets }) {
+export default function ClientTickets({ clientId }) {
+    const dispatch = useDispatch();
+
+    const [ticketsChecker, setTicketsChecker] = useState(false);
+
+    const clientTickets = useSelector(state => state.clients.client?.tickets);
+
+    useEffect(() => {
+        dispatch(getClientTicketsThunk(clientId));
+    }, [dispatch, clientId]);
+
+    useEffect(() => {
+        if (ticketsChecker) {
+            dispatch(getClientTicketsThunk(clientId));
+            setTicketsChecker(false);
+        }
+    }, [ticketsChecker, dispatch, clientId]);
+
+    if (!clientTickets) return <div>Loading...</div>;
+
+    const onModalClose = () => {
+        setTicketsChecker(true);
+    }
+
     return (
         <div className="client-tickets">
             <div className="client-tickets-header">
                 <h2>Client Tickets</h2>
-                <div className="add-ticket-button">
-                    <FaCirclePlus />
-                    <div>
-                        Add Ticket
+                <OpenModalMenuItem
+                    modalComponent={<AddTicket clientIdClient={clientId} setTicketsChecker={setTicketsChecker} />}
+                    onModalClose={onModalClose}
+                >
+                    <div className="add-ticket-button">
+                        <FaCirclePlus />
+                        <div>Add Ticket</div>
                     </div>
-                </div>
+                </OpenModalMenuItem>
             </div>
+
             <div className="ticket-list">
-                {tickets && tickets.length > 0 ? (
-                    tickets.map(ticket => (
+                {clientTickets && clientTickets.length > 0 ? (
+                    clientTickets.map(ticket => (
                         <TicketCard key={ticket.id} ticket={ticket} />
                     ))
                 ) : (
-                    <p>No tickets available for this client.</p>
+                    <p className="no-tickets">No tickets available for this client.</p>
                 )}
             </div>
         </div>

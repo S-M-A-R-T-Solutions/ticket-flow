@@ -82,7 +82,7 @@
 
                 &:hover {
                     background-color: rgba(29, 161, 242, 0.1);
-                    color: white;
+                    color: var(--text-color);
                 }
 
                 svg {
@@ -269,7 +269,8 @@
                         color: var(--text-color);
 
                         &:hover {
-                            background-color: #FFFFFF16;
+                            background-color: #dedede8a;
+
                         }
                     }
                 }

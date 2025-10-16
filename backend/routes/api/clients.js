@@ -67,6 +67,24 @@ router.get('/:id', requireAuth, async (req, res, next) => {
     }
 });
 
+//Get all the Tickets of a Client by clientId
+router.get('/:id/tickets', requireAuth, async (req, res, next) => {
+    try {
+        const client = await Client.findByPk(req.params.id);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const tickets = await Ticket.findAll({
+            where: { clientId: client.id }
+        });
+
+        return res.json(tickets);
+    } catch (error) {
+        next(error);
+    }
+});
+
 //Get all Locations of a Client by clientId
 router.get('/:id/locations', requireAuth, async (req, res, next) => {
     try {

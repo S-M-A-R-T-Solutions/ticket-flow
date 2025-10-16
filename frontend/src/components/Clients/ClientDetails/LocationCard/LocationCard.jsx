@@ -1,4 +1,5 @@
-import { FaPen, FaAddressBook } from "react-icons/fa6";
+// import { FaPen, FaAddressBook } from "react-icons/fa6";
+import { TiContacts, TiEdit } from "react-icons/ti";
 
 import { useEffect } from "react";
 
@@ -17,23 +18,23 @@ export default function LocationCard({ location, setLocationChecker, locationInd
     return (
         <div className="location-card">
             <div className="location-name">
-                <div className="location-name-and-edit">
+                <div className="location-name-and-edit-location">
                     <h3>{location.name}</h3>
                     <div className="spacer">
-                        <div className="location-contact-info">
+                        <div className="location-contact-info-location">
                             <OpenModalMenuItem
                                 modalComponent={<LocationContactInfo locationId={location.id} contactInfo={{ phoneNumbers: location.phoneNumbers, emails: location.emails }} />}
                                 dismisable={true}
                             >
-                                <FaAddressBook />
+                                <TiContacts />
                             </OpenModalMenuItem>
                         </div>
-                        <div className="edit-location-button">
+                        <div className="edit-location-button-location">
                             <OpenModalMenuItem
                                 modalComponent={<EditLocation locationIndex={locationIndex} setLocationChecker={setLocationChecker} clientId={clientId} />}
                                 dismisable={true}
                             >
-                                <FaPen />
+                                <TiEdit />
                             </OpenModalMenuItem>
                         </div>
                     </div>
