@@ -149,14 +149,10 @@ router.post('/:id/locations', requireAuth, singleMulterUpload('image'), async (r
         if (!client) {
             return res.status(404).json({ message: 'Client not found' });
         }
-
-        console.log("REQ.BODY", req.body);
         
         const profilePicUrl = req.file
             ? await singleFileUpload({ file: req.file, public: true })
             : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
-        
-        // console.log("PROFILE DATA", name, addressLine1, city, state, zipcode, profilePicUrl);
 
         const location = await Location.create({
             name,
