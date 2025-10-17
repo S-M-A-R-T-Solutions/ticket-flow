@@ -21,6 +21,36 @@
         width: 30%;
         padding: 0;
 
+        .magnifier-icon {
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: var(--text-color);
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            background-color: transparent;
+            border: 1px solid var(--tiffany-blue);
+            padding: 8px;
+            border-radius: 2px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        //When hover over .location-card-left, blur the image slightly and show a magnifier icon
+        &:hover {
+            
+            img {
+                filter: blur(1.5px);
+            }
+            
+            .magnifier-icon {
+                background-color: rgba(29, 161, 242, 0.1);
+                opacity: 1;
+            }
+        }
+
         .open-modal-menu-item {
             width: 100%;
             height: 100%;

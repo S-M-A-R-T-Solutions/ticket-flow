@@ -8,6 +8,8 @@ import LocationContactInfo from "./LocationContactInfo";
 import LocationImagePreview from "./LocationImagePreview";
 import EditLocation from "./EditLocation";
 
+import { MdOutlineZoomOutMap } from "react-icons/md";
+
 import "./LocationCard.scss";
 
 export default function LocationCard({ location, setLocationChecker, locationIndex, clientId }) {
@@ -20,7 +22,9 @@ export default function LocationCard({ location, setLocationChecker, locationInd
         <div className="location-card">
             <div className="location-card-left">
                 <OpenModalMenuItem
-                    modalComponent={<LocationImagePreview image={location.profilePicUrl} />}>
+                    modalComponent={<LocationImagePreview image={location.profilePicUrl} />}
+                    >
+                    <MdOutlineZoomOutMap className="magnifier-icon" />
                     <img src={location.profilePicUrl} alt={location.name} />
                 </OpenModalMenuItem>
             </div>
