@@ -6,6 +6,7 @@ import LocationCard from "./LocationCard";
 
 import { getOneClientThunk } from "../../../store/clients";
 
+import { MdOutlineAddLocationAlt } from "react-icons/md";
 import { FaPhone, FaEnvelope, FaPen, FaCirclePlus } from "react-icons/fa6";
 
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
@@ -29,8 +30,6 @@ export default function ClientDetails() {
     useEffect(() => {
         dispatch(getOneClientThunk(clientId));
     }, [dispatch, clientId, locationAddedChecker, locationChecker]);
-
-    console.log("CLIENT DETAILS CLIENT: ", client);
 
     return (
         <div className="client-details">
@@ -107,7 +106,7 @@ export default function ClientDetails() {
                                         dismisable={false}
                                     >
                                         <div className="add-location-button">
-                                            <FaCirclePlus />
+                                            <MdOutlineAddLocationAlt />
                                             <div>
                                                 Add Location
                                             </div>

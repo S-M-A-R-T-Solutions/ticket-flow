@@ -1,4 +1,4 @@
-import { FaCirclePlus } from 'react-icons/fa6';
+import { LuTicketPlus } from "react-icons/lu";
 
 import TicketCard from '../../../MyWork/MyWorkTicketCards';
 import OpenModalMenuItem from '../../../Navigation/OpenModalMenuItem';
@@ -44,7 +44,7 @@ export default function ClientTickets({ clientId }) {
                     onModalClose={onModalClose}
                 >
                     <div className="add-ticket-button">
-                        <FaCirclePlus />
+                        <LuTicketPlus />
                         <div>Add Ticket</div>
                     </div>
                 </OpenModalMenuItem>

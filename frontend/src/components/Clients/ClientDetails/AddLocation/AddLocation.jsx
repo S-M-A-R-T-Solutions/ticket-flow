@@ -75,7 +75,7 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
             <div className="form-group">
                 <form onSubmit={handleSubmit}>
                     <div className="add-location-input">
-                        <label>Location Name</label>
+                        <label>Location Name*</label>
                         <input
                             type="text"
                             value={name}
@@ -87,7 +87,7 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
                     </div>
                     <div className="address-lines">
                         <div className="add-location-input">
-                            <label>Address Line 1</label>
+                            <label>Address Line 1*</label>
                             <input
                                 type="text"
                                 value={addressLine1}
@@ -109,7 +109,7 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
                     </div>
                     <div className="city-state-zip">
                         <div className="add-location-input">
-                            <label>City</label>
+                            <label>City*</label>
                             <input
                                 type="text"
                                 value={city}
@@ -120,7 +120,7 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
                             {errors.city && <div className="error-message">{errors.city}</div>}
                         </div>
                         <div className="add-location-input">
-                            <label>State</label>
+                            <label>State*</label>
                             <select
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
@@ -135,7 +135,7 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
                             {/* {errors.state && <div className="error-message">{errors.state}</div>} */}
                         </div>
                         <div className="add-location-input">
-                            <label>Zipcode</label>
+                            <label>Zipcode*</label>
                             <input
                                 type="text"
                                 placeholder="12345 or 12345-6789"
@@ -147,8 +147,8 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
                         </div>
                     </div>
                     <div className="form-buttons">
-                        <button type="submit" className="submit-button" disabled={disabled}>Add Location</button>
-                        <button type="button" className="cancel-button" onClick={() => { setLocationAddedChecker(false); closeModal(); }}>Cancel</button>
+                        <button className="submit-button" disabled={disabled}>Add Location</button>
+                        <button className="cancel-button" onClick={() => { setLocationAddedChecker(false); closeModal(); }}>Cancel</button>
                     </div>
                 </form>
             </div>
