@@ -129,8 +129,6 @@ export const getAllLocationsOfAClientThunk = (clientId) => async (dispatch) => {
 export const addClientThunk = (client) => async (dispatch) => {
     const formData = new FormData();
 
-    console.log(client, "THIS IS CLIENT");
-
     // Append the client information to the form data
     if (client.firstName) formData.append('firstName', client.firstName); else formData.append('firstName', '');
     if (client.lastName) formData.append('lastName', client.lastName); else formData.append('lastName', '');
@@ -156,12 +154,31 @@ export const addClientThunk = (client) => async (dispatch) => {
 };
 
 export const addLocationToAClientThunk = (clientId, location) => async (dispatch) => {
+    const formData = new FormData();
+
+    const { name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl } = location;
+
+    console.log("LOCATION DATA IN THUNK", name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl);
+
+    // Append the location information to the form data
+    formData.append('name', name);
+    if (addressLine1) formData.append('addressLine1', addressLine1);
+    if (addressLine2) formData.append('addressLine2', addressLine2);
+    if (city) formData.append('city', city);
+    if (state) formData.append('state', state);
+    if (zipcode) formData.append('zipcode', zipcode);
+
+    // Append the profile picture (file) if it exists
+    if (profilePicUrl) {
+        formData.append('image', profilePicUrl); // 'image' is the field name used in multer
+    }
+    
     const res = await csrfFetch(`/api/clients/${clientId}/locations`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            // No need to set 'Content-Type' to 'multipart/form-data', it will be automatically handled
         },
-        body: JSON.stringify(location)
+        body: formData
     });
 
     const newLocation = await res.json();

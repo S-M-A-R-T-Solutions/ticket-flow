@@ -140,14 +140,24 @@ router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next
 });
 
 //Add a Location to a Client
-router.post('/:id/locations', async (req, res, next) => {
+router.post('/:id/locations', requireAuth, singleMulterUpload('image'), async (req, res, next) => {
     try {
+        const { name, addressLine1, addressLine2, city, state, zipcode } = req.body;
+        
         const client = await Client.findByPk(req.params.id);
+        
         if (!client) {
             return res.status(404).json({ message: 'Client not found' });
         }
 
-        const { name, addressLine1, addressLine2, city, state, zipcode } = req.body;
+        console.log("REQ.BODY", req.body);
+        
+        const profilePicUrl = req.file
+            ? await singleFileUpload({ file: req.file, public: true })
+            : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
+        
+        // console.log("PROFILE DATA", name, addressLine1, city, state, zipcode, profilePicUrl);
+
         const location = await Location.create({
             name,
             addressLine1,
@@ -155,7 +165,8 @@ router.post('/:id/locations', async (req, res, next) => {
             city,
             state,
             zipcode,
-            clientId: client.id
+            clientId: client.id,
+            profilePicUrl
         });
 
         return res.status(201).json(location);

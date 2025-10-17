@@ -90,8 +90,6 @@ export default function AddClient({ setClientsChecker }) {
             profilePicUrl: selectedFile || profilePicUrl
         };
 
-        console.log(profilePicUrl, "THIS IS THE PROFILE PIC URL");
-
         return dispatch(addClientThunk(newClient))
             .then(() => {
                 setClientsChecker(true);
