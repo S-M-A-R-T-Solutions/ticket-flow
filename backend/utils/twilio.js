@@ -4,6 +4,8 @@ const generateAlphanumericId = require('./randomGenerator');
 const twilioConfig = require('../config/twilio');
 const { Op } = require('sequelize');
 const { getTitleAndDescription } = require('./openai');
+const axios = require('axios');
+const { Buffer } = require('buffer');
 
 async function upsertCallAndTicket(req) {
     const {
@@ -244,21 +246,15 @@ async function upsertCallRecording(req) {
 async function getAudioFileFromUrl(url, mimeType) {
     const extension = url.split('.').pop().split('?')[0];
     const filename = generateAlphanumericId(10) + '.' + extension;
-    const fetch = require('node-fetch');
-    const { Buffer } = require('buffer');
 
-    const res = await fetch(url);
-    if (!res.ok) {
-        throw new Error(`Failed to fetch audio file: ${res.status} ${res.statusText}`);
-    }
-    const arrayBuffer = await res.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    // Return an object compatible with singleFileUpload
-    return {
-        originalname: filename,
-        buffer,
-        mimetype: mimeType
-    };
+    await axios.get(url, { responseType: 'arraybuffer' }).then(response => {
+        const buffer = Buffer.from(response.data);
+        return {
+            originalname: filename,
+            buffer: buffer,
+            mimetype: mimeType,
+        };
+    });
 }
 
 module.exports = {
