@@ -49,6 +49,9 @@ module.exports = {
       recordingDuration: {
         type: Sequelize.FLOAT,
       },
+      transcription: {
+        type: Sequelize.TEXT,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

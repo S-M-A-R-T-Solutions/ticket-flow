@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     transcription: {
       type: DataTypes.TEXT,
-    }
+    },
   }, {
     sequelize,
     modelName: 'TwilioRecording',
