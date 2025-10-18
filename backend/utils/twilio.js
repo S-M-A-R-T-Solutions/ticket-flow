@@ -257,7 +257,11 @@ async function getAudioFileFromUrl(url, mimeType) {
             mimetype: mimeType,
         };
 
-        console.info('Fetched audio file from URL:\n' + JSON.stringify(file));
+        console.info('Fetched audio file from URL:\n' + JSON.stringify({
+            originalname: filename,
+            mimetype: mimeType,
+            buffer: buffer.toString().slice(0, 20) + '... (truncated)',
+        }));
 
         return file;
     } catch (error) {
