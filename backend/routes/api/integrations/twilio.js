@@ -73,12 +73,12 @@ router.post('/recordingStatus', urlencodedParser, async (req, res) => {
 
     if (RecordingStatus === 'completed') {
         try {
-            const file = await getAudioFileFromUrl(RecordingUrl.replace(/\.[^/.]+$/, '') + '.mp3', 'audio/mpeg');
+            const { file, stream } = await getAudioFileFromUrl(RecordingUrl.replace(/\.[^/.]+$/, '') + '.mp3', 'audio/mpeg');
             const s3url = await singleFileUpload({ file, public: true });
             console.info('Recording uploaded to S3 URL: ' + s3url);
 
             const { recording } = result;
-            const transcription = await getTranscriptionFromRecording(file);
+            const transcription = await getTranscriptionFromRecording(stream);
             await recording.update({ transcription });
 
             await updateTicketWithTranscription(CallSid, transcription);
