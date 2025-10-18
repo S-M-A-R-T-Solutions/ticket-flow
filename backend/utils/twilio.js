@@ -165,7 +165,9 @@ async function updateTicketWithTranscription(callSid) {
         return false;
     }
 
-    const { title, description } = await getTitleAndDescription(callSid);
+    const transcription = await getCompletedTranscriptions(callSid);
+
+    const { title, description } = await getTitleAndDescription(transcription);
 
     try {
         await ticket.update({
@@ -183,6 +185,5 @@ async function updateTicketWithTranscription(callSid) {
 module.exports = {
     upsertCallAndTicket,
     insertTranscription,
-    getCompletedTranscriptions,
     updateTicketWithTranscription
 };

@@ -1,11 +1,7 @@
-const openaiApiKey = require('../../../config').openaiApiKey;
+const openaiApiKey = require('../config').openaiApiKey;
 const { OpenAI } = require('openai');
-const { getCompletedTranscriptions } = require('./twilio');
 
-
-async function getTitleAndDescription(callSid) {
-    const transcription = await getCompletedTranscriptions(callSid);
-
+async function getTitleAndDescription(transcription) {
     if (transcription === null || transcription.length === 0) {
         return { title: 'Missed Call', description: 'No transcription available for this call due to missing or incomplete data. Please, contact as soon as possible.' };
     }

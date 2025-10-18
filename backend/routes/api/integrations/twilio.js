@@ -43,6 +43,7 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
     return res.sendStatus(200);
 });
 
+// TODO: remove this if openai handler is working fine
 router.post('/transcription', urlencodedParser, async (req, res) => {
     console.info(JSON.stringify(req.body));
 
