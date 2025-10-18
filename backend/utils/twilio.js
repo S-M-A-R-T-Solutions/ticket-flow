@@ -263,14 +263,14 @@ async function getAudioFileFromUrl(url, mimeType) {
 
         const file = {
             originalname: filename,
-            path: filePath,
+            buffer: buffer,
             mimetype: mimeType,
         };
 
         console.info('Fetched audio file from URL and saved to disk:\n' + JSON.stringify({
             originalname: filename,
             mimetype: mimeType,
-            path: filePath,
+            buffer: String(buffer).slice(0, 20) + '...'
         }));
 
         return { file, stream };
