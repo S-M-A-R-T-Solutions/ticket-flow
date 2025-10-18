@@ -19,16 +19,21 @@ router.post('/callStart', urlencodedParser, async (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
     const pbx = config.pbxNumber;
     const protocol = env === 'production' ? 'https' : 'http';
-    const url = protocol + '://' + req.get('host') + '/api/integrations/twilio/transcription';
+    // const urlTranscriptions = protocol + '://' + req.get('host') + '/api/integrations/twilio/transcription';
+    const urlRecordings = protocol + '://' + req.get('host') + '/api/integrations/twilio/recordingStatus';
 
-    // twiml.record({ transcribe: true, transcribeCallback: url, playBeep: false });
 
-    twiml.start().transcription({
-        statusCallbackUrl: url,
-    });
+    // twiml.start().transcription({
+    //     statusCallbackUrl: urlTranscriptions,
+    // });
 
     twiml.say(config.answerMessage);
     twiml.dial(pbx);
+
+    twiml.record({
+        recordingStatusCallback: urlRecordings,
+        recordingStatusCallbackMethod: 'POST'
+    });
 
     res.type('text/xml');
     return res.send(twiml.toString());
@@ -39,6 +44,23 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
 
     // const result = await upsertCallAndTicket(req);
     await upsertCallAndTicket(req);
+
+    return res.sendStatus(200);
+});
+
+router.post('/recordingStatus', urlencodedParser, async (req, res) => {
+    console.info(JSON.stringify(req.body));
+
+    // const {
+    //     AccountSid,
+    //     CallSid,
+    //     RecordingSid,
+    //     RecordingUrl,
+    //     RecordingStatus,
+    //     RecordingDuration,
+    //     RecordingChannels,
+    //     RecordingSource,
+    // } = req.body;
 
     return res.sendStatus(200);
 });
