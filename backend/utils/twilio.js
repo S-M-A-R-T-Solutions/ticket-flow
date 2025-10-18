@@ -247,23 +247,30 @@ async function upsertCallRecording(req) {
 async function getAudioFileFromUrl(url, mimeType) {
     const extension = url.split('.').pop().split('?')[0];
     const filename = generateAlphanumericId(10) + '.' + extension;
+    const tempDir = '../media/temp_recordings';
+    const filePath = tempDir + '/' + filename;
 
     try {
-        const res = await axios.get(url, { responseType: 'arraybuffer' });
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir, { recursive: true });
+        }
 
+        const res = await axios.get(url, { responseType: 'arraybuffer' });
         const buffer = Buffer.from(res.data);
-        const stream = fs.createReadStream(buffer);
+
+        fs.writeFileSync(filePath, buffer);
+        const stream = fs.createReadStream(filePath);
 
         const file = {
             originalname: filename,
-            buffer: buffer,
+            path: filePath,
             mimetype: mimeType,
         };
 
-        console.info('Fetched audio file from URL:\n' + JSON.stringify({
+        console.info('Fetched audio file from URL and saved to disk:\n' + JSON.stringify({
             originalname: filename,
             mimetype: mimeType,
-            buffer: buffer.toString().slice(0, 20) + '... (truncated)',
+            path: filePath,
         }));
 
         return { file, stream };
