@@ -9,6 +9,7 @@ const { upsertCallAndTicket, insertTranscription, updateTicketWithTranscription 
 const publicWebhookPaths = [
     '/api/integrations/twilio/callStart',
     '/api/integrations/twilio/callStatus',
+    '/api/integrations/twilio/recordingStatus',
     '/api/integrations/twilio/transcription',
 ];
 
