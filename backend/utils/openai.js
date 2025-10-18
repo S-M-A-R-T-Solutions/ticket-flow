@@ -30,42 +30,25 @@ async function getTitleAndDescription(transcription) {
     return { title: '', description: '' };
 }
 
-async function getTranscriptionFromRecording(recordingUrl) {
+async function getTranscriptionFromRecording(file) {
     const client = new OpenAI({ apiKey: openaiApiKey });
 
-    const audioUrl = recordingUrl.replace(/\.[^/.]+$/, '') + '.mp3';
-    console.info('getTranscriptionFromRecording - audioUrl: ' + audioUrl);
+    // const audioUrl = recordingUrl.replace(/\.[^/.]+$/, '') + '.mp3';
+    // console.info('getTranscriptionFromRecording - audioUrl: ' + audioUrl);
 
     let transcription = null;
 
     try {
-        const response = await client.responses.create({
-            model: "gpt-5",
-            input: [
-                // {
-                //     role: "system",
-                //     content: "Get the transcription text from the following audio recording URL. Provide only the transcription text without any additional text. The audio recording is from a customer support call. The call can be in multiple languages at the same time, mostly English and Spanish. If possible label the customer and agent parts.",
-                // },
-                {
-                    role: "user",
-                    content: [
-
-                        {
-                            type: "input_text",
-                            text: "Get the transcription text from the following audio recording URL. Provide only the transcription text without any additional text. The audio recording is from a customer support call. The call can be in multiple languages at the same time, mostly English and Spanish. If possible label the customer and agent parts.",
-                        },
-                        {
-                            type: "input_file",
-                            file_url: audioUrl,
-                        },
-                    ],
-                },
-            ],
+        const response = await client.audio.transcriptions.create({
+            file: file,
+            model: "gpt-4o-transcribe",
+            response_format: "text",
+            prompt: "Get the transcription text from the following audio recording URL. Provide only the transcription text without any additional text. The audio recording is from a customer support call. The call can be in multiple languages at the same time, mostly English and Spanish. If possible label the customer and agent parts.",
         });
-
+        
         console.info('getTranscriptionFromRecording:\n' + JSON.stringify(response));
 
-        transcription = response.output_text;
+        transcription = response.text;
         console.info('getTranscriptionFromRecording:\n' + transcription);
     }
     catch (error) {
