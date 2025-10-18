@@ -78,7 +78,7 @@ router.post('/recordingStatus', urlencodedParser, async (req, res) => {
             console.info('Recording uploaded to S3 URL: ' + s3url);
 
             const { recording } = result;
-            const transcription = await getTranscriptionFromRecording(s3url);
+            const transcription = await getTranscriptionFromRecording(file.buffer);
             await recording.update({ transcription });
 
             await updateTicketWithTranscription(CallSid, transcription);
