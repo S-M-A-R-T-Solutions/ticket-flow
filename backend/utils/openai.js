@@ -34,4 +34,27 @@ async function getTitleAndDescription(transcription) {
     return { title: '', description: '' };
 }
 
-module.exports = { getTitleAndDescription };
+async function getTranscriptionFromRecording(recordingUrl) {
+    const client = new OpenAI({ apiKey: openaiApiKey });
+
+    const response = await client.responses.create({
+        model: "gpt-5",
+        input: [
+            {
+                role: "system",
+                content: "Get the transcription text from the following audio recording URL. Provide only the transcription text without any additional text. The audio recording is from a customer support call. The call can be in multiple languages at the same time, mostly English and Spanish. If possible label the customer and agent parts.",
+            },
+            {
+                role: "user",
+                content: recordingUrl,
+            },
+        ],
+    });
+
+    const transcription = response.choices[0].message.content.trim();
+    console.info('getTranscriptionFromRecording:\n' + transcription);
+
+    return transcription;
+}
+
+module.exports = { getTitleAndDescription, getTranscriptionFromRecording };

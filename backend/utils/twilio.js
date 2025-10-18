@@ -1,4 +1,4 @@
-const { Client, Ticket, TwilioTranscription, TwilioCall } = require('@db/models');
+const { Client, Ticket, TwilioTranscription, TwilioCall, TwilioRecording } = require('@db/models');
 const sq = require('../db/models').sequelize;
 const generateAlphanumericId = require('./randomGenerator');
 const twilioConfig = require('../config/twilio');
@@ -150,7 +150,7 @@ async function getCompletedTranscriptions(callSid) {
     return completed.trim();
 }
 
-async function updateTicketWithTranscription(callSid) {
+async function updateTicketWithTranscription(callSid, transcription) {
     const call = await TwilioCall.findOne({ where: { callSid: callSid } });
 
     if (!call) {
@@ -164,8 +164,6 @@ async function updateTicketWithTranscription(callSid) {
         console.error(`Ticket with ID ${call.ticketId} not found`);
         return false;
     }
-
-    const transcription = await getCompletedTranscriptions(callSid);
 
     const { title, description } = await getTitleAndDescription(transcription);
 
@@ -182,8 +180,63 @@ async function updateTicketWithTranscription(callSid) {
     return true;
 }
 
+async function upsertCallRecording(req) {
+    const {
+        AccountSid,
+        CallSid,
+        RecordingSid,
+        RecordingUrl,
+        RecordingStatus,
+        RecordingDuration,
+        RecordingStartTime,
+        // RecordingChannels,
+        // RecordingSource,
+    } = req.body;
+
+    const existingRecording = await TwilioRecording.findOne({ where: { recordingSid: RecordingSid } });
+
+    let result = null;
+
+    if (existingRecording) {
+        try {
+            result = await existingRecording.update({
+                recordingUrl: RecordingUrl || existingRecording.recordingUrl,
+                recordingStatus: RecordingStatus || existingRecording.recordingStatus,
+                recordingStartTime: RecordingStartTime || existingRecording.recordingStartTime,
+                recordingDuration: Number(RecordingDuration) || existingRecording.recordingDuration,
+            });
+        }
+        catch (error) {
+            console.error(error);
+            return false;
+        }
+
+        return { recording: result, created: false };
+    }
+
+    try {
+        result = await TwilioRecording.create({
+            recordingSid: RecordingSid,
+            callSid: CallSid,
+            accountSid: AccountSid,
+            recordingUrl: RecordingUrl,
+            recordingStatus: RecordingStatus,
+            recordingStartTime: RecordingStartTime,
+            recordingDuration: Number(RecordingDuration),
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return false;
+    }
+
+    return { recording: result, created: true };
+}
+
 module.exports = {
     upsertCallAndTicket,
     insertTranscription,
-    updateTicketWithTranscription
+    getCompletedTranscriptions,
+    updateTicketWithTranscription,
+    upsertCallRecording,
 };
