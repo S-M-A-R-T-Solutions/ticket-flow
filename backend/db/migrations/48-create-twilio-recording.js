@@ -27,6 +27,7 @@ module.exports = {
       recordingSid: {
         type: Sequelize.STRING(64),
         allowNull: false,
+        unique: true,
       },
       callSid: {
         type: Sequelize.STRING(64),
@@ -40,6 +41,9 @@ module.exports = {
         type: Sequelize.STRING(255),
       },
       recordingStatus: {
+        type: Sequelize.STRING(64),
+      },
+      recordingStartTime: {
         type: Sequelize.STRING(64),
       },
       recordingDuration: {
