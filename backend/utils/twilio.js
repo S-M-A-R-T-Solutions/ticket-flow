@@ -241,10 +241,22 @@ async function upsertCallRecording(req) {
     return { recording: result, created: true };
 }
 
+async function getAudioFileFromUrl(url, mimeType) {
+    const extension = url.split('.').pop().split('?')[0];
+    const filename = generateAlphanumericId(10) + '.' + extension;
+
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const file = new File([blob], filename, { type: mimeType });
+
+    return file;
+}
+
 module.exports = {
     upsertCallAndTicket,
     insertTranscription,
     getCompletedTranscriptions,
     updateTicketWithTranscription,
     upsertCallRecording,
+    getAudioFileFromUrl,
 };

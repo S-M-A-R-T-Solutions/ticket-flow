@@ -10,9 +10,12 @@ const {
     updateTicketWithTranscription,
     upsertCallRecording,
     getCompletedTranscriptions,
+    getAudioFileFromUrl,
 } = require('../../../utils/twilio');
 
 const { getTranscriptionFromRecording } = require('../../../utils/openai');
+
+const { singleFileUpload } = require('../../../awsS3');
 
 const publicWebhookPaths = [
     '/api/integrations/twilio/callStart',
@@ -69,11 +72,20 @@ router.post('/recordingStatus', urlencodedParser, async (req, res) => {
     const { CallSid, RecordingStatus, RecordingUrl } = req.body;
 
     if (RecordingStatus === 'completed') {
-        const { recording } = result;
-        const transcription = await getTranscriptionFromRecording(RecordingUrl);
-        await recording.update({ transcription });
+        try {
+            const file = await getAudioFileFromUrl(RecordingUrl.replace(/\.[^/.]+$/, '') + '.mp3', 'audio/mpeg');
+            const s3url = await singleFileUpload({ file, public: true });
+            console.info('Recording uploaded to S3 URL: ' + s3url);
 
-        await updateTicketWithTranscription(CallSid, transcription);
+            const { recording } = result;
+            const transcription = await getTranscriptionFromRecording(s3url);
+            await recording.update({ transcription });
+
+            await updateTicketWithTranscription(CallSid, transcription);
+        } catch (error) {
+            console.error(error);
+            return res.sendStatus(500);
+        }
     }
 
     return res.sendStatus(200);
