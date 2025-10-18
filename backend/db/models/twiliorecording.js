@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     recordingSid: {
       type: DataTypes.STRING(64),
       allowNull: false,
+      unique: true,
     },
     callSid: {
       type: DataTypes.STRING(64),
@@ -44,9 +45,15 @@ module.exports = (sequelize, DataTypes) => {
     recordingStatus: {
       type: DataTypes.STRING(64),
     },
+    recordingStartTime: {
+      type: DataTypes.STRING(64),
+    },
     recordingDuration: {
       type: DataTypes.FLOAT,
     },
+    transcription: {
+      type: DataTypes.TEXT,
+    }
   }, {
     sequelize,
     modelName: 'TwilioRecording',

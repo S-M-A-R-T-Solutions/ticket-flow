@@ -8,23 +8,23 @@ async function getTitleAndDescription(transcription) {
 
     const client = new OpenAI({ apiKey: openaiApiKey });
 
-    const response = await client.responses.create({
-        model: "gpt-5",
-        input: [
-            {
-                role: "system",
-                content: "Generate a concise title (max 10 words) and a detailed description (max 100 words) for a support ticket based on the following conversation transcription. Format the response json as '{title, description}'. Give only the json response without any additional text.",
-            },
-            {
-                role: "user",
-                content: transcription,
-            },
-        ],
-    });
-
-    console.info('getTitleAndDescription:\n' + response.choices[0].message.content);
-
     try {
+        const response = await client.responses.create({
+            model: "gpt-5",
+            input: [
+                {
+                    role: "system",
+                    content: "Generate a concise title (max 10 words) and a detailed description (max 100 words) for a support ticket based on the following conversation transcription. Format the response json as '{title, description}'. Give only the json response without any additional text.",
+                },
+                {
+                    role: "user",
+                    content: transcription,
+                },
+            ],
+        });
+
+        console.info('getTitleAndDescription:\n' + response.choices[0].message.content);
+
         const { title, description } = JSON.parse(response.choices[0].message.content);
         return { title, description };
     } catch (error) {
@@ -34,4 +34,35 @@ async function getTitleAndDescription(transcription) {
     return { title: '', description: '' };
 }
 
-module.exports = { getTitleAndDescription };
+async function getTranscriptionFromRecording(recordingUrl) {
+    const client = new OpenAI({ apiKey: openaiApiKey });
+
+    let transcription = null;
+
+    try {
+        const response = await client.responses.create({
+            model: "gpt-5",
+            input: [
+                {
+                    role: "system",
+                    content: "Get the transcription text from the following audio recording URL. Provide only the transcription text without any additional text. The audio recording is from a customer support call. The call can be in multiple languages at the same time, mostly English and Spanish. If possible label the customer and agent parts.",
+                },
+                {
+                    role: "user",
+                    content: recordingUrl,
+                },
+            ],
+        });
+
+        transcription = response.choices[0].message.content.trim();
+        console.info('getTranscriptionFromRecording:\n' + transcription);
+    }
+    catch (error) {
+        console.error('Error getting transcription from recording:', error);
+        return null;
+    }
+
+    return transcription;
+}
+
+module.exports = { getTitleAndDescription, getTranscriptionFromRecording };

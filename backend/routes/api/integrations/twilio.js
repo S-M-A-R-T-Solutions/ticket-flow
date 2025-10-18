@@ -4,7 +4,14 @@ const twilio = require('twilio');
 const config = require('@config/twilio');
 const env = require('../../../config').environment;
 const urlencodedParser = express.urlencoded({ extended: true });
-const { upsertCallAndTicket, insertTranscription, updateTicketWithTranscription } = require('../../../utils/twilio');
+const {
+    upsertCallAndTicket,
+    insertTranscription,
+    updateTicketWithTranscription,
+    upsertCallRecording,
+} = require('../../../utils/twilio');
+
+const { getTranscriptionFromRecording } = require('../../../utils/openai');
 
 const publicWebhookPaths = [
     '/api/integrations/twilio/callStart',
@@ -52,16 +59,16 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
 router.post('/recordingStatus', urlencodedParser, async (req, res) => {
     console.info(JSON.stringify(req.body));
 
-    // const {
-    //     AccountSid,
-    //     CallSid,
-    //     RecordingSid,
-    //     RecordingUrl,
-    //     RecordingStatus,
-    //     RecordingDuration,
-    //     RecordingChannels,
-    //     RecordingSource,
-    // } = req.body;
+    const { CallSid, RecordingStatus, RecordingUrl } = req.body;
+
+    const { recording, created } = await upsertCallRecording(req);
+
+    if (RecordingStatus === 'completed') {
+        const transcription = await getTranscriptionFromRecording(RecordingUrl);
+        await recording.update({ transcription });
+
+        await updateTicketWithTranscription(CallSid, transcription);
+    }
 
     return res.sendStatus(200);
 });
@@ -89,7 +96,8 @@ router.post('/transcription', urlencodedParser, async (req, res) => {
     await insertTranscription(req);
 
     if (TranscriptionEvent === 'transcription-stopped') {
-        await updateTicketWithTranscription(CallSid);
+        const transcription = await getCompletedTranscriptions(CallSid);
+        await updateTicketWithTranscription(CallSid, transcription);
     }
 
     return res.sendStatus(200);
