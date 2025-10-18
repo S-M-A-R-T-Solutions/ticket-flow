@@ -9,6 +9,7 @@ const {
     insertTranscription,
     updateTicketWithTranscription,
     upsertCallRecording,
+    getCompletedTranscriptions,
 } = require('../../../utils/twilio');
 
 const { getTranscriptionFromRecording } = require('../../../utils/openai');
@@ -59,11 +60,16 @@ router.post('/callStatus', urlencodedParser, async (req, res) => {
 router.post('/recordingStatus', urlencodedParser, async (req, res) => {
     console.info(JSON.stringify(req.body));
 
+    const result = await upsertCallRecording(req);
+    if (!result) {
+        console.error('Failed to upsert call recording');
+        return res.sendStatus(500);
+    }
+
     const { CallSid, RecordingStatus, RecordingUrl } = req.body;
 
-    const { recording, created } = await upsertCallRecording(req);
-
     if (RecordingStatus === 'completed') {
+        const { recording } = result;
         const transcription = await getTranscriptionFromRecording(RecordingUrl);
         await recording.update({ transcription });
 

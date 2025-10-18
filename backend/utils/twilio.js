@@ -214,6 +214,13 @@ async function upsertCallRecording(req) {
         return { recording: result, created: false };
     }
 
+    const call = await TwilioCall.findOne({ where: { callSid: CallSid } });
+
+    if (!call) {
+        console.error(`Call with SID ${CallSid} not found`);
+        return false;
+    }
+
     try {
         result = await TwilioRecording.create({
             recordingSid: RecordingSid,
