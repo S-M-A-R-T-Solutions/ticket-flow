@@ -223,6 +223,7 @@ async function upsertCallRecording(req) {
 
     try {
         result = await TwilioRecording.create({
+            callId: call.id,
             recordingSid: RecordingSid,
             callSid: CallSid,
             accountSid: AccountSid,
