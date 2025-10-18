@@ -10,7 +10,7 @@ async function getTitleAndDescription(transcription) {
 
     try {
         const response = await client.responses.create({
-            model: "gpt-5",
+            model: "gpt-4o",
             input: [
                 {
                     role: "system",
@@ -38,12 +38,13 @@ async function getTranscriptionFromRecording(recordingUrl) {
     const client = new OpenAI({ apiKey: openaiApiKey });
 
     const audioUrl = recordingUrl.replace(/\.[^/.]+$/, '') + '.mp3';
+    console.info('getTranscriptionFromRecording - audioUrl: ' + audioUrl);
 
     let transcription = null;
 
     try {
         const response = await client.responses.create({
-            model: "gpt-5",
+            model: "gpt-4o",
             input: [
                 {
                     role: "system",
