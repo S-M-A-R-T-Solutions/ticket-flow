@@ -54,7 +54,7 @@ async function getTranscriptionFromRecording(recordingUrl) {
             ],
         });
 
-        console.info('OpenAI transcription response:\n' + JSON.stringify(response.choices[0].message));
+        console.info('getTranscriptionFromRecording:\n' + JSON.stringify(response));
 
         transcription = response.choices[0].message.content.trim();
         console.info('getTranscriptionFromRecording:\n' + transcription);
