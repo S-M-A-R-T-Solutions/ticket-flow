@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const { getTitleAndDescription } = require('./openai');
 const axios = require('axios');
 const { Buffer } = require('buffer');
+const fs = require('fs');
 
 async function upsertCallAndTicket(req) {
     const {
@@ -249,7 +250,9 @@ async function getAudioFileFromUrl(url, mimeType) {
 
     try {
         const res = await axios.get(url, { responseType: 'arraybuffer' });
+
         const buffer = Buffer.from(res.data);
+        const stream = fs.createReadStream(buffer);
 
         const file = {
             originalname: filename,
@@ -263,7 +266,7 @@ async function getAudioFileFromUrl(url, mimeType) {
             buffer: buffer.toString().slice(0, 20) + '... (truncated)',
         }));
 
-        return file;
+        return { file, stream };
     } catch (error) {
         console.error('Error fetching audio file from URL:', error);
     }
