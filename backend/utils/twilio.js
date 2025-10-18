@@ -248,12 +248,16 @@ async function getAudioFileFromUrl(url, mimeType) {
     const filename = generateAlphanumericId(10) + '.' + extension;
 
     await axios.get(url, { responseType: 'arraybuffer' }).then(response => {
+        console.info('getAudioFileFromUrl - fetched audio file from URL:\n' + JSON.stringify(response));
+
         const buffer = Buffer.from(response.data);
         return {
             originalname: filename,
             buffer: buffer,
             mimetype: mimeType,
         };
+    }).catch(error => {
+        console.error('Error fetching audio file from URL:', error);
     });
 }
 
