@@ -37,6 +37,8 @@ async function getTitleAndDescription(transcription) {
 async function getTranscriptionFromRecording(recordingUrl) {
     const client = new OpenAI({ apiKey: openaiApiKey });
 
+    const audioUrl = recordingUrl.replace(/\.[^/.]+$/, '') + '.mp3';
+
     let transcription = null;
 
     try {
@@ -49,7 +51,7 @@ async function getTranscriptionFromRecording(recordingUrl) {
                 },
                 {
                     role: "user",
-                    content: recordingUrl,
+                    content: audioUrl,
                 },
             ],
         });
