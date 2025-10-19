@@ -172,7 +172,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
 
     try {
         await ticket.update({
-            title: title || 'No Title',
+            title: title.slice(0, 50) || 'No Title',
             description: description || 'No Description',
         });
     } catch (error) {
