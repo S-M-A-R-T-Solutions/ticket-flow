@@ -14,7 +14,7 @@ async function getTitleAndDescription(transcription) {
             input: [
                 {
                     role: "user",
-                    content: "Generate a concise title (max 10 words) and a detailed description (max 100 words) for a support ticket based on the following conversation transcription. Format the response json as '{title, description}'. Give only the json response without any additional text. This transcription may include multiple languages, primarily English and Spanish.\n\nTranscription:\n" + transcription,
+                    content: "Generate a concise title (max 50 characters) and a detailed description (max 100 words) for a support ticket based on the following conversation transcription. Format the response json as '{title, description}'. Give only the json response without any additional text. This transcription may include multiple languages, primarily English and Spanish.\n\nTranscription:\n" + transcription,
                 },
             ],
         });
