@@ -48,8 +48,7 @@ async function getTranscriptionFromRecording(file) {
         
         console.info('getTranscriptionFromRecording:\n' + JSON.stringify(response));
 
-        transcription = response.text;
-        console.info('getTranscriptionFromRecording:\n' + transcription);
+        transcription = response;
     }
     catch (error) {
         console.error('Error getting transcription from recording:', error);
