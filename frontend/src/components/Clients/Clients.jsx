@@ -6,7 +6,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
-import "./Clients.scss";
+import "./Clients.scss"
 
 import { getAllClientsThunk, getTotalClientsAmountThunk } from "../../store/clients";
 import ClientCard from '../ClientCard/ClientCard';
@@ -56,24 +56,22 @@ export default function Clients() {
     }
 
     return (
-        <section className="app-section clients-tab">
-            <div className="section-header">
+        <section className="clients-tab">
+            <div className="clients-tab-header">
                 <h1>Clients</h1>
-
-                <div className="spacer"></div>
 
                 <OpenModalMenuItem
                     modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
                     onModalClose={onModalClose}
                     dismisable={false}
                 >
-                    <button className="btn-add-client-button">
+                    <div className="add-client-button">
                         <FaCirclePlus /> Add Client
-                    </button>
+                    </div>
                 </OpenModalMenuItem>
             </div>
 
-            <div className="clients-container">
+            <div className="clients-list-container">
                 <div>
                     {allClients.map((client) => (
                         <ClientCard key={client.id} client={client} setEditClientChecker={setEditClientChecker} setDeleteClientChecker={setDeleteClientChecker} />

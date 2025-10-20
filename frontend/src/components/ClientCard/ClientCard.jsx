@@ -29,10 +29,11 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
     return (
         <div
             className={`client-card-${clientType}`}
-            onClick={goToClientDetails}
         >
-            <div className="client-card-left">
-                <div style= {{display: "flex", flexDirection: "row", alignItems: "center", gap: "10px"}}>
+            <div className="client-card-left"
+                onClick={goToClientDetails}
+            >
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px" }}>
                     <img className="client-profile" src={client.profilePicUrl} alt="profile-pic" />
                     {
                         client.companyName !== "" ? (
@@ -48,24 +49,24 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
                 </div>
             </div>
             <div className="client-card-right">
-            <div className="edit-ticket-btn-ticketcard">
+                <div className="edit-ticket-btn-ticketcard" style={{ zIndex: 10 }}>
                     <OpenModalMenuItem
                         itemText={<FaPen />}
-                        modalComponent= {
-                            <EditClient 
-                                client={client} 
-                                setEditClientChecker={setEditClientChecker} 
-                            /> }
+                        modalComponent={
+                            <EditClient
+                                client={client}
+                                setEditClientChecker={setEditClientChecker}
+                            />}
                     />
                 </div>
                 <div className="edit-ticket-btn-ticketcard" onClick={handleDeleteClick}>
                     <OpenModalMenuItem
                         itemText={<FaTrash />}
-                        modalComponent= {
-                            <DeleteClient 
-                                client={client} 
-                                setDeleteClientChecker={setDeleteClientChecker} 
-                            /> }
+                        modalComponent={
+                            <DeleteClient
+                                client={client}
+                                setDeleteClientChecker={setDeleteClientChecker}
+                            />}
                     />
                 </div>
             </div>
