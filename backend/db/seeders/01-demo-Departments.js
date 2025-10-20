@@ -21,6 +21,14 @@ module.exports = {
       {
         name: 'Sales',
         description: 'Sales and Marketing'
+      },
+      {
+        name: "Accounting",
+        description: "Financial and Accounting"
+      },
+      {
+        name: "Help Desk Support",
+        description: "Technical Support and Customer Service"
       }
     ], options)
   },
