@@ -1,6 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { FaTrash, FaPen } from "react-icons/fa";
+import { TiEdit } from "react-icons/ti";
+import { IoTrashOutline } from "react-icons/io5";
+
 import { useEffect } from "react";
 import { getOneClientThunk } from "../../store/clients";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
@@ -51,7 +53,7 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
             <div className="client-card-right">
                 <div className="edit-ticket-btn-ticketcard" style={{ zIndex: 10 }}>
                     <OpenModalMenuItem
-                        itemText={<FaPen />}
+                        itemText={<TiEdit />}
                         modalComponent={
                             <EditClient
                                 client={client}
@@ -61,7 +63,7 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
                 </div>
                 <div className="edit-ticket-btn-ticketcard" onClick={handleDeleteClick}>
                     <OpenModalMenuItem
-                        itemText={<FaTrash />}
+                        itemText={<IoTrashOutline />}
                         modalComponent={
                             <DeleteClient
                                 client={client}
