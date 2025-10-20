@@ -35,7 +35,7 @@ module.exports = {
       imageUrl: {
         type: Sequelize.STRING(255),
         allowNull: false,
-        defaultValue: 'https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg'
+        defaultValue: 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
       },
       unit: {
         type: Sequelize.STRING(20),

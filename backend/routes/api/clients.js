@@ -67,6 +67,24 @@ router.get('/:id', requireAuth, async (req, res, next) => {
     }
 });
 
+//Get all the Tickets of a Client by clientId
+router.get('/:id/tickets', requireAuth, async (req, res, next) => {
+    try {
+        const client = await Client.findByPk(req.params.id);
+        if (!client) {
+            return res.status(404).json({ message: 'Client not found' });
+        }
+
+        const tickets = await Ticket.findAll({
+            where: { clientId: client.id }
+        });
+
+        return res.json(tickets);
+    } catch (error) {
+        next(error);
+    }
+});
+
 //Get all Locations of a Client by clientId
 router.get('/:id/locations', requireAuth, async (req, res, next) => {
     try {
@@ -122,14 +140,20 @@ router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next
 });
 
 //Add a Location to a Client
-router.post('/:id/locations', async (req, res, next) => {
+router.post('/:id/locations', requireAuth, singleMulterUpload('image'), async (req, res, next) => {
     try {
+        const { name, addressLine1, addressLine2, city, state, zipcode } = req.body;
+        
         const client = await Client.findByPk(req.params.id);
+        
         if (!client) {
             return res.status(404).json({ message: 'Client not found' });
         }
+        
+        const profilePicUrl = req.file
+            ? await singleFileUpload({ file: req.file, public: true })
+            : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
 
-        const { name, addressLine1, addressLine2, city, state, zipcode } = req.body;
         const location = await Location.create({
             name,
             addressLine1,
@@ -137,7 +161,8 @@ router.post('/:id/locations', async (req, res, next) => {
             city,
             state,
             zipcode,
-            clientId: client.id
+            clientId: client.id,
+            profilePicUrl
         });
 
         return res.status(201).json(location);

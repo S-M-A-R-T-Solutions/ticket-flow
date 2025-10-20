@@ -48,13 +48,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    state: { 
+    state: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    zipcode: { 
+    zipcode: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    profilePicUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
+
     }
   }, {
     sequelize,
