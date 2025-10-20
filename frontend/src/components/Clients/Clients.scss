@@ -1,0 +1,53 @@
+.clients-tab {
+    .section-header {
+        h1 {}
+        .spacer {}
+        .btn-add-client-button {
+            svg {}
+            span {}
+        }
+    }
+
+    .clients-container {
+        > div {
+            .client-card {}
+        }
+    }
+
+    .tickets-footer {
+        .prev-btn {
+            svg {}
+        }
+
+        div {
+            span {}
+        }
+
+        .next-btn {
+            svg {}
+        }
+    }
+
+    .loader {}
+
+    @media (max-width: 768px) {
+        .section-header {
+            h1 {}
+            .btn-add-client-button {}
+        }
+
+        .clients-container {
+            > div {
+                .client-card {}
+            }
+        }
+
+        .tickets-footer {
+            .prev-btn {}
+            div {
+                span {}
+            }
+            .next-btn {}
+        }
+    }
+}

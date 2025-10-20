@@ -4,41 +4,67 @@
     border-radius: 16px;
     width: 800px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
+    padding: 20px;
     animation: fadeIn 0.25s ease-in-out;
-    padding: 20px 28px;
 
     h2 {
-        font-size: 22px;
         font-weight: 600;
         text-align: center;
         color: var(--text-color);
-        margin-bottom: 12px;
-
-        &::after {
-        content: '';
-        display: block;
-        width: 40px;
-        height: 3px;
-        background-color: var(--special-btn);
-        border-radius: 2px;
-        margin: 8px auto 0 auto;
-        }
+        margin-top: 10px;
+        margin-bottom: 20px;
     }
 
-    form {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 16px;
-    }
-
+    
     .form-group {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 16px;
+
+            .form-content {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+
+                .add-location-left {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 40%;
+
+                    .add-location-image-placeholder {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-items: center;
+
+                        img {
+                            width: 200px;
+                            height: 200px;
+                            border-radius: 16px;
+                            object-fit: cover;
+                            transition: all 0.2s ease-in-out;
+                            border: 1px solid var(--box-bg-border);
+                            background-color: var(--box-bg);
+                        }
+                    }
+                }
+
+                .add-location-right {
+                    display: flex;
+                    flex-direction: column;
+                    // width: 60%;
+                    gap: 12px;
+                }
+            }
+        }
     }
 
     /* =============================== */
@@ -51,34 +77,32 @@
         width: 100%;
 
         label {
-        font-size: 12px;
-        text-transform: uppercase;
-        opacity: 0.7;
-        letter-spacing: 0.5px;
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
         }
 
         input,
         select {
-        width: 100%;
-        border: 1px solid var(--box-bg-border);
-        border-radius: 8px;
-        padding: 10px 12px;
-        color: var(--light-black);
-        font-size: 12px;
-        transition: all 0.25s ease;
-        background-color: var(--text-color);
+            width: 100%;
+            background-color: var(--light-white);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px;
+            color: var(--light-black);
+            outline: none;
         }
 
         input:focus,
         select:focus {
-        outline: none;
-        border-color: var(--special-btn);
-        box-shadow: 0 0 0 2px var(--special-btn)33;
+            border-color: var(--tiffany-blue);
         }
 
         .error-message {
-        font-size: 12px;
-        color: var(--razzmatazz);
+            font-size: 12px;
+            color: var(--razzmatazz);
         }
     }
 
@@ -88,7 +112,7 @@
     .address-lines {
         display: flex;
         gap: 16px;
-        flex-wrap: wrap;
+        flex-wrap: row;
 
         .add-location-input {
         flex: 1;
@@ -98,7 +122,7 @@
 
     .city-state-zip {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: row;
         gap: 16px;
 
         .add-location-input {
@@ -107,14 +131,15 @@
         }
 
         select {
-        cursor: pointer;
-        border: 1px solid var(--box-bg-border);
-        border-radius: 8px;
-        padding: 10px 12px;
-        color: var(--light-black);
-        font-size: 12px;
-        transition: all 0.25s ease;
-        background-color: var(--text-color);
+            cursor: pointer;
+            width: 100%;
+            background-color: var(--light-white);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12px;
+            color: var(--light-black);
+            outline: none;
         }
     }
 
@@ -124,47 +149,47 @@
     .form-buttons {
         display: flex;
         justify-content: center;
-        gap: 14px;
-        width: 100%;
-        margin-top: 8px;
+        gap: 12px;
+
+        button {
+            width: fit-content;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+
+            &:first-child {
+                background-color: var(--tiffany-blue);
+                color: white;
+
+                &:hover {
+                    opacity: 0.9;
+                }
+            }
+
+            &:last-child {
+                background-color: transparent;
+                color: var(--text-color);
+
+                &:hover {
+                    background-color: #dedede8a;
+                }
+            }
+        }
 
         .submit-button,
         .cancel-button {
-        width: 150px;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.25s ease;
-        cursor: pointer;
-        }
+            width: fit-content;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
 
-        .submit-button {
-        background-color: var(--special-btn);
-        color: var(--text-color-inverted);
-        border: none;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-
-        &:hover:not(:disabled) {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
-        }
-
-        &:disabled {
-            background-color: #888;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-        }
-
-        .cancel-button {
-        background-color: transparent;
-        border: 1px solid var(--box-bg-border);
-        color: var(--text-color);
-
-        &:hover {
-            background-color: var(--box-bg);
-        }
+            &:hover {
+                opacity: 0.9;
+            }
         }
     }
 

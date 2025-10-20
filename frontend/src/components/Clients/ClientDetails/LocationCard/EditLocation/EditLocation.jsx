@@ -6,6 +6,8 @@ import { editLocationThunk } from "../../../../../store/clients";
 
 import { STATES } from "../../../../../utils/constants";
 
+import './EditLocation.scss';
+
 export default function EditLocation({ setLocationChecker, locationIndex, clientId }) {
     const dispatch = useDispatch();
     const { closeModal } = useModal();
@@ -81,11 +83,11 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
 
     return (
         <div className="edit-location-modal">
-            <h2>Edit Location</h2>
+            <h1>Edit Location</h1>
             <div className="form-group">
                 <form onSubmit={handleSubmit}>
-                    <div className="add-location-input">
-                        <label>Location Name</label>
+                    <div className="edit-location-input">
+                        <label>Location Name*</label>
                         <input
                             type="text"
                             value={name}
@@ -96,8 +98,8 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
                         {errors.name && <div className="error-message">{errors.name}</div>}
                     </div>
                     <div className="address-lines">
-                        <div className="add-location-input">
-                            <label>Address Line 1</label>
+                        <div className="edit-location-input">
+                            <label>Address Line 1*</label>
                             <input
                                 type="text"
                                 value={addressLine1}
@@ -107,7 +109,7 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
                             />
                             {errors.addressLine1 && <div className="error-message">{errors.addressLine1}</div>}
                         </div>
-                        <div className="add-location-input">
+                        <div className="edit-location-input">
                             <label>Address Line 2</label>
                             <input
                                 type="text"
@@ -118,8 +120,8 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
                         </div>
                     </div>
                     <div className="city-state-zip">
-                        <div className="add-location-input">
-                            <label>City</label>
+                        <div className="edit-location-input">
+                            <label>City*</label>
                             <input
                                 type="text"
                                 value={city}
@@ -129,8 +131,8 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
                             />
                             {errors.city && <div className="error-message">{errors.city}</div>}
                         </div>
-                        <div className="add-location-input">
-                            <label>State</label>
+                        <div className="edit-location-input">
+                            <label>State*</label>
                             <select
                                 value={state}
                                 onChange={(e) => setState(e.target.value)}
@@ -144,8 +146,8 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
                             </select>
                             {/* {errors.state && <div className="error-message">{errors.state}</div>} */}
                         </div>
-                        <div className="add-location-input">
-                            <label>Zipcode</label>
+                        <div className="edit-location-input">
+                            <label>Zipcode*</label>
                             <input
                                 type="text"
                                 placeholder="12345 or 12345-6789"
@@ -157,8 +159,8 @@ export default function EditLocation({ setLocationChecker, locationIndex, client
                         </div>
                     </div>
                     <div className="form-buttons">
-                        <button type="submit" className="submit-button" disabled={disabled}>Save Changes</button>
-                        <button type="button" className="cancel-button" onClick={() => { closeModal(); }}>Cancel</button>
+                        <button className="submit-button-btn-edit-location" disabled={disabled}>Save Changes</button>
+                        <button className="cancel-button-btn-edit-location" onClick={() => { closeModal(); }}>Cancel</button>
                     </div>
                 </form>
             </div>

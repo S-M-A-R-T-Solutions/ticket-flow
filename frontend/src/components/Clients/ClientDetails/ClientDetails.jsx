@@ -6,6 +6,7 @@ import LocationCard from "./LocationCard";
 
 import { getOneClientThunk } from "../../../store/clients";
 
+import { MdOutlineAddLocationAlt } from "react-icons/md";
 import { FaPhone, FaEnvelope, FaPen, FaCirclePlus } from "react-icons/fa6";
 
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
@@ -29,8 +30,6 @@ export default function ClientDetails() {
     useEffect(() => {
         dispatch(getOneClientThunk(clientId));
     }, [dispatch, clientId, locationAddedChecker, locationChecker]);
-
-    console.log("CLIENT DETAILS CLIENT: ", client);
 
     return (
         <div className="client-details">
@@ -107,7 +106,7 @@ export default function ClientDetails() {
                                         dismisable={false}
                                     >
                                         <div className="add-location-button">
-                                            <FaCirclePlus />
+                                            <MdOutlineAddLocationAlt />
                                             <div>
                                                 Add Location
                                             </div>
@@ -117,7 +116,6 @@ export default function ClientDetails() {
                                 <div className="locations-list">
                                     {client.locations && client.locations.length > 0 ? (
                                         client.locations.map((location, index) => (
-                                            // Add Modal to Open Location's Contact Phones and Emails, then add "Add Contact Information" inside that modal
                                             <LocationCard key={location.id} clientId={client.id} locationIndex={index} location={location} setLocationChecker={setLocationChecker} />
                                         ))
                                     ) : (
@@ -128,7 +126,7 @@ export default function ClientDetails() {
                         </div>
                     </div>
                     <div className="client-tickets-section">
-                        <ClientTickets tickets={client.tickets} />
+                        <ClientTickets tickets={client.tickets} clientId={client.id} />
                     </div>
                 </>
             ) : (

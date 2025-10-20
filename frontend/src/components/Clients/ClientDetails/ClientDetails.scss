@@ -211,30 +211,35 @@
 
                 .locations-header {
                     display: flex;
+                    flex-direction: row;
                     justify-content: space-between;
                     align-items: center;
                     margin-bottom: 10px;
 
                     h2 {
                         margin: 0;
-                        font-size: 20px;
-                        font-weight: 600;
+                        // font-size: 20px;
+                        // font-weight: 600;
                     }
 
                     .add-location-button {
                         display: flex;
                         align-items: center;
-                        gap: 8px;
-                        padding: 10px;
-                        border-radius: 8px;
-                        font-size: 16px;
-                        background-color: var(--button-bg-color);
-                        color: var(--button-text-color);
+                        justify-content: center;
+                        gap: 6px;
+                        background-color: transparent;
+                        border: 1px solid var(--tiffany-blue);
+                        color: var(--tiffany-blue);
+                        font-size: 14px;
                         cursor: pointer;
-                        transition: background-color 0.3s ease;
+                        // margin: 10px auto;
+                        padding: 8px 14px;
+                        border-radius: 8px;
+                        transition: background-color 0.3s ease, color 0.3s ease;
 
                         &:hover {
-                            background-color: var(--tiffany-blue);
+                            background-color: rgba(29, 161, 242, 0.1);
+                            color: var(--text-color);
                         }
                     }
                 }
@@ -250,6 +255,7 @@
 
   // --- TICKETS SECTION (outside wrapper) ---
     .client-tickets-section {
-            margin-top: 20px;
+        width: 100%;
+        margin-top: 20px;
     }
 }
