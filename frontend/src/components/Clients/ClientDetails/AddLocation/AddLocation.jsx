@@ -93,15 +93,29 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
                 <form onSubmit={handleSubmit}>
                     <div className="form-content">
                         <div className="add-location-left">
-                            <div className="add-location-image-placeholder">
-                                <img src={profilePicUrl} alt="Location Placeholder" />
-                                <input
-                                    type="file"
-                                    name="img_url"
-                                    onChange={updateFile}
-                                    accept=".jpg, .jpeg, .png"
+                            <div
+                                className="image-wrapper"
+                                onClick={() => document.getElementById('hiddenLocationFileInput').click()}
+                            >
+                                <img
+                                    src={profilePicUrl}
+                                    alt="Location Placeholder"
+                                    className="location-image"
                                 />
+                                <div className="image-overlay">
+                                    {profilePicUrl.includes('placeholder') ? 'Click to upload' : 'Click to change'}
+                                </div>
                             </div>
+
+                            <input
+                                id="hiddenLocationFileInput"
+                                type="file"
+                                name="img_url"
+                                accept="image/*"
+                                capture="environment"
+                                onChange={updateFile}
+                                style={{ display: 'none' }}
+                            />
                         </div>
                         <div className="add-location-right">
                             <div className="add-location-input">
@@ -179,8 +193,18 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
                         </div>
                     </div>
                     <div className="form-buttons">
-                        <button className="submit-button" disabled={disabled}>Add Location</button>
-                        <button className="cancel-button" onClick={() => { setLocationAddedChecker(false); closeModal(); }}>Cancel</button>
+                        <button
+                            className="submit-button"
+                            disabled={disabled}
+                        >
+                            Add Location
+                        </button>
+                        <button
+                            className="cancel-button"
+                            onClick={() => { setLocationAddedChecker(false); closeModal(); }}
+                        >
+                            Cancel
+                        </button>
                     </div>
                 </form>
             </div>

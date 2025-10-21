@@ -7,7 +7,7 @@ import LocationCard from "./LocationCard";
 import { getOneClientThunk } from "../../../store/clients";
 
 import { MdOutlineAddLocationAlt } from "react-icons/md";
-import { FaPhone, FaEnvelope, FaPen, FaCirclePlus } from "react-icons/fa6";
+import { FaPhone, FaEnvelope } from "react-icons/fa6";
 
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
@@ -65,9 +65,6 @@ export default function ClientDetails() {
                                             </div>
                                         )}
                                     </div>
-                                </div>
-                                <div className="edit-client-button">
-                                    <FaPen />
                                 </div>
                             </div>
                             <div className="divider"></div>

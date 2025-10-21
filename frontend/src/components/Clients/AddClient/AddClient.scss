@@ -13,7 +13,7 @@
     
     .add-client-header {
         font-weight: 600;
-        font-size: 24px;
+        font-size: 18px;
         text-align: center;
         color: var(--text-color);
         margin: 10px 0px;
@@ -28,13 +28,13 @@
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        justify-content: space-between;
+        justify-content: flex-start;
         gap: 24px;
         flex-wrap: wrap;
 
         @media (max-width: 760px) {
-        flex-direction: column;
-        align-items: center;
+            flex-direction: column;
+            align-items: center;
         }
     }
 
@@ -47,19 +47,63 @@
         align-items: center;
         width: 35%;
 
-        .client-image {
-        width: 200px;
-        height: 200px;
-        border-radius: 16px;
-        object-fit: cover;
-        transition: all 0.2s ease-in-out;
-        border: 1px solid var(--box-bg-border);
-        background-color: var(--box-bg);
+        .image-wrapper {
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
 
-        &:hover {
+            .client-image {
+                width: 200px;
+                height: 200px;
+                border-radius: 16px;
+                object-fit: cover;
+                transition: all 0.25s ease-in-out;
+                border: 1px solid var(--box-bg-border);
+                background-color: var(--box-bg);
+            }
+
+            .image-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 16px;
+                background-color: rgba(0, 0, 0, 0.5);
+                color: #fff;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease-in-out;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            &:hover .client-image {
+                transform: scale(1.03);
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            }
+
+            &:hover .image-overlay {
+                opacity: 1;
+            }
+        }
+
+        .client-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 16px;
+            object-fit: cover;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid var(--box-bg-border);
+            background-color: var(--box-bg);
+
+            &:hover {
             transform: scale(1.03);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        }
+            }   
         }
 
         input[type='file'] {
@@ -68,6 +112,7 @@
             text-align: center;
             color: var(--text-color);
             cursor: pointer;
+            text-overflow: ellipsis;
             background: transparent;
             border: none;
             opacity: 0.8;

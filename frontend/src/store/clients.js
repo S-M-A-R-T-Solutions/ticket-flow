@@ -210,12 +210,26 @@ export const getLocationThunk = (clientId, locationId) => async (dispatch) => {
 };
 
 export const editLocationThunk = (clientId, locationId, location) => async (dispatch) => {
+    const formData = new FormData();
+
+    const { name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl } = location;
+
+    // Append the location information to the form data
+    formData.append('name', name);
+    if (addressLine1) formData.append('addressLine1', addressLine1);
+    if (addressLine2) formData.append('addressLine2', addressLine2);
+    if (city) formData.append('city', city);
+    if (state) formData.append('state', state);
+    if (zipcode) formData.append('zipcode', zipcode);
+
+    // Append the profile picture (file) if it exists
+    if (profilePicUrl) {
+        formData.append('image', profilePicUrl); // 'image' is the field name used in multer
+    }
+
     const res = await csrfFetch(`/api/clients/${clientId}/locations/${locationId}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(location)
+        body: formData, // FormData automatically sets the correct headers
     });
 
     const updatedLocation = await res.json();
