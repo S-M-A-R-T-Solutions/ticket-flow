@@ -104,12 +104,22 @@ export default function AddClient({ setClientsChecker }) {
             </div>
             <form className="add-client-form" onSubmit={handleSubmit}>
                 <div className="add-client-left">
-                    <img src={profilePicUrl} alt="client-avatar" className="client-image" />
+                    <div className="image-wrapper" onClick={() => document.getElementById('hiddenAddFileInput').click()}>
+                        <img
+                            src={profilePicUrl}
+                            alt="client-avatar"
+                            className="client-image"
+                        />
+                        <div className="image-overlay">Click to upload</div>
+                    </div>
                     <input
+                        id="hiddenAddFileInput"
                         type="file"
                         name="img_url"
-                        onChange={updateFile}
+                        capture="environment"
                         accept=".jpg, .jpeg, .png"
+                        onChange={updateFile}
+                        style={{ display: 'none' }}
                     />
                     {errors.profilePicUrl && <span className="error">{errors.profilePicUrl}</span>}
                 </div>
