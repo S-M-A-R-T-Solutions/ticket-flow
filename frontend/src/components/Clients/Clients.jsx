@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { FaCirclePlus } from "react-icons/fa6";
+import { IoPersonAddOutline } from "react-icons/io5";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
@@ -60,7 +60,7 @@ export default function Clients() {
                         dismisable={false}
                     >
                         <div className="add-client-button">
-                            <FaCirclePlus /> Add Client
+                            <IoPersonAddOutline /> Add Client
                         </div>
                     </OpenModalMenuItem>
                 </div>
@@ -94,7 +94,7 @@ export default function Clients() {
                     dismisable={false}
                 >
                     <div className="add-client-button">
-                        <FaCirclePlus /> Add Client
+                        <IoPersonAddOutline /> Add Client
                     </div>
                 </OpenModalMenuItem>
             </div>
