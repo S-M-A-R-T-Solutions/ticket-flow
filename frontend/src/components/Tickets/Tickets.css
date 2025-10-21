@@ -28,19 +28,27 @@
 /* Add Ticket Button */
 .add-ticket-btn {
     display: flex;
-    justify-content: center;
     align-items: center;
-    /* gap: 5px; */
-    /* font-size: 1rem; */
-    background-color: var(--special-btn);
-    /* border: solid 1px var(--button-bg-color); */
-    border-radius: 10px;
-    /* Button background */
-    color: var(--text-color);
-    /* Button text color */
-    padding: 5px;
+    justify-content: center;
+    gap: 6px;
+    background-color: transparent;
+    border: 1px solid var(--tiffany-blue);
+    color: var(--tiffany-blue);
+    font-size: 14px;
     cursor: pointer;
+    margin: 10px auto;
+    padding: 8px 14px;
+    border-radius: 8px;
     transition: background-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(29, 161, 242, 0.1);
+        color: var(--text-color);
+    }
+
+    svg {
+        font-size: 16px;
+    }
 }
 
 /* Tickets Container */
@@ -49,7 +57,7 @@
     grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
     gap: 16px;
 
-    width: 100%;    
+    width: 100%;
     /* flex-grow: 1; */
 }
 
