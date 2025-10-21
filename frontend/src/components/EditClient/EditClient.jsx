@@ -109,6 +109,27 @@ export default function EditClient({ client, setEditClientChecker }) {
                     {errors.profilePicUrl && <span className="error">{errors.profilePicUrl}</span>}
                 </div>
                 <div className="edit-client-right">
+                    <div className="edit-client-type">
+                        <label>Client Type:</label>
+                        <label>
+                            <input
+                                type="radio"
+                                value="individual"
+                                checked={client.firstName !== "" || client.lastName !== ""}
+                                disabled={true}
+                            />
+                            Individual
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                value="company"
+                                checked={client.companyName !== ""}
+                                disabled={true}
+                            />
+                            Company
+                        </label>
+                    </div>
                     {client.companyName !== '' ? (
                         <div className="edit-client-input">
                             <label>Company Name</label>
@@ -121,7 +142,7 @@ export default function EditClient({ client, setEditClientChecker }) {
                         </div>
 
                     ) : (
-                        <>
+                        <div className="client-contact-inputs">
                             <div className="edit-client-input">
                                 <label>First Name</label>
                                 <input
@@ -139,26 +160,28 @@ export default function EditClient({ client, setEditClientChecker }) {
                                 />
                             </div>
                             {errors.name && <div className="edit-client-errors">{errors.name}</div>}
-                        </>
+                        </div>
                     )}
-                    <div className="edit-client-input">
-                        <label>Email</label>
-                        <input
-                            type="text"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className="edit-client-input">
-                        <label>Phone Number*</label>
-                        <input
-                            type="text"
-                            name="phoneNumber"
-                            maxLength={14}
-                            value={formatPhoneNumber(phoneNumber)}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                        />
-                        {errors.phoneNumber && <span className="error">{errors.phoneNumber}</span>}
+                    <div className="client-contact-inputs">
+                        <div className="edit-client-input">
+                            <label>Email</label>
+                            <input
+                                type="text"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <div className="edit-client-input">
+                            <label>Phone Number*</label>
+                            <input
+                                type="text"
+                                name="phoneNumber"
+                                maxLength={14}
+                                value={formatPhoneNumber(phoneNumber)}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                            {errors.phoneNumber && <span className="error">{errors.phoneNumber}</span>}
+                        </div>
                     </div>
                 </div>
                 <div className="edit-client-buttons">
