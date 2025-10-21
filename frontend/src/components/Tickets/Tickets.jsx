@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { FaCirclePlus } from "react-icons/fa6";
+import { LuTicketPlus } from "react-icons/lu";
 
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
 
@@ -53,7 +53,7 @@ export default function Tickets() {
                         onModalClose={onModalClose}
                     >
                         <button className="btn btn-add-item">
-                            <FaCirclePlus /> Add Ticket
+                            <LuTicketPlus /> Add Ticket
                         </button>
                     </OpenModalMenuItem>
                 </div>
@@ -87,8 +87,8 @@ export default function Tickets() {
                         modalComponent={<AddTicket setTicketsChecker={setTicketsChecker} />}
                         onModalClose={onModalClose}
                     >
-                        <button className="btn btn-add-item">
-                            <FaCirclePlus /> Add Ticket
+                        <button className="add-ticket-btn">
+                            <LuTicketPlus /> Add Ticket
                         </button>
                     </OpenModalMenuItem>
                 </div>
