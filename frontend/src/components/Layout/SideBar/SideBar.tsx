@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { MdOutlineInventory } from "react-icons/md";
 import { AiOutlineHome } from "react-icons/ai";
 import { LuTicket } from "react-icons/lu";
 import { HiOutlineUserGroup } from "react-icons/hi";
+import { BsClipboardCheck } from "react-icons/bs";
 
 import './SideBar.scss';
 
@@ -34,7 +34,7 @@ export default function SideBar() {
                 </li>
                 <li>
                     <NavLink to="/inventory" className="nav-item">
-                        <MdOutlineInventory className='nav-icon' />
+                        <BsClipboardCheck className='nav-icon' />
                         Inventory
                     </NavLink>
                 </li>
