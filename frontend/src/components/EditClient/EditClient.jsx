@@ -99,14 +99,23 @@ export default function EditClient({ client, setEditClientChecker }) {
             </div>
             <form onSubmit={handleOnSubmit} className="edit-client-form">
                 <div className="edit-client-left">
-                    <img src={profilePicUrl} alt="client-avatar" className="client-image" />
+                    <div className="image-wrapper" onClick={() => document.getElementById('hiddenFileInput').click()}>
+                        <img
+                            src={profilePicUrl}
+                            alt="client-avatar"
+                            className="client-image"
+                        />
+                        <div className="image-overlay">Click to change</div>
+                    </div>
                     <input
+                        id="hiddenFileInput"
                         type="file"
                         name="img_url"
-                        onChange={updateFile}
+                        capture="environment"
                         accept=".jpg, .jpeg, .png"
+                        onChange={updateFile}
+                        style={{ display: 'none' }}
                     />
-                    {errors.profilePicUrl && <span className="error">{errors.profilePicUrl}</span>}
                 </div>
                 <div className="edit-client-right">
                     <div className="edit-client-type">

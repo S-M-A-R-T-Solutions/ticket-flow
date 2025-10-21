@@ -272,7 +272,7 @@ router.get('/:clientId/locations/:locationId', requireAuth, async (req, res, nex
 });
 
 //Edit a Location of a Client
-router.put('/:clientId/locations/:locationId', requireAuth, async (req, res, next) => {
+router.put('/:clientId/locations/:locationId', requireAuth, singleMulterUpload('image'), async (req, res, next) => {
     try {
         const { clientId, locationId } = req.params;
 
@@ -288,6 +288,10 @@ router.put('/:clientId/locations/:locationId', requireAuth, async (req, res, nex
             }
         });
 
+        const profilePicUrl = req.file
+            ? await singleFileUpload({ file: req.file, public: true })
+            : location.profilePicUrl;
+
         if (!location) {
             return res.status(404).json({ message: 'Location not found for this client' });
         }
@@ -300,6 +304,7 @@ router.put('/:clientId/locations/:locationId', requireAuth, async (req, res, nex
         location.city = city || location.city;
         location.state = state || location.state;
         location.zipcode = zipcode || location.zipcode;
+        location.profilePicUrl = profilePicUrl;
 
         await location.save();
 
