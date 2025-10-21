@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { FaCirclePlus } from "react-icons/fa6";
+import { IoPersonAddOutline } from "react-icons/io5";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
@@ -42,18 +42,46 @@ export default function Clients() {
 
     const lastPage = Math.ceil(totalClients / CLIENTS_PER_PAGE);
 
-    if (!allClients || !totalClients)
-        return (
-            <section className="clients-tab">
-                <span className="loader"></span>
-            </section>
-        );
-
     const onModalClose = () => {
         setDeleteClientChecker(true);
         setClientsAddChecker(true);
         setEditClientChecker(true);
     }
+
+    if (!allClients || !totalClients)
+        return (
+            <section className="clients-tab">
+                <div className="clients-tab-header">
+                    <h1>Clients</h1>
+
+                    <OpenModalMenuItem
+                        modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
+                        onModalClose={onModalClose}
+                        dismisable={false}
+                    >
+                        <div className="add-client-button">
+                            <IoPersonAddOutline /> Add Client
+                        </div>
+                    </OpenModalMenuItem>
+                </div>
+
+                <div className="clients-list-container">
+                    <section className="clients-tab">
+                        <span className="loader"></span>
+                    </section>
+                </div>
+
+                <div className='tickets-footer'>
+                    <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
+                    <div>
+                        <span >
+                            {page} of {lastPage}
+                        </span>
+                    </div>
+                    <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><FaAngleRight /></button>
+                </div>
+            </section>
+        );
 
     return (
         <section className="clients-tab">
@@ -66,7 +94,7 @@ export default function Clients() {
                     dismisable={false}
                 >
                     <div className="add-client-button">
-                        <FaCirclePlus /> Add Client
+                        <IoPersonAddOutline /> Add Client
                     </div>
                 </OpenModalMenuItem>
             </div>

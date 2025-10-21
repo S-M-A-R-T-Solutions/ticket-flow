@@ -51,25 +51,27 @@ export default function ClientCard({ client, setEditClientChecker, setDeleteClie
                 </div>
             </div>
             <div className="client-card-right">
-                <div className="edit-ticket-btn-ticketcard" style={{ zIndex: 10 }}>
+                <div className="edit-ticket-btn-ticket-card" style={{ zIndex: 10 }}>
                     <OpenModalMenuItem
-                        itemText={<TiEdit />}
                         modalComponent={
                             <EditClient
                                 client={client}
                                 setEditClientChecker={setEditClientChecker}
                             />}
-                    />
+                    >
+                        <TiEdit />
+                    </OpenModalMenuItem>
                 </div>
-                <div className="edit-ticket-btn-ticketcard" onClick={handleDeleteClick}>
+                <div className="delete-ticket-btn-ticket-card" onClick={handleDeleteClick}>
                     <OpenModalMenuItem
-                        itemText={<IoTrashOutline />}
                         modalComponent={
                             <DeleteClient
                                 client={client}
                                 setDeleteClientChecker={setDeleteClientChecker}
                             />}
-                    />
+                    >
+                        <IoTrashOutline style={{ color: "var(--danger-color, #c33)", fontSize: "18px" }} />
+                    </OpenModalMenuItem>
                 </div>
             </div>
         </div>
