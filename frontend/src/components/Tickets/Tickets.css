@@ -2,7 +2,7 @@
 .tickets-tab {
     display: flex;
     width: 100%;
-    flex-grow: 1;
+    flex: 1;
     flex-direction: column;
     align-content: space-between;
     justify-content: space-between;
@@ -14,7 +14,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -22,7 +22,6 @@
 .section-header h1 {
     font-size: 2rem;
     color: var(--text-color);
-    /* Adapt text color based on theme */
 }
 
 /* Add Ticket Button */
@@ -54,11 +53,10 @@
 /* Tickets Container */
 .tickets-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-    gap: 16px;
-
-    width: 100%;
-    /* flex-grow: 1; */
+    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+    gap: 12px;
+    padding: 0 20px 20px 20px;
+    overflow-y: auto;
 }
 
 /* Tickets Footer */

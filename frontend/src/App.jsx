@@ -56,7 +56,6 @@ function Layout() {
                   <MyWork myTickets={myTickets} status={status} />
                 </div>
               </main>
-
             </div>
           </>
         ) : (
