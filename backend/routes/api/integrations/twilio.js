@@ -40,7 +40,11 @@ router.post('/callStart', urlencodedParser, async (req, res) => {
     // });
 
     twiml.say(config.answerMessage);
-    twiml.dial(pbx);
+    twiml.dial({
+        record: 'record-from-answer',
+        recordingStatusCallback: urlRecordings,
+        recordingStatusCallbackMethod: 'POST',
+    }, pbx);
 
     twiml.record({
         recordingStatusCallback: urlRecordings,

@@ -54,6 +54,12 @@ module.exports = (sequelize, DataTypes) => {
     transcription: {
       type: DataTypes.TEXT,
     },
+    recordingChannels: {
+      type: DataTypes.STRING(64),
+    },
+    recordingSource: {
+      type: DataTypes.STRING(64),
+    },
   }, {
     sequelize,
     modelName: 'TwilioRecording',
