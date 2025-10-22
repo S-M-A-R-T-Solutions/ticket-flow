@@ -15,6 +15,7 @@ import Tickets from "./components/Tickets";
 import MyWork from "./components/MyWork";
 import TicketDetailsOld from "./components/TicketDetails";
 import TicketDetails from "./components/Tickets/TicketDetails/TicketDetails";
+import Employees from "./components/Employees/Employees";
 import Clients from "./components/Clients/Clients";
 import ClientDetails from "./components/Clients/ClientDetails";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
@@ -55,7 +56,6 @@ function Layout() {
                   <MyWork myTickets={myTickets} status={status} />
                 </div>
               </main>
-
             </div>
           </>
         ) : (
@@ -99,6 +99,10 @@ const router = createBrowserRouter([
       {
         path: '/tickets/:ticketId/test',
         element: <TicketDetailsOld />
+      },
+      {
+        path: '/employees',
+        element: <Employees />
       },
       {
         path: '/clients',

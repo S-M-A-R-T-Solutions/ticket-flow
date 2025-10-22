@@ -1,4 +1,4 @@
-.clients-tab {
+.employees-tab {
     display: flex;
     width: 100%;
     flex: 1;
@@ -6,31 +6,31 @@
     align-content: space-between;
     justify-content: space-between;
 
-    .clients-tab-header {
+    .employees-section-header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         padding-left: 20px;
         padding-right: 20px;
+        padding-bottom: 15px;
 
         h1 {
             font-size: 2rem;
             color: var(--text-color);
         }
 
-        .add-client-button {
+        button {
             display: flex;
             align-items: center;
-            width: fit-content;
-            justify-content: end;
+            justify-content: center;
             gap: 6px;
             background-color: transparent;
             border: 1px solid var(--tiffany-blue);
             color: var(--tiffany-blue);
             font-size: 14px;
             cursor: pointer;
-            // margin: 10px 10px;
+            margin: 10px auto;
             padding: 8px 14px;
             border-radius: 8px;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -46,7 +46,7 @@
         }
     }
 
-    .clients-list-container {
+    .employees-list {
         display: flex;
         flex: 1;
         flex-direction: column;
@@ -55,7 +55,7 @@
         overflow-y: auto;
     }
 
-    .clients-footer {
+    .employees-footer {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -87,5 +87,4 @@
             background-color: var(--ultra-violet);
         }
     }
-
 }
