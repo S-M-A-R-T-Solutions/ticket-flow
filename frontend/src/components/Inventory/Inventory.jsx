@@ -2,12 +2,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { FaCirclePlus } from "react-icons/fa6";
+import { BsClipboardPlus } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
-import './Inventory.css';
+import './Inventory.scss';
 
 import { getAllPartsThunk, getTotalPartsAmountThunk } from "../../store/parts";
 import PartCard from "../Parts/PartCard/PartCard";
@@ -41,14 +41,6 @@ export default function Inventory() {
 
     const lastPage = Math.ceil(totalParts / PARTS_PER_PAGE);
 
-    // if (!allParts || !totalParts)
-    if (!allParts)
-        return (
-            <section className="inventory-tab">
-                <span className="loader"></span>
-            </section>
-        );
-
     const onModalClose = () => {
         setDeletePartChecker(true);
         setAddPartChecker(true);
@@ -61,21 +53,51 @@ export default function Inventory() {
         return navigate(`/inventory/${part.id}`);
     }
 
+    // if (!allParts || !totalParts)
+    if (!allParts)
+        return (
+            <section className="inventory-tab">
+                <div className="section-header">
+                    <h1>Inventory</h1>
+                    <OpenModalMenuItem
+                        // style={{ width: "100%",maxWidth: '400px' }}
+                        modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
+                        onModalClose={onModalClose}
+                        dismisable={false}
+                    >
+                        <button className="btn-add-item">
+                            <BsClipboardPlus /> Add Part
+                        </button>
+                    </OpenModalMenuItem>
+                </div>
+
+                <section className="inventory-tab">
+                    <span className="loader"></span>
+                </section>
+
+                <div className="tickets-footer">
+                    <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
+                    <div>
+                        <span >
+                            {page} of {lastPage}
+                        </span>
+                    </div>
+                    <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><FaAngleRight /></button>
+                </div>
+            </section>
+        );
+
     return (
-        <section className="app-section inventory-tab">
+        <section className="inventory-tab">
             <div className="section-header">
                 <h1>Inventory</h1>
-
-                <div className="spacer"></div>
-
                 <OpenModalMenuItem
-                    // style={{ width: "100%",maxWidth: '400px' }}
                     modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
                     onModalClose={onModalClose}
                     dismisable={false}
                 >
-                    <button className="btn btn-add-item">
-                        <FaCirclePlus /> Add Part
+                    <button className="btn-add-item">
+                        <BsClipboardPlus /> Add Part
                     </button>
                 </OpenModalMenuItem>
             </div>
@@ -88,7 +110,7 @@ export default function Inventory() {
                 ))}
             </div>
 
-            <div className="tickets-footer">
+            <div className="inventory-footer">
                 <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
                 <div>
                     <span >

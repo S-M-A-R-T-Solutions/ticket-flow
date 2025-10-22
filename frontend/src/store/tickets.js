@@ -1,55 +1,55 @@
 import { csrfFetch } from "./csrf";
 
 //CONSTANTS
-const GETALLTICKETS = 'tickets/getAllTickets';
-const GETTOTALTICKETSACOUMT = 'tickets/getTotalTicketsAmount';
-const GETMYTICKETS = 'tickets/getMyTickets';
-const GETTICKET = 'tickets/getTicket';
-const ADDTICKET = 'tickets/addTicket';
-const UPDATETICKET = 'tickets/updateTicket';
-const DELETETICKET = 'tickets/deleteTicket';
-const GETTICKETBYHASH = 'tickets/getTicketByHash';
+const GET_ALL_TICKETS = 'tickets/getAllTickets';
+const GET_TOTAL_TICKETS_AMOUNT = 'tickets/getTotalTicketsAmount';
+const GET_MY_TICKETS = 'tickets/getMyTickets';
+const GET_TICKET = 'tickets/getTicket';
+const ADD_TICKET = 'tickets/addTicket';
+const UPDATE_TICKET = 'tickets/updateTicket';
+const DELETE_TICKET = 'tickets/deleteTicket';
+const GET_TICKET_BY_HASH = 'tickets/getTicketByHash';
 
 const ADD_NOTE_TO_TICKET = 'tickets/addNoteToTicket';
 
 //ACTION CREATORS
 const getAllTickets = (tickets) => ({
-    type: GETALLTICKETS,
+    type: GET_ALL_TICKETS,
     payload: tickets
 });
 
 const getTotalTicketsAmount = (amount) => ({
-    type: GETTOTALTICKETSACOUMT,
+    type: GET_TOTAL_TICKETS_AMOUNT,
     payload: amount
 });
 
 const getTicketByHash = (ticket) => ({
-    type: GETTICKETBYHASH,
+    type: GET_TICKET_BY_HASH,
     payload: ticket
 });
 
 const getMyTickets = (tickets) => ({
-    type: GETMYTICKETS,
+    type: GET_MY_TICKETS,
     payload: tickets
 });
 
 const getTicket = (ticket) => ({
-    type: GETTICKET,
+    type: GET_TICKET,
     payload: ticket
 });
 
 const addTicket = (ticket) => ({
-    type: ADDTICKET,
+    type: ADD_TICKET,
     payload: ticket
 });
 
 const updateTicket = (ticket) => ({
-    type: UPDATETICKET,
+    type: UPDATE_TICKET,
     payload: ticket
 });
 
 const deleteTicket = (ticket) => ({
-    type: DELETETICKET,
+    type: DELETE_TICKET,
     payload: ticket
 });
 
@@ -139,28 +139,28 @@ const initialState = {
 
 const ticketsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case GETALLTICKETS: {
+        case GET_ALL_TICKETS: {
             return { ...state, allTickets: action.payload };
         }
-        case GETTOTALTICKETSACOUMT: {
+        case GET_TOTAL_TICKETS_AMOUNT: {
             return { ...state, totalTicketsAmount: action.payload };
         }
-        case GETTICKETBYHASH: {
+        case GET_TICKET_BY_HASH: {
             return { ...state, ticketByHash: action.payload };
         }
-        case GETMYTICKETS: {
+        case GET_MY_TICKETS: {
             return { ...state, myTickets: action.payload };
         }
-        case GETTICKET: {
+        case GET_TICKET: {
             return { ...state, ticket: action.payload };
         }
-        case ADDTICKET: {
+        case ADD_TICKET: {
             return { ...state, myTickets: [...state.myTickets, action.payload] };
         }
-        case UPDATETICKET: {
+        case UPDATE_TICKET: {
             return { ...state, myTickets: state.myTickets.map(ticket => ticket.id === action.payload.id ? action.payload : ticket) };
         }
-        case DELETETICKET: {
+        case DELETE_TICKET: {
             return { ...state, myTickets: state.myTickets.filter(ticket => ticket.id !== action.payload.id) };
         }
         default:

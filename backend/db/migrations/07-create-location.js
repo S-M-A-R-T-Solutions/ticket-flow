@@ -44,6 +44,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      profilePicUrl: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

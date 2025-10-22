@@ -4,53 +4,39 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
     /* min-height: 100vh; */
     background-color: var(--background-color);
     color: var(--text-color);
-    overflow-x: hidden;
 }
 
 .main-panel {
     display: flex;
+    flex: 1;
     flex-direction: column;
-
     width: 100%;
-
+    // height: fit-content;
     padding-left: $sidebarWidth;
 }
 
 /* Header styles */
 header.main-header {
     width: 100%;
-    padding: 32px;
+    padding: 10px 20px;
 }
 
 /* Main content area */
 .main-zone {
-    // display: grid;
-    // grid-template-columns: 1fr 350px;
-    // gap: 16px;
-
-    // padding-inline: 32px;
-
-    // width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px 32px;
-    width: 100%;
-    flex-grow: 1;
+    padding: 10px 20px;
+    flex: 1;
 }
 
 .section-container {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+    width: 80%;
 }
 
 .my-work-panel {
@@ -58,10 +44,9 @@ header.main-header {
     flex-direction: column;
     gap: 16px;
     padding: 20px;
-    width: 100%;
+    width: 20%;
+    flex: 1;
     border-radius: 8px;
-    max-width: 20%;
-    min-width: 0;
     background-color: var(--surface-color);
 }
 
@@ -72,43 +57,4 @@ footer {
     padding: 20px;
     text-align: center;
     width: 100%;
-
-    /* box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); */
-}
-
-/* Media queries for responsiveness */
-
-/* For tablets */
-@media (min-width: 768px) {
-    .main-zone {
-        gap: 30px;
-    }
-
-    .left-section-mm {
-        width: 25%;
-        /* Keep the left section at 25% on tablets */
-    }
-
-    .right-section-mm {
-        width: 75%;
-        /* Keep the right section at 75% on tablets */
-    }
-}
-
-/* For smaller screens (mobile) */
-@media (max-width: 767px) {
-    .main-zone {
-        flex-direction: column;
-        /* Stack sections vertically on mobile */
-        padding: 10px;
-        gap: 10px;
-    }
-
-    .left-section-mm,
-    .right-section-mm {
-        /* width: 100%; */
-        /* Ensure both sections take full width on mobile */
-        padding: 10px;
-        border-radius: 8px;
-    }
 }

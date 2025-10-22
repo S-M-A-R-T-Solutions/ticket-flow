@@ -5,6 +5,7 @@ const GET_ALL_CLIENTS = 'clients/getAllClients';
 const GET_TOTAL_CLIENTS_AMOUNT = 'clients/getTotalClientsAmount';
 const GET_ALL_LOCATIONS_OF_A_CLIENT = 'clients/getAllLocationsOfAClient';
 const GET_ONE_CLIENT = 'clients/getOneClient';
+const GET_CLIENT_TICKETS = 'clients/getClientTickets';
 const ADD_CLIENT = 'clients/addClient';
 const ADD_LOCATION_TO_A_CLIENT = 'clients/addLocationToAClient';
 const EDIT_CLIENT = 'clients/editClient';
@@ -32,6 +33,11 @@ const getTotalClientsAmount = (amount) => ({
 const getOneClient = (client) => ({
     type: GET_ONE_CLIENT,
     payload: client
+});
+
+const getClientTickets = (tickets) => ({
+    type: GET_CLIENT_TICKETS,
+    payload: tickets
 });
 
 const getAllLocationsOfAClient = (locations) => ({
@@ -108,6 +114,12 @@ export const getOneClientThunk = (clientId) => async (dispatch) => {
     dispatch(getOneClient(client));
 };
 
+export const getClientTicketsThunk = (clientId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/clients/${clientId}/tickets`);
+    const tickets = await res.json();
+    dispatch(getClientTickets(tickets));
+};
+
 export const getAllLocationsOfAClientThunk = (clientId) => async (dispatch) => {
     const res = await csrfFetch(`/api/clients/${clientId}/locations`);
     const locations = await res.json();
@@ -116,8 +128,6 @@ export const getAllLocationsOfAClientThunk = (clientId) => async (dispatch) => {
 
 export const addClientThunk = (client) => async (dispatch) => {
     const formData = new FormData();
-
-    console.log(client, "THIS IS CLIENT");
 
     // Append the client information to the form data
     if (client.firstName) formData.append('firstName', client.firstName); else formData.append('firstName', '');
@@ -144,12 +154,31 @@ export const addClientThunk = (client) => async (dispatch) => {
 };
 
 export const addLocationToAClientThunk = (clientId, location) => async (dispatch) => {
+    const formData = new FormData();
+
+    const { name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl } = location;
+
+    console.log("LOCATION DATA IN THUNK", name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl);
+
+    // Append the location information to the form data
+    formData.append('name', name);
+    if (addressLine1) formData.append('addressLine1', addressLine1);
+    if (addressLine2) formData.append('addressLine2', addressLine2);
+    if (city) formData.append('city', city);
+    if (state) formData.append('state', state);
+    if (zipcode) formData.append('zipcode', zipcode);
+
+    // Append the profile picture (file) if it exists
+    if (profilePicUrl) {
+        formData.append('image', profilePicUrl); // 'image' is the field name used in multer
+    }
+    
     const res = await csrfFetch(`/api/clients/${clientId}/locations`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            // No need to set 'Content-Type' to 'multipart/form-data', it will be automatically handled
         },
-        body: JSON.stringify(location)
+        body: formData
     });
 
     const newLocation = await res.json();
@@ -181,12 +210,26 @@ export const getLocationThunk = (clientId, locationId) => async (dispatch) => {
 };
 
 export const editLocationThunk = (clientId, locationId, location) => async (dispatch) => {
+    const formData = new FormData();
+
+    const { name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl } = location;
+
+    // Append the location information to the form data
+    formData.append('name', name);
+    if (addressLine1) formData.append('addressLine1', addressLine1);
+    if (addressLine2) formData.append('addressLine2', addressLine2);
+    if (city) formData.append('city', city);
+    if (state) formData.append('state', state);
+    if (zipcode) formData.append('zipcode', zipcode);
+
+    // Append the profile picture (file) if it exists
+    if (profilePicUrl) {
+        formData.append('image', profilePicUrl); // 'image' is the field name used in multer
+    }
+
     const res = await csrfFetch(`/api/clients/${clientId}/locations/${locationId}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(location)
+        body: formData, // FormData automatically sets the correct headers
     });
 
     const updatedLocation = await res.json();
@@ -255,6 +298,9 @@ const clientsReducer = (state = initialState, action) => {
         }
         case GET_ONE_CLIENT: {
             return { ...state, client: action.payload };
+        }
+        case GET_CLIENT_TICKETS: {
+            return { ...state, client: { ...state.client, tickets: action.payload } };
         }
         case GET_ALL_LOCATIONS_OF_A_CLIENT: {
             return { ...state, client: { ...state.client, locations: action.payload } };

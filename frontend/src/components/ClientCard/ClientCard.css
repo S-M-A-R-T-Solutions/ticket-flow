@@ -1,4 +1,4 @@
-.client-card-company, 
+.client-card-company,
 .client-card-individual {
     display: flex;
     justify-content: space-between;
@@ -106,4 +106,37 @@
 .client-container-personal span {
     font-size: 0.75rem;
     color: #f9f9f9;
+}
+
+.edit-ticket-btn-ticket-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 18px;
+    color: var(--button-text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.1);
+    }
+}
+
+.delete-ticket-btn-ticket-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    border-radius: 6px;
+    /* font-size: 24px; */
+    color: #c33;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(255, 0, 0, 0.1);
+    }
 }
