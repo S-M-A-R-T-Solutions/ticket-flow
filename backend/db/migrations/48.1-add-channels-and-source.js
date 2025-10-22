@@ -11,7 +11,7 @@ module.exports = {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
         queryInterface.addColumn(
-          'TwilioRecordings',
+          'TwilioRecording',
           'recordingChannels',
           {
             type: Sequelize.STRING(64),
@@ -19,7 +19,7 @@ module.exports = {
           { transaction: t },
         ),
         queryInterface.addColumn(
-          'TwilioRecordings',
+          'TwilioRecording',
           'recordingSource',
           {
             type: Sequelize.STRING(64),
