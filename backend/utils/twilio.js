@@ -192,8 +192,8 @@ async function upsertCallRecording(req) {
         RecordingStatus,
         RecordingDuration,
         RecordingStartTime,
-        // RecordingChannels,
-        // RecordingSource,
+        RecordingChannels,
+        RecordingSource,
     } = req.body;
 
     const existingRecording = await TwilioRecording.findOne({ where: { recordingSid: RecordingSid } });
@@ -207,6 +207,8 @@ async function upsertCallRecording(req) {
                 recordingStatus: RecordingStatus || existingRecording.recordingStatus,
                 recordingStartTime: RecordingStartTime || existingRecording.recordingStartTime,
                 recordingDuration: Number(RecordingDuration) || existingRecording.recordingDuration,
+                recordingChannels: RecordingChannels || existingRecording.recordingChannels,
+                recordingSource: RecordingSource || existingRecording.recordingSource,
             });
         }
         catch (error) {
@@ -234,6 +236,8 @@ async function upsertCallRecording(req) {
             recordingStatus: RecordingStatus,
             recordingStartTime: RecordingStartTime,
             recordingDuration: Number(RecordingDuration),
+            recordingChannels: RecordingChannels,
+            recordingSource: RecordingSource,
         });
     }
     catch (error) {
