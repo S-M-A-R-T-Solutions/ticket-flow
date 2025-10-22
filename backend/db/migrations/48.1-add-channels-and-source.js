@@ -11,20 +11,26 @@ module.exports = {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
         queryInterface.addColumn(
-          'TwilioRecordings',
+          {
+            tableName: 'TwilioRecordings',
+            schema: options.schema
+          },
           'recordingChannels',
           {
             type: Sequelize.STRING(64),
           },
-          { ...options, transaction: t },
+          { transaction: t },
         ),
         queryInterface.addColumn(
-          'TwilioRecordings',
+          {
+            tableName: 'TwilioRecordings',
+            schema: options.schema
+          },
           'recordingSource',
           {
             type: Sequelize.STRING(64),
           },
-          { ...options, transaction: t },
+          { transaction: t },
         ),
       ]);
     });
@@ -32,8 +38,14 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction(t => {
       return Promise.all([
-        queryInterface.removeColumn('TwilioRecordings', 'recordingChannels', { ...options, transaction: t }),
-        queryInterface.removeColumn('TwilioRecordings', 'recordingSource', { ...options, transaction: t }),
+        queryInterface.removeColumn({
+          tableName: 'TwilioRecordings',
+          schema: options.schema
+        }, 'recordingChannels', { transaction: t }),
+        queryInterface.removeColumn({
+          tableName: 'TwilioRecordings',
+          schema: options.schema
+        }, 'recordingSource', { transaction: t }),
       ]);
     });
   },
