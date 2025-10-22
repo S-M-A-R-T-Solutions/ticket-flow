@@ -5,6 +5,8 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 
 import { getAllUsersThunk, getTotalUsersAmountThunk } from "../../store/session";
 
+import EmployeeCard from "./EmployeeCard";
+
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
 import { LuUserPlus } from "react-icons/lu";
@@ -41,11 +43,7 @@ export default function Employees() {
 
             <div className="employees-list">
                 {employees && Object.values(employees).map((employee) => (
-                    <div key={employee.id} className="employee-card">
-                        <h2>{employee.firstName} {employee.lastName}</h2>
-                        <p>Email: {employee.email}</p>
-                        <p>Role: {employee.role}</p>
-                    </div>
+                    <EmployeeCard key={employee.id} employee={employee} />
                 ))}
             </div>
 
