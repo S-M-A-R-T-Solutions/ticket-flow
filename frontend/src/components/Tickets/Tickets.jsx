@@ -77,27 +77,22 @@ export default function Tickets() {
 
     return (
         <section className='tickets-tab'>
-            <div>
-                <div className="tickets-section-header">
-                    <h1>Tickets</h1>
+            <div className="tickets-section-header">
+                <h1>Tickets</h1>
+                <OpenModalMenuItem
+                    modalComponent={<AddTicket setTicketsChecker={setTicketsChecker} />}
+                    onModalClose={onModalClose}
+                >
+                    <button className="add-ticket-btn">
+                        <LuTicketPlus /> Add Ticket
+                    </button>
+                </OpenModalMenuItem>
+            </div>
 
-                    <div className="spacer"></div>
-
-                    <OpenModalMenuItem
-                        modalComponent={<AddTicket setTicketsChecker={setTicketsChecker} />}
-                        onModalClose={onModalClose}
-                    >
-                        <button className="add-ticket-btn">
-                            <LuTicketPlus /> Add Ticket
-                        </button>
-                    </OpenModalMenuItem>
-                </div>
-
-                <div className='tickets-container'>
-                    {allTickets.map(ticket => (
-                        <TicketCard key={ticket.id} ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
-                    ))}
-                </div>
+            <div className='tickets-container'>
+                {allTickets.map(ticket => (
+                    <TicketCard key={ticket.id} ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
+                ))}
             </div>
 
             <div className='tickets-footer'>
