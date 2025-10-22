@@ -87,6 +87,53 @@ router.post(
     }
 );
 
+//Add a User (Employee)
+router.post(
+    '/',
+    requireAuth,
+    singleMulterUpload('image'),
+    async (req, res, next) => {
+        try {
+            const { email, password, username, firstName, lastName, title } = req.body;
+            const profilePicUrl = req.file ?
+                await singleFileUpload({ file: req.file, public: true }) :
+                null;
+            const hashedPassword = bcrypt.hashSync(password);
+
+            const noProfilePic = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
+
+            // Find a user that match the email or the username
+            const checkUserName = await User.findOne({ where: { username: username } });
+            const checkUserEmail = await User.findOne({ where: { email: email } });
+
+            if (checkUserEmail) {
+                res.status(500);
+                return res.json({
+                    message: "User already exists",
+                    "errors": {
+                        email: "User with this email already exists"
+                    }
+                })
+            }
+            if (checkUserName) {
+                res.status(500);
+                return res.json({
+                    message: "User already exists",
+                    "errors": {
+                        username: "User with this username already exists"
+                    }
+                })
+            }
+
+            const user = await User.create({ email, username, hashedPassword, firstName, lastName, title, profilePicUrl: profilePicUrl || noProfilePic });
+
+            return res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 //Edit a User
 router.put(
     '/:id',
