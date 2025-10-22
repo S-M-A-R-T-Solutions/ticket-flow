@@ -6,6 +6,7 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import { getAllUsersThunk, getTotalUsersAmountThunk } from "../../store/session";
 
 import EmployeeCard from "./EmployeeCard";
+import AddEmployee from "./AddEmployee";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
@@ -17,6 +18,7 @@ export default function Employees() {
     const dispatch = useDispatch();
 
     const [page, setPage] = useState(1);
+    const [employeesAddChecker, setEmployeesAddChecker] = useState(false);
 
     const EMPLOYEES_PER_PAGE = 10;
 
@@ -27,13 +29,20 @@ export default function Employees() {
     useEffect(() => {
         dispatch(getTotalUsersAmountThunk());
         dispatch(getAllUsersThunk(page, EMPLOYEES_PER_PAGE));
-    }, [dispatch, page]);
+        setEmployeesAddChecker(false);
+    }, [dispatch, page, employeesAddChecker]);
+
+    const onModalClose = () => {
+        setEmployeesAddChecker(true);
+    }
 
     return (
         <section className="employees-tab">
             <div className="employees-section-header">
                     <h1>Employees</h1>
                     <OpenModalMenuItem
+                        modalComponent={<AddEmployee setEmployeesAddChecker={setEmployeesAddChecker} />}
+                        onModalClose={onModalClose}
                     >
                         <button className="add-employee-btn">
                             <LuUserPlus /> Add Employee
