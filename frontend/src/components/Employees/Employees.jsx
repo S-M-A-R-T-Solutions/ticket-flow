@@ -49,7 +49,7 @@ export default function Employees() {
                 ))}
             </div>
 
-            <div className='tickets-footer'>
+            <div className='employees-footer'>
                 <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><HiOutlineChevronLeft /></button>
                 <div>
                     <span >

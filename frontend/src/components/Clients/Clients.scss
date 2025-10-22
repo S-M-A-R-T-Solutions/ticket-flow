@@ -1,7 +1,7 @@
 .clients-tab {
     display: flex;
     width: 100%;
-    flex-grow: 1;
+    flex: 1;
     flex-direction: column;
     align-content: space-between;
     justify-content: space-between;
@@ -11,7 +11,6 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
         padding-left: 20px;
         padding-right: 20px;
 
@@ -55,4 +54,44 @@
         padding: 0 20px 20px 20px;
         overflow-y: auto;
     }
+
+    .clients-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+        
+        .prev-btn,
+        .next-btn {
+            background-color: var(--button-bg-color);
+            /* Button background */
+            color: var(--button-text-color);
+            /* Button text */
+            /* border: none; */
+            width: fit-content;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    
+        .prev-btn:disabled,
+        .next-btn:disabled {
+            background-color: var(--login-bg);
+            /* Disabled button background */
+            color: var(--text-color);
+            /* Disabled text color */
+            cursor: not-allowed;
+        }
+    
+        .prev-btn:hover:not(:disabled),
+        .next-btn:hover:not(:disabled) {
+            background-color: var(--ultra-violet);
+            /* Darker background on hover */
+        }
+    }
+
 }

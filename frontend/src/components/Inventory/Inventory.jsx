@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
-import './Inventory.css';
+import './Inventory.scss';
 
 import { getAllPartsThunk, getTotalPartsAmountThunk } from "../../store/parts";
 import PartCard from "../Parts/PartCard/PartCard";
@@ -56,12 +56,9 @@ export default function Inventory() {
     // if (!allParts || !totalParts)
     if (!allParts)
         return (
-            <section className="app-section inventory-tab">
+            <section className="inventory-tab">
                 <div className="section-header">
                     <h1>Inventory</h1>
-
-                    <div className="spacer"></div>
-
                     <OpenModalMenuItem
                         // style={{ width: "100%",maxWidth: '400px' }}
                         modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
@@ -91,14 +88,10 @@ export default function Inventory() {
         );
 
     return (
-        <section className="app-section inventory-tab">
+        <section className="inventory-tab">
             <div className="section-header">
                 <h1>Inventory</h1>
-
-                <div className="spacer"></div>
-
                 <OpenModalMenuItem
-                    // style={{ width: "100%",maxWidth: '400px' }}
                     modalComponent={<AddPart setPartsChecker={setAddPartChecker} />}
                     onModalClose={onModalClose}
                     dismisable={false}
@@ -117,7 +110,7 @@ export default function Inventory() {
                 ))}
             </div>
 
-            <div className="tickets-footer">
+            <div className="inventory-footer">
                 <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
                 <div>
                     <span >

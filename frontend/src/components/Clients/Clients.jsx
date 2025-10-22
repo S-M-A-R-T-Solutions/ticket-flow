@@ -87,7 +87,6 @@ export default function Clients() {
         <section className="clients-tab">
             <div className="clients-tab-header">
                 <h1>Clients</h1>
-
                 <OpenModalMenuItem
                     modalComponent={<AddClient setClientsChecker={setClientsAddChecker} />}
                     onModalClose={onModalClose}
@@ -107,7 +106,7 @@ export default function Clients() {
                 </div>
             </div>
 
-            <div className='tickets-footer'>
+            <div className='clients-footer'>
                 <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
                 <div>
                     <span >
