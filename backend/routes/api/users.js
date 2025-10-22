@@ -275,12 +275,24 @@ router.get('/:id', requireAuth, async (req, res) => {
 });
 
 //Get all Users
-router.get(
-    '/',
-    requireAuth,
-    async (_req, res) => {
-        const users = await User.findAll();
-        return res.json(users);
+router.get('/', requireAuth, async (_req, res) => {
+        try {
+            const page = parseInt(_req.query.page) || 1;
+            const size = parseInt(_req.query.size) || 10;
+
+            const offset = (page - 1) * size;
+            const limit = size;
+
+            const users = await User.findAll({
+                offset,
+                limit,
+                order: [['id', 'ASC']]
+            });
+
+            return res.json(users);
+        } catch (error) {
+            return res.status(500).json({ message: "Error fetching users", error: error.message });
+        }
     }
 );
 

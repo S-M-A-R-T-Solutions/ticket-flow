@@ -16,16 +16,16 @@ export default function Employees() {
 
     const [page, setPage] = useState(1);
 
-    const EMPLOYEES_PER_PAGE = 2;
+    const EMPLOYEES_PER_PAGE = 10;
 
     const employees = useSelector((state) => state.session.allUsers);
     const totalEmployees = useSelector((state) => state.session.totalUsersAmount);
     const lastPage = Math.ceil(totalEmployees / EMPLOYEES_PER_PAGE);
 
     useEffect(() => {
-        dispatch(getAllUsersThunk());
         dispatch(getTotalUsersAmountThunk());
-    }, [dispatch]);
+        dispatch(getAllUsersThunk(page, EMPLOYEES_PER_PAGE));
+    }, [dispatch, page]);
 
     return (
         <section className="employees-tab">

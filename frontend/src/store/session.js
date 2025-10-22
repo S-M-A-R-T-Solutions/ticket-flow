@@ -59,8 +59,8 @@ const setUser = (user) => {
 };
 
 //THUNKS
-export const getAllUsersThunk = () => async (dispatch) => {
-    const response = await csrfFetch('/api/users');
+export const getAllUsersThunk = (page, size) => async (dispatch) => {
+    const response = await csrfFetch(`/api/users?page=${page}&size=${size}`);
     const data = await response.json();
     dispatch(getAllUsers(data));
 }

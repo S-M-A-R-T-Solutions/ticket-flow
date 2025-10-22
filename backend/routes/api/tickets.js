@@ -1,8 +1,6 @@
 const express = require('express');
 
-const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, Signature } = require('@db/models');
-
-const bcrypt = require('bcryptjs');
+const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee } = require('@db/models');
 
 const generateAlphanumericId = require('@utils/randomGenerator');
 

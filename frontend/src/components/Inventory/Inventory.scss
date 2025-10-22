@@ -66,10 +66,7 @@
         .prev-btn,
         .next-btn {
             background-color: var(--button-bg-color);
-            /* Button background */
             color: var(--button-text-color);
-            /* Button text */
-            /* border: none; */
             width: fit-content;
             padding: 10px 15px;
             font-size: 1.2rem;
@@ -82,16 +79,13 @@
         .prev-btn:disabled,
         .next-btn:disabled {
             background-color: var(--login-bg);
-            /* Disabled button background */
             color: var(--text-color);
-            /* Disabled text color */
             cursor: not-allowed;
         }
     
         .prev-btn:hover:not(:disabled),
         .next-btn:hover:not(:disabled) {
             background-color: var(--ultra-violet);
-            /* Darker background on hover */
         }
     }
 }
