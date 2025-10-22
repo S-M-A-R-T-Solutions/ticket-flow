@@ -34,17 +34,17 @@ router.post('/callStart', urlencodedParser, async (req, res) => {
     // const urlTranscriptions = protocol + '://' + req.get('host') + '/api/integrations/twilio/transcription';
     const urlRecordings = protocol + '://' + req.get('host') + '/api/integrations/twilio/recordingStatus';
 
-
     // twiml.start().transcription({
     //     statusCallbackUrl: urlTranscriptions,
     // });
-
-    twiml.say(config.answerMessage);
+    
     twiml.dial({
         record: 'record-from-answer',
         recordingStatusCallback: urlRecordings,
         recordingStatusCallbackMethod: 'POST',
     }, pbx);
+
+    twiml.say(config.answerMessage);
 
     twiml.record({
         recordingStatusCallback: urlRecordings,
