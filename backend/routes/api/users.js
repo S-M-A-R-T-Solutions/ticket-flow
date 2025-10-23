@@ -127,8 +127,6 @@ router.post(
                 })
             }
 
-            
-
             const user = await User.create({ email, username, hashedPassword, firstName, lastName, profilePicUrl: profilePicUrl || noProfilePic });
 
             return res.json(user);
