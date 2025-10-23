@@ -62,6 +62,14 @@ router.post(
             }
         });
 
+        if(user && !user.isActive) {
+            const err = new Error('The provided account is inactive. Contact an administrator for help');
+            err.status = 401;
+            err.title = 'The provided account is inactive. Contact an administrator for help.';
+            err.errors = { credential: 'The provided account is inactive.' };
+            return next(err);
+        }
+
         if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
             const err = new Error('Login failed');
             err.status = 401;

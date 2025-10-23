@@ -1,16 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 
+import { LuUserPlus } from "react-icons/lu";
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 
 import { getAllUsersThunk, getTotalUsersAmountThunk } from "../../store/session";
 
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import EmployeeCard from "./EmployeeCard";
 import AddEmployee from "./AddEmployee";
-
-import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
-
-import { LuUserPlus } from "react-icons/lu";
 
 import "./Employees.scss";
 
@@ -59,7 +57,11 @@ export default function Employees() {
 
             <div className="employees-list">
                 {employees && Object.values(employees).map((employee) => (
-                    <EmployeeCard key={employee.id} employee={employee} setEditEmployeeChecker={setEditEmployeeChecker}/>
+                    employee.isActive ? (
+                        <EmployeeCard key={employee.id} employee={employee} isActive={true} setEditEmployeeChecker={setEditEmployeeChecker} setDeleteEmployeeChecker={setDeleteEmployeeChecker} />
+                    ) : (
+                        <EmployeeCard key={employee.id} employee={employee} isActive={false} setEditEmployeeChecker={setEditEmployeeChecker} setDeleteEmployeeChecker={setDeleteEmployeeChecker} />
+                    )
                 ))}
             </div>
 
