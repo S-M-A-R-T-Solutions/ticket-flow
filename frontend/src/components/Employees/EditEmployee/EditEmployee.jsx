@@ -89,11 +89,10 @@ export default function EditEmployee({ employee, setEditEmployeeChecker }) {
             setProfilePicUrl(fileURL);
         }
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
-
 
         const updatedUser = {
             firstName,
@@ -111,7 +110,6 @@ export default function EditEmployee({ employee, setEditEmployeeChecker }) {
             closeModal();
         }
     }
-
 
     return (
         <div className='edit-user-container'>

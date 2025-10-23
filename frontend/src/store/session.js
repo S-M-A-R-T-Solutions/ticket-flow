@@ -101,7 +101,6 @@ export const addUserThunk = (user) => async (dispatch) => {
 };
 
 export const updateUserThunk = (userId, updatedUser) => async (dispatch) => {
-    const { img_url, firstName, lastName, password } = updatedUser;
     try {
         const formData = new FormData();
         formData.append('userId', userId);
