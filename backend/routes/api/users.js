@@ -149,8 +149,6 @@ router.put(
             await singleFileUpload({ file: req.file, public: true }) :
             null;
 
-
-
         const hashedPassword = bcrypt.hashSync(password);
         await user.update({ email: email || user.email, username: username || user.username, hashedPassword: hashedPassword || user.hashedPassword, firstName: firstName || user.firstName, lastName: lastName || user.lastName, profilePicUrl: profileImageUrl || user.profilePicUrl, isActive: isActive !== undefined ? isActive : user.isActive });
 
@@ -281,6 +279,7 @@ router.get('/', requireAuth, async (_req, res) => {
         try {
             const page = parseInt(_req.query.page) || null;
             const size = parseInt(_req.query.size) || null;
+            const order = _req.query.order || 'ASC';
 
             const offset = (page - 1) * size;
             const limit = size;
@@ -288,7 +287,8 @@ router.get('/', requireAuth, async (_req, res) => {
             const users = await User.findAll({
                 offset,
                 limit,
-                order: [['id', 'ASC']]
+                order: [['firstName', 'ASC']],
+                attributes: { exclude: ['hashedPassword', 'createdAt', 'updatedAt'] }
             });
 
             return res.json(users);
@@ -297,5 +297,23 @@ router.get('/', requireAuth, async (_req, res) => {
         }
     }
 );
+
+//Deactivate a User
+router.put('/:id/deactivate', requireAuth, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findByPk(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        await user.update({ isActive: false });
+
+        return res.json({ message: "User deactivated successfully" });
+    } catch (error) {
+        return res.status(500).json({ message: "Error deactivating user", error: error.message });
+    }
+});
 
 module.exports = router;

@@ -73,7 +73,6 @@ module.exports = {
       {
         firstName: "Twilio",
         lastName: "Auto user",
-        isActive: false,
         profilePicUrl: "",
         title: "NA",
         username: "twilioautouser",
