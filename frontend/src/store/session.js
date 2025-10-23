@@ -6,6 +6,7 @@ const GET_TOTAL_USERS_AMOUNT = "session/getTotalUsersAmount";
 const GET_USER = "session/getUser";
 const ADD_USER = "session/addUser";
 const EDIT_USER = "session/editUser";
+const DEACTIVATE_USER = "session/deactivateUser";
 const REMOVE_USER = "session/removeUser";
 const SET_USER = "session/setUser";
 
@@ -43,6 +44,13 @@ const editUser = (user) => {
         type: EDIT_USER,
         payload: user
     }
+}
+
+const deactivateUser = (user) => {
+    return {
+        type: DEACTIVATE_USER,
+        payload: user
+    };
 }
 
 const removeUser = () => {
@@ -134,11 +142,11 @@ export const updateUserThunk = (userId, updatedUser) => async (dispatch) => {
     }
 };
 
-export const removeUserThunk = (userId) => async (dispatch) => {
-    const response = await csrfFetch(`/api/users/${userId}`, {
-        method: "DELETE"
+export const deactivateUserThunk = (user) => async (dispatch) => {
+    const response = await csrfFetch(`/api/users/${user.id}/deactivate`, {
+        method: "PUT"
     });
-    dispatch(removeUser());
+    dispatch(deactivateUser(user));
     return response;
 };
 
@@ -224,8 +232,17 @@ const sessionReducer = (state = initialState, action) => {
             );
             return newState;
         }
+        case DEACTIVATE_USER: {
+            const newState = { ...state };
+            newState.allUsers = newState.allUsers.map(user =>
+                user.id === action.payload.id ? action.payload : user
+            );
+            return newState;
+        }
         case REMOVE_USER: {
-            return { ...state, user: null };
+            const newState = { ...state };
+            newState.user = null;
+            return newState;
         }
         case SET_USER: {
             return { ...state, user: action.payload };
