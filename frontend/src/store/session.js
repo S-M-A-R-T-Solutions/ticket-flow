@@ -79,24 +79,25 @@ export const getUserThunk = (userId) => async (dispatch) => {
 };
 
 export const addUserThunk = (user) => async (dispatch) => {
-    const { username, firstName, lastName, email, password, image } = user;
+
+    const { username, firstName, lastName, email, password, profilePicUrl } = user;
 
     const formData = new FormData();
+
     formData.append("username", username);
     formData.append("firstName", firstName);
     formData.append("lastName", lastName);
     formData.append("email", email);
     formData.append("password", password);
-    if (image) formData.append("image", image);
+    if (profilePicUrl) formData.append("image", profilePicUrl);
 
-    const response = await csrfFetch("/api/users", {
+    const response = await csrfFetch("/api/users/add-user", {
         method: "POST",
         body: formData
     });
 
-    const data = await response.json();
-    dispatch(addUser(data.user));
-    return response;
+    const newUser = await response.json();
+    dispatch(addUser(newUser));
 };
 
 export const updateUserThunk = (userId, form) => async (dispatch) => {
@@ -215,9 +216,7 @@ const sessionReducer = (state = initialState, action) => {
             return newState;
         }
         case ADD_USER: {
-            const newState = { ...state };
-            newState.allUsers = [...newState.allUsers, action.payload];
-            return newState;
+            return { ...state, allUsers: [...state.allUsers, action.payload] };
         }
         case EDIT_USER: {
             const newState = { ...state };

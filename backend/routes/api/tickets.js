@@ -76,12 +76,6 @@ router.get('/track/:hashedId', async (req, res) => {
 
     const ClientInfo = await Client.findByPk(ticket.clientId);
 
-    // const Parts = await Part.findAll({
-    //     where: {
-    //         ticketId: ticket.id
-    //     }
-    // });
-
     const StatusInfo = await Status.findByPk(ticket.statusId);
 
     const safeTicket = {

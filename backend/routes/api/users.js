@@ -89,18 +89,20 @@ router.post(
 
 //Add a User (Employee)
 router.post(
-    '/',
+    '/add-user',
     requireAuth,
     singleMulterUpload('image'),
     async (req, res, next) => {
         try {
-            const { email, password, username, firstName, lastName, title } = req.body;
+            const { email, password, username, firstName, lastName } = req.body;
+            
             const profilePicUrl = req.file ?
                 await singleFileUpload({ file: req.file, public: true }) :
                 null;
+
             const hashedPassword = bcrypt.hashSync(password);
 
-            const noProfilePic = 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
+            const noProfilePic = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
             // Find a user that match the email or the username
             const checkUserName = await User.findOne({ where: { username: username } });
@@ -125,7 +127,9 @@ router.post(
                 })
             }
 
-            const user = await User.create({ email, username, hashedPassword, firstName, lastName, title, profilePicUrl: profilePicUrl || noProfilePic });
+            
+
+            const user = await User.create({ email, username, hashedPassword, firstName, lastName, profilePicUrl: profilePicUrl || noProfilePic });
 
             return res.json(user);
         } catch (error) {
@@ -277,8 +281,8 @@ router.get('/:id', requireAuth, async (req, res) => {
 //Get all Users
 router.get('/', requireAuth, async (_req, res) => {
         try {
-            const page = parseInt(_req.query.page) || 1;
-            const size = parseInt(_req.query.size) || 10;
+            const page = parseInt(_req.query.page) || null;
+            const size = parseInt(_req.query.size) || null;
 
             const offset = (page - 1) * size;
             const limit = size;

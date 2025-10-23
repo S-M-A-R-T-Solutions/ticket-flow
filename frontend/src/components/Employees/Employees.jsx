@@ -43,6 +43,7 @@ export default function Employees() {
                     <OpenModalMenuItem
                         modalComponent={<AddEmployee setEmployeesAddChecker={setEmployeesAddChecker} />}
                         onModalClose={onModalClose}
+                        dismisable={false}
                     >
                         <button className="add-employee-btn">
                             <LuUserPlus /> Add Employee
@@ -65,7 +66,6 @@ export default function Employees() {
                 </div>
                 <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><HiOutlineChevronRight /></button>
             </div>
-
         </section>
     );
 }
