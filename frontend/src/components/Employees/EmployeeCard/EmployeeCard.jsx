@@ -3,9 +3,11 @@ import { IoTrashOutline } from "react-icons/io5";
 
 import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 
+import EditEmployee from "../EditEmployee/EditEmployee";
+
 import './EmployeeCard.scss';
 
-export default function EmployeeCard({ employee }) {
+export default function EmployeeCard({ employee, setEditEmployeeChecker }) {
     return (
         <div className="employee-card">
             <div className='employee-left'>
@@ -18,14 +20,14 @@ export default function EmployeeCard({ employee }) {
             <div className='employee-operations'>
                 <div className="edit-employee-btn">
                     <OpenModalMenuItem
-                        modalComponent={<div>Edit Employee</div>}
+                        modalComponent={<EditEmployee employee={employee} setEditEmployeeChecker={setEditEmployeeChecker} />}
                     >
                         <TiEdit />
                     </OpenModalMenuItem>
                 </div>
                 <div className="delete-employee-btn">
                     <OpenModalMenuItem
-                        modalComponent={<div>Delete Employee</div>}
+                        modalComponent={<EditEmployee employee={employee} setEditEmployeeChecker={setEditEmployeeChecker} />}
                     >
                         <IoTrashOutline style={{ color: "var(--danger-color, #c33)", fontSize: "18px" }} />
                     </OpenModalMenuItem>

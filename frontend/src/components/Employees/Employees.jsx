@@ -19,6 +19,8 @@ export default function Employees() {
 
     const [page, setPage] = useState(1);
     const [employeesAddChecker, setEmployeesAddChecker] = useState(false);
+    const [employeesEditChecker, setEditEmployeeChecker] = useState(false);
+    const [employeesDeleteChecker, setDeleteEmployeeChecker] = useState(false);
 
     const EMPLOYEES_PER_PAGE = 10;
 
@@ -30,10 +32,14 @@ export default function Employees() {
         dispatch(getTotalUsersAmountThunk());
         dispatch(getAllUsersThunk(page, EMPLOYEES_PER_PAGE));
         setEmployeesAddChecker(false);
-    }, [dispatch, page, employeesAddChecker]);
+        setEditEmployeeChecker(false);
+        setDeleteEmployeeChecker(false);
+    }, [dispatch, page, employeesAddChecker, employeesEditChecker, employeesDeleteChecker]);
 
     const onModalClose = () => {
         setEmployeesAddChecker(true);
+        setEditEmployeeChecker(true);
+        setDeleteEmployeeChecker(true);
     }
 
     return (
@@ -53,7 +59,7 @@ export default function Employees() {
 
             <div className="employees-list">
                 {employees && Object.values(employees).map((employee) => (
-                    <EmployeeCard key={employee.id} employee={employee} />
+                    <EmployeeCard key={employee.id} employee={employee} setEditEmployeeChecker={setEditEmployeeChecker}/>
                 ))}
             </div>
 

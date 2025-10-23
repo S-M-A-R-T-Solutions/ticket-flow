@@ -46,8 +46,23 @@ export default function AddEmployee({ setEmployeesAddChecker }) {
         if (!username || username === '') {
             newErrors.username = "Please enter a valid username";
         }
+        if (username.includes('@')) {
+            newErrors.username = "Username cannot contain '@' or be an email";
+        }
+        if(username.length < 4){
+            newErrors.username = "Username must be at least 4 characters long";
+        }
+        if(username.length > 30){
+            newErrors.username = "Username cannot be longer than 30 characters";
+        }
         if (!email || email === '' || !email.includes('@')) {
             newErrors.email = "Please enter a valid email";
+        }
+        if(email.length < 3){
+            newErrors.email = "Email must be at least 3 characters long";
+        }
+        if(email.length > 256){
+            newErrors.email = "Email cannot be longer than 256 characters";
         }
         if (!password || password === '') {
             newErrors.password = "Please enter a valid password";
@@ -55,7 +70,12 @@ export default function AddEmployee({ setEmployeesAddChecker }) {
         if (password !== confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
         }
-
+        if(password.length < 6){
+            newErrors.password = "Password must be at least 6 characters long";
+        }
+        if(password.length > 50){
+            newErrors.password = "Password cannot be longer than 50 characters";
+        }
         setErrors(newErrors);
         setIsButtonDisabled(Object.keys(newErrors).length > 0);
     }, [firstName, lastName, username, email, password, confirmPassword]);
@@ -88,7 +108,6 @@ export default function AddEmployee({ setEmployeesAddChecker }) {
             setSelectedFile(file);
             const fileURL = URL.createObjectURL(file);
             setProfilePicUrl(fileURL);
-            console.log(fileURL, "THIS IS THE FILE URL");
         }
     };
 
