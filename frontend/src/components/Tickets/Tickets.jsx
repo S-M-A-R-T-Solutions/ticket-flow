@@ -1,7 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
+
 import { LuTicketPlus } from "react-icons/lu";
 
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
@@ -96,13 +97,13 @@ export default function Tickets() {
             </div>
 
             <div className='tickets-footer'>
-                <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><FaAngleLeft /></button>
+                <button className='prev-btn' style={{ border: "none" }} disabled={page <= 1} onClick={() => setPage(page - 1)}><HiOutlineChevronLeft /></button>
                 <div>
                     <span >
                         {page} of {lastPage}
                     </span>
                 </div>
-                <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><FaAngleRight /></button>
+                <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><HiOutlineChevronRight /></button>
             </div>
         </section>
     )

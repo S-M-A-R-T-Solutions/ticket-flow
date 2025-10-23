@@ -6,6 +6,7 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import { getAllUsersThunk, getTotalUsersAmountThunk } from "../../store/session";
 
 import EmployeeCard from "./EmployeeCard";
+import AddEmployee from "./AddEmployee";
 
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
@@ -17,6 +18,9 @@ export default function Employees() {
     const dispatch = useDispatch();
 
     const [page, setPage] = useState(1);
+    const [employeesAddChecker, setEmployeesAddChecker] = useState(false);
+    const [employeesEditChecker, setEditEmployeeChecker] = useState(false);
+    const [employeesDeleteChecker, setDeleteEmployeeChecker] = useState(false);
 
     const EMPLOYEES_PER_PAGE = 10;
 
@@ -27,13 +31,25 @@ export default function Employees() {
     useEffect(() => {
         dispatch(getTotalUsersAmountThunk());
         dispatch(getAllUsersThunk(page, EMPLOYEES_PER_PAGE));
-    }, [dispatch, page]);
+        setEmployeesAddChecker(false);
+        setEditEmployeeChecker(false);
+        setDeleteEmployeeChecker(false);
+    }, [dispatch, page, employeesAddChecker, employeesEditChecker, employeesDeleteChecker]);
+
+    const onModalClose = () => {
+        setEmployeesAddChecker(true);
+        setEditEmployeeChecker(true);
+        setDeleteEmployeeChecker(true);
+    }
 
     return (
         <section className="employees-tab">
             <div className="employees-section-header">
                     <h1>Employees</h1>
                     <OpenModalMenuItem
+                        modalComponent={<AddEmployee setEmployeesAddChecker={setEmployeesAddChecker} />}
+                        onModalClose={onModalClose}
+                        dismisable={false}
                     >
                         <button className="add-employee-btn">
                             <LuUserPlus /> Add Employee
@@ -43,7 +59,7 @@ export default function Employees() {
 
             <div className="employees-list">
                 {employees && Object.values(employees).map((employee) => (
-                    <EmployeeCard key={employee.id} employee={employee} />
+                    <EmployeeCard key={employee.id} employee={employee} setEditEmployeeChecker={setEditEmployeeChecker}/>
                 ))}
             </div>
 
@@ -56,7 +72,6 @@ export default function Employees() {
                 </div>
                 <button className='next-btn' style={{ border: "none" }} disabled={page >= lastPage} onClick={() => setPage(page + 1)}><HiOutlineChevronRight /></button>
             </div>
-
         </section>
     );
 }

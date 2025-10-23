@@ -15,8 +15,18 @@
     border-left: 6px solid var(--jonquil)
 }
 
+.client-card-company:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
 .client-card-individual {
     border-left: 6px solid var(--ultra-violet)
+}
+
+.client-card-individual:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .client-card:hover {

@@ -1,4 +1,6 @@
-.add-client-container {
+.add-user-container {
+    display: flex;
+    flex-direction: column;
     background-color: var(--surface-color);
     color: var(--text-color);
     border-radius: 16px;
@@ -10,7 +12,7 @@
     /* =============================== */
     /* Header title                    */
     /* =============================== */
-    .add-client-header {
+    .add-user-header {
         font-weight: 600;
         font-size: 18px;
         text-align: center;
@@ -22,7 +24,7 @@
     /* =============================== */
     /* Form container layout            */
     /* =============================== */
-    .add-client-form {
+    .add-user-form {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
@@ -39,7 +41,7 @@
     /* =============================== */
     /* Left column - image section     */
     /* =============================== */
-    .add-client-left {
+    .add-user-left {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -50,9 +52,9 @@
             cursor: pointer;
             display: inline-block;
 
-            .client-image {
-                width: 200px;
-                height: 200px;
+            .user-image {
+                width: 250px;
+                height: 250px;
                 border-radius: 16px;
                 object-fit: cover;
                 transition: all 0.25s ease-in-out;
@@ -89,7 +91,7 @@
             }
         }
 
-        .client-image {
+        .user-image {
             width: 200px;
             height: 200px;
             border-radius: 16px;
@@ -120,89 +122,140 @@
     /* =============================== */
     /* Right column - form fields      */
     /* =============================== */
-    .add-client-right {
+    .add-user-right {
         display: flex;
         flex-direction: column;
         gap: 16px;
         width: 60%;
 
-        .add-client-type {
+        .first-last-name {
             display: flex;
+            flex-direction: row;
             align-items: center;
             gap: 16px;
-            flex-wrap: wrap;
 
-            label {
-                font-size: 13px;
-                text-transform: uppercase;
-                opacity: 0.8;
-                letter-spacing: 0.5px;
-                cursor: pointer;
+            .add-user-input {
                 display: flex;
-                align-items: center;
-                gap: 6px;
+                width: 50%;
+                flex-direction: column;
+                gap: 5px;
 
-                input[type='radio'] {
-                    accent-color: var(--tiffany-blue);
-                    cursor: pointer;
+                label {
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    opacity: 0.7;
+                    letter-spacing: 0.5px;
                 }
 
-                &:hover {
-                    color: var(--tiffany-blue);
+                input[type='text'],
+                select {
+                    width: 100%;
+                    background-color: var(--light-white);
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    padding: 8px 10px;
+                    font-size: 12px;
+                    color: var(--light-black);
+                    outline: none;
+
+                    &:focus {
+                        border-color: var(--tiffany-blue);
+                    }
+                }
+
+                .error {
+                    font-size: 12px;
+                    color: red;
                 }
             }
         }
 
-        .client-name-inputs, .client-contact-inputs {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
-        flex-wrap: wrap;
-
-            .add-client-input {
-                flex: 1;
-            }
-        }
-
-        .add-client-input {
+        .username-email {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
 
-            label {
-                font-size: 12px;
-                text-transform: uppercase;
-                opacity: 0.7;
-                letter-spacing: 0.5px;
-            }
+            .add-user-input {
+                display: flex;
+                width: 50%;
+                flex-direction: column;
+                gap: 5px;
 
-            input[type='text'],
-            select {
-                width: 100%;
-                background-color: var(--light-white);
-                border: 1px solid rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                padding: 8px 10px;
-                font-size: 12px;
-                color: var(--light-black);
-                outline: none;
+                label {
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    opacity: 0.7;
+                    letter-spacing: 0.5px;
+                }
 
-                &:focus {
-                    border-color: var(--tiffany-blue);
+                input,
+                select {
+                    width: 100%;
+                    background-color: var(--light-white);
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    padding: 8px 10px;
+                    font-size: 12px;
+                    color: var(--light-black);
+                    outline: none;
+
+                    &:focus {
+                        border-color: var(--tiffany-blue);
+                    }
+                }
+
+                .error {
+                    font-size: 12px;
+                    color: red;
                 }
             }
+        }
 
-            .error {
-                font-size: 12px;
-                color: red;
+        .password-confirm {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+            gap: 16px;
+
+            .add-user-input {
+                display: flex;
+                width: 50%;
+                flex-direction: column;
+                gap: 5px;
+
+                label {
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    opacity: 0.7;
+                    letter-spacing: 0.5px;
+                }
+
+                input,
+                select {
+                    width: 100%;
+                    background-color: var(--light-white);
+                    border: 1px solid rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    padding: 8px 10px;
+                    font-size: 12px;
+                    color: var(--light-black);
+                    outline: none;
+
+                    &:focus {
+                        border-color: var(--tiffany-blue);
+                    }
+                }
+
+                .error {
+                    font-size: 12px;
+                    color: red;
+                }
             }
         }
     }
 
-    /* =============================== */
-    /* Buttons                         */
-    /* =============================== */
-    .add-client-buttons {
+    .add-employee-buttons {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -238,7 +291,7 @@
             }
         }
 
-        .btn-submit-add-client, btn-cancel-add-client {
+        .btn-submit-add-employee, .btn-cancel-add-employee {
             // width: 50%;
             padding: 6px 12px;
             border-radius: 8px;
