@@ -81,9 +81,19 @@ export default function EditEmployee({ employee, setEditEmployeeChecker }) {
         setIsButtonDisabled(Object.keys(newErrors).length > 0);
     }, [firstName, lastName, username, email]);
 
+    const updateFile = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            const fileURL = URL.createObjectURL(file);
+            setProfilePicUrl(fileURL);
+        }
+    };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
+
 
         const updatedUser = {
             firstName,
@@ -102,14 +112,6 @@ export default function EditEmployee({ employee, setEditEmployeeChecker }) {
         }
     }
 
-    const updateFile = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setSelectedFile(file);
-            const fileURL = URL.createObjectURL(file);
-            setProfilePicUrl(fileURL);
-        }
-    };
 
     return (
         <div className='edit-user-container'>

@@ -100,15 +100,15 @@ export const addUserThunk = (user) => async (dispatch) => {
     dispatch(addUser(newUser));
 };
 
-export const updateUserThunk = (userId, form) => async (dispatch) => {
-    const { img_url, firstName, lastName, password } = form;
+export const updateUserThunk = (userId, updatedUser) => async (dispatch) => {
+    const { img_url, firstName, lastName, password } = updatedUser;
     try {
         const formData = new FormData();
         formData.append('userId', userId);
-        formData.append("image", img_url);
-        formData.append("firstName", firstName);
-        formData.append("lastName", lastName);
-        formData.append("password", password);
+        formData.append("image", updatedUser.profilePicUrl);
+        formData.append("firstName", updatedUser.firstName);
+        formData.append("lastName", updatedUser.lastName);
+        formData.append("password", updatedUser.password);
 
         const options = {
             method: "PUT",
