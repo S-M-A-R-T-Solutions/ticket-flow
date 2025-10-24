@@ -7,6 +7,7 @@ const GET_USER = "session/getUser";
 const ADD_USER = "session/addUser";
 const EDIT_USER = "session/editUser";
 const DEACTIVATE_USER = "session/deactivateUser";
+const ACTIVATE_USER = "session/activateUser";
 const REMOVE_USER = "session/removeUser";
 const SET_USER = "session/setUser";
 
@@ -49,6 +50,13 @@ const editUser = (user) => {
 const deactivateUser = (user) => {
     return {
         type: DEACTIVATE_USER,
+        payload: user
+    };
+}
+
+const activateUser = (user) => {
+    return {
+        type: ACTIVATE_USER,
         payload: user
     };
 }
@@ -150,6 +158,14 @@ export const deactivateUserThunk = (user) => async (dispatch) => {
     return response;
 };
 
+export const activateUserThunk = (user) => async (dispatch) => {
+    const response = await csrfFetch(`/api/users/${user.id}/activate`, {
+        method: "PUT"
+    });
+    dispatch(activateUser(user));
+    return response;
+};
+
 export const login = (user) => async (dispatch) => {
     // console.log(user, "THIS IS USER");
     const { credential, password } = user;
@@ -233,6 +249,13 @@ const sessionReducer = (state = initialState, action) => {
             return newState;
         }
         case DEACTIVATE_USER: {
+            const newState = { ...state };
+            newState.allUsers = newState.allUsers.map(user =>
+                user.id === action.payload.id ? action.payload : user
+            );
+            return newState;
+        }
+        case ACTIVATE_USER: {
             const newState = { ...state };
             newState.allUsers = newState.allUsers.map(user =>
                 user.id === action.payload.id ? action.payload : user

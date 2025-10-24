@@ -6,74 +6,158 @@
 
     .employee-header {
         display: flex;
-            flex-direction: column;
-            row-gap: 20px;
-            width: 100%;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 20px;
+        flex-direction: column;
+        row-gap: 20px;
+        width: 100%;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 20px;
             
-            .employee-basic-info {
+        .employee-basic-info {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            background-color: var(--surface-color);
+            gap: 24px;
+            padding: 20px;
+            border-radius: 8px;
+                
+            .employee-profile-picture {
+                img {
+                    width: 200px;
+                    height: 200px;
+                    border-radius: 100%;
+                    object-fit: cover;
+                    border: 1px solid var(--box-bg-border);
+                    background-color: var(--box-bg);
+                }
+            }
+
+            .divider {
+                width: 0.5px;
+                background-color: var(--box-bg-border);
+                opacity: 0.2;
+            }
+        }
+            
+        .employee-basic-info-text {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .name-status {
                 display: flex;
                 flex-direction: row;
-                width: 100%;
-                background-color: var(--surface-color);
+                align-items: center;
                 gap: 16px;
-                padding: 20px;
-                border-radius: 8px;
 
-                .employee-profile-picture {
-                    img {
-                        width: 250px;
-                        height: 250px;
-                        border-radius: 100%;
-                        object-fit: cover;
-                        border: 1px solid var(--box-bg-border);
-                        background-color: var(--box-bg);
-                    }
+                h2 {
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: var(--text-color);
+                }
+
+                span {
+                    font-size: 12px;
+                    color: var(--text-color);
+                }
+
+                .employee-name {
+                    font-size: 28px;
+                    font-weight: 600;
+                    color: var(--text-color);
+                }
+
+                .status-badge-active {
+                    // font-size: 14px;
+                    font-weight: 500;
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    color: white;
+                    background-color: #4caf50;
+                }
+
+                .status-badge-inactive {
+                    // font-size: 14px;
+                    font-weight: 500;
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    color: white;
+                    background-color: #ff6b6b;
                 }
             }
-            
-            .employee-basic-info-text {
+
+            .employee-username-role {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 16px;
+
+                span {
+                    font-size: 14px;
+                    color: var(--text-color);
+                    opacity: 0.8;
+                }
+            }
+
+            .employee-contact-information {
                 display: flex;
                 flex-direction: column;
-
-                .name-status {
+                gap: 16px;
+                align-items: flex-start;
+                margin-top: 8px;
+                
+                .employee-contact-information-buttons {
                     display: flex;
                     flex-direction: row;
-                    align-items: center;
-                    gap: 16px;
+                    gap: 12px;
 
-                    h2 {
-                        font-size: 24px;
-                        font-weight: 700;
-                        color: var(--text-color);
-                    }
+                    .phone-number,
+                    .email-address {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        font-size: 12px;
+                        padding-right: 10px;
+                        cursor: pointer;
+                        width: fit-content;
+                        z-index: 1;
 
-                    .employee-name {
-                        font-size: 28px;
-                        font-weight: 600;
-                        color: var(--text-color);
-                    }
+                        &::before {
+                            content: '';
+                            position: absolute;
+                            inset: 0;
+                            background-color: var(--text-color);
+                            border-radius: 50px;
+                            opacity: 0.08;
+                            z-index: -1;
+                            transition: opacity 0.3s ease;
+                        }
 
-                    .status-badge-active {
-                        font-size: 14px;
-                        font-weight: 500;
-                        padding: 4px 8px;
-                        border-radius: 8px;
-                        color: white;
-                        background-color: #4caf50;
-                    }
+                        &:hover::before {
+                            opacity: 0.12;
+                        }
 
-                    .status-badge-inactive {
-                        font-size: 14px;
-                        font-weight: 500;
-                        padding: 4px 8px;
-                        border-radius: 8px;
-                        color: white;
-                        background-color: #ff6b6b;
+                        .phone-button,
+                        .email-button {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 100%;
+                            padding: 10px;
+                            font-size: 12px;
+                            background-color: var(--button-bg-color);
+                            color: var(--button-text-color);
+                            transition: background-color 0.3s ease;
+
+                            &:hover {
+                                background-color: var(--tiffany-blue);
+                            }
+                        }
                     }
                 }
             }
+        }
     }
 }

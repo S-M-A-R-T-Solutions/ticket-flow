@@ -3,12 +3,13 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { TiEdit } from "react-icons/ti";
-import { IoTrashOutline } from "react-icons/io5";
+import { MdOutlineCancel, MdCheckCircleOutline } from "react-icons/md"
 
 import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 
 import EditEmployee from "../EditEmployee";
 import DeleteEmployee from '../DeleteEmployee';
+import RestoreEmployee from '../RestoreEmployee';
 
 import { restoreUser } from "../../../store/session";
 
@@ -28,6 +29,10 @@ export default function EmployeeCard({ employee, isActive, setEditEmployeeChecke
         navigate(`/employees/${employee.id}`);
     };
 
+    if(!sessionUser) return (
+        <div>Loading...</div>
+    )
+
     return (
         <div
             className={`employee-card-${isActive ? 'inactive' : 'active'}`}
@@ -35,7 +40,7 @@ export default function EmployeeCard({ employee, isActive, setEditEmployeeChecke
         >
             <div className='employee-left'
                 onClick={goToEmployeeDetails}
-                style={{cursor: "pointer"}}
+                style={{ cursor: "pointer" }}
             >
                 <img className="employee-profile-picture" src={employee.profilePicUrl} alt="profile-pic" />
                 <div className="employee-info">
@@ -51,17 +56,21 @@ export default function EmployeeCard({ employee, isActive, setEditEmployeeChecke
                         <TiEdit />
                     </OpenModalMenuItem>
                 </div>
-                <div className="delete-employee-btn" style={{ display: sessionUser.id === employee.id ? 'none' : 'block' }}>
+                <div className="active-employee-btn" style={{ display: (sessionUser.id === employee.id) || employee.active ? 'none' : 'block' }}>
                     <OpenModalMenuItem
                         modalComponent={<DeleteEmployee employee={employee} setDeleteEmployeeChecker={setDeleteEmployeeChecker} />}
                     >
-                        <IoTrashOutline style={{ color: "var(--danger-color, #c33)", fontSize: "18px" }} />
+                        <MdOutlineCancel style={{ color: "var(--danger-color, #c33)", fontSize: "18px" }} />
                     </OpenModalMenuItem>
                 </div>
             </div>
-            <div className="employee-operations" style={{ display: employee.isActive ? 'none' : 'flex' }}>
-                <div className="inactive-employee-tag">
-                    <p>Inactive</p>
+            <div className="employee-operations-inactive" style={{ display: employee.isActive ? 'none' : 'flex' }}>
+                <div className="inactive-employee-btn">
+                    <OpenModalMenuItem
+                        modalComponent={<RestoreEmployee employee={employee} setDeleteEmployeeChecker={setDeleteEmployeeChecker} />}
+                    >
+                        <MdCheckCircleOutline style={{ color: "var(--success-color, #4BB543)", fontSize: "20px" }} />
+                    </OpenModalMenuItem>
                 </div>
             </div>
         </div>

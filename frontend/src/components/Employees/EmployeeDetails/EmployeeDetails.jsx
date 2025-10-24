@@ -2,7 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { MdOutlineLocalPhone } from "react-icons/md";
+import { LuMail } from "react-icons/lu";
+
 import { getUserThunk } from "../../../store/session";
+
+import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
 import './EmployeeDetails.scss';
 
@@ -35,6 +40,7 @@ export default function EmployeeDetails() {
                                 </div>
                             )}
                         </div>
+                        <div className="divider"></div>
                         <div className="employee-basic-info-text">
                             <div className="name-status">
                                 <h2>{employee.firstName} {employee.lastName}</h2>
@@ -42,11 +48,47 @@ export default function EmployeeDetails() {
                                     {employee.isActive ? 'ACTIVE' : 'INACTIVE'}
                                 </span>
                             </div>
+                            <div className="employee-username-role">
+                                <div>
+                                    <span>Username:</span>
+                                    <p>@{employee.username}</p>
+                                </div>
+                                <div>
+                                    <span>Position:</span>
+                                    <p>{employee.title}</p>
+                                </div>
+                            </div>
+                            <div className="employee-contact-information">
+                                <h3>Contact Information</h3>
+                                <div className="employee-contact-information-buttons">
+                                    {employee.phone && (
+                                        <div className="phone-number" onClick={() => {
+                                            window.location.href = `tel:${employee.phone}`;
+                                        }}>
+                                            <div className="phone-button" >
+                                                <MdOutlineLocalPhone />
+                                            </div>
+                                            {formatPhoneNumber(employee.phone)}
+                                        </div>
+                                    )}
+                                    {employee.email && (
+                                        <div className="email-address" onClick={() => {
+                                            window.location.href = `mailto:${employee.email}`;
+                                        }}>
+                                            <div className="email-button">
+                                                <LuMail />
+                                            </div>
+                                            {employee.email || "No email provided"}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             )
-                : (<p>Loading...</p>)}
-        </div>
+                : (<p>Loading...</p>)
+            }
+        </div >
     );
 }

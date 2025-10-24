@@ -317,4 +317,22 @@ router.put('/:id/deactivate', requireAuth, async (req, res) => {
     }
 });
 
+//Activate a User
+router.put('/:id/activate', requireAuth, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findByPk(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        await user.update({ isActive: true });
+
+        return res.json({ message: "User activated successfully" });
+    } catch (error) {
+        return res.status(500).json({ message: "Error activating user", error: error.message });
+    }
+});
+
 module.exports = router;
