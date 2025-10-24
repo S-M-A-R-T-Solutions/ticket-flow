@@ -79,7 +79,7 @@ module.exports = {
       {
         firstName: "Twilio",
         lastName: "Auto user",
-        profilePicUrl: "",
+        profilePicUrl: "https://www.investopedia.com/thmb/qwP8WRk25KE1pvUUKPO8Uc9GsOc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-2198652273-a878a2a830b742fb8c9b5c9f4ae5ccf8.jpg",
         title: "NA",
         username: "twilioautouser",
         phone: "+17890123456",

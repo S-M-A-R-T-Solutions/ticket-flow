@@ -579,4 +579,40 @@ router.post('/:id/signature', requireAuth, properUserValidation, async (req, res
     }
 });
 
+//Get all Tickets assigned to an Employee
+router.get('/employee/:employeeId', requireAuth, async (req, res, next) => {
+    try {
+        const { employeeId } = req.params;
+
+        console.log("Employee ID Param:", employeeId);
+
+        const user = await User.findByPk(parseInt(employeeId));
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const assignments = await TicketEmployee.findAll({
+            where: {
+                userId: user.id
+            }
+        });
+
+        const ticketIds = assignments.map(assignment => assignment.ticketId);
+
+        console.log("Assigned Ticket IDs:", ticketIds);
+
+        const tickets = await Ticket.findAll({
+            where: {
+                id: ticketIds
+            }
+        });
+
+        return res.json(tickets);
+
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

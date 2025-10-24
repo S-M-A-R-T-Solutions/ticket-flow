@@ -16,7 +16,7 @@
         .employee-basic-info {
             display: flex;
             flex-direction: row;
-            width: 100%;
+            width: 50%;
             background-color: var(--surface-color);
             gap: 24px;
             padding: 20px;
@@ -38,6 +38,16 @@
                 background-color: var(--box-bg-border);
                 opacity: 0.2;
             }
+        }
+
+        .employee-roles {
+            display: flex;
+            flex-direction: row;
+            width: 50%;
+            background-color: var(--surface-color);
+            gap: 24px;
+            padding: 20px;
+            border-radius: 8px;
         }
             
         .employee-basic-info-text {
@@ -159,5 +169,15 @@
                 }
             }
         }
+    }
+
+    .employee-tickets-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        background-color: var(--surface-color);
+        gap: 24px;
+        padding: 20px;
+        border-radius: 8px;
     }
 }

@@ -9,6 +9,7 @@ const ADD_TICKET = 'tickets/addTicket';
 const UPDATE_TICKET = 'tickets/updateTicket';
 const DELETE_TICKET = 'tickets/deleteTicket';
 const GET_TICKET_BY_HASH = 'tickets/getTicketByHash';
+const GET_TICKETS_ASSIGNED_TO_EMPLOYEE = 'tickets/getTicketsAssignedToEmployee';
 
 const ADD_NOTE_TO_TICKET = 'tickets/addNoteToTicket';
 
@@ -56,6 +57,11 @@ const deleteTicket = (ticket) => ({
 const addNoteToTicket = (note) => ({
     type: ADD_NOTE_TO_TICKET,
     payload: note
+});
+
+const getTicketsAssignedToEmployee = (tickets) => ({
+    type: GET_TICKETS_ASSIGNED_TO_EMPLOYEE,
+    payload: tickets
 });
 
 //THUNKS
@@ -127,6 +133,12 @@ export const addNoteToTicketThunk = (note, ticketId) => async (dispatch) => {
     dispatch(addNoteToTicket(newNote));
 }
 
+export const getTicketsAssignedToEmployeeThunk = (employeeId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/tickets/employee/${employeeId}`);
+    const tickets = await res.json();
+    dispatch(getTicketsAssignedToEmployee(tickets));
+}
+
 
 //REDUCER
 const initialState = {
@@ -162,6 +174,9 @@ const ticketsReducer = (state = initialState, action) => {
         }
         case DELETE_TICKET: {
             return { ...state, myTickets: state.myTickets.filter(ticket => ticket.id !== action.payload.id) };
+        }
+        case GET_TICKETS_ASSIGNED_TO_EMPLOYEE: {
+            return { ...state, allTickets: action.payload };
         }
         default:
             return state;
