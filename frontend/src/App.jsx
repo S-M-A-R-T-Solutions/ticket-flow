@@ -16,6 +16,7 @@ import MyWork from "./components/MyWork";
 import TicketDetailsOld from "./components/TicketDetails";
 import TicketDetails from "./components/Tickets/TicketDetails/TicketDetails";
 import Employees from "./components/Employees/Employees";
+import EmployeeDetails from "./components/Employees/EmployeeDetails";
 import Clients from "./components/Clients/Clients";
 import ClientDetails from "./components/Clients/ClientDetails";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
@@ -76,14 +77,6 @@ const router = createBrowserRouter([
         path: '/',
         element: <LoginSignup />
       },
-      // {
-      //   path: '/',
-      //   element: <Splash />
-      // },
-      // {
-      //   path: '/login',
-      //   element: <LoginSignup />
-      // },
       {
         path: '/dashboard',
         element: <Dashboard />
@@ -103,6 +96,10 @@ const router = createBrowserRouter([
       {
         path: '/employees',
         element: <Employees />
+      },
+      {
+        path: '/employees/:employeeId',
+        element: <EmployeeDetails />
       },
       {
         path: '/clients',

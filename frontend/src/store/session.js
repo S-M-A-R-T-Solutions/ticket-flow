@@ -67,8 +67,8 @@ const setUser = (user) => {
 };
 
 //THUNKS
-export const getAllUsersThunk = (page, size) => async (dispatch) => {
-    const response = await csrfFetch(`/api/users?page=${page}&size=${size}`);
+export const getAllUsersThunk = (page, size, sortLabel, sortValue) => async (dispatch) => {
+    const response = await csrfFetch(`/api/users?page=${page}&size=${size}&sort=${sortLabel}&value=${sortValue }`);
     const data = await response.json();
     dispatch(getAllUsers(data));
 }
@@ -203,7 +203,7 @@ export const signup = (user) => async (dispatch) => {
 };
 
 //REDUCER
-const initialState = { user: null, allUsers: [], totalUsersAmount: 0 };
+const initialState = { user: null, selectedUser: null, allUsers: [], totalUsersAmount: 0 };
 
 const sessionReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -219,7 +219,7 @@ const sessionReducer = (state = initialState, action) => {
         }
         case GET_USER: {
             const newState = { ...state };
-            newState.user = action.payload;
+            newState.selectedUser = action.payload;
             return newState;
         }
         case ADD_USER: {
