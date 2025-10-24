@@ -155,4 +155,30 @@ router.delete('/:roleId/users/:userId', async (req, res) => {
     }
 });
 
+//Get All Roles of a User
+router.get('/users/:userId/roles', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const roles = await Role.findAll({
+            include: [{
+                model: UserRole,
+                where: { userId: parseInt(userId) }
+            }],
+            attributes: { exclude: ['createdAt', 'updatedAt'] }
+        });
+
+        return res.json({ userId: user.id, roles });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error Retrieving User Roles",
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;

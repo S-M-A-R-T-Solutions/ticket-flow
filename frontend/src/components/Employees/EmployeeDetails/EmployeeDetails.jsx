@@ -7,6 +7,7 @@ import { LuMail } from "react-icons/lu";
 
 import { getUserThunk } from "../../../store/session";
 import { getTicketsAssignedToEmployeeThunk } from "../../../store/tickets";
+import { fetchUserRolesThunk } from "../../../store/session";
 
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
@@ -22,14 +23,17 @@ export default function EmployeeDetails() {
 
     const employee = useSelector(state => state.session.selectedUser)
     const tickets = useSelector(state => state.tickets.allTickets);
+    const roles = useSelector(state => state.session.selectedUserRoles);
 
     useEffect(() => {
         dispatch(getUserThunk(employeeId));
         dispatch(getTicketsAssignedToEmployeeThunk(parseInt(employeeId)));
+        dispatch(fetchUserRolesThunk(employeeId));
     }, [dispatch, employeeId]);
 
     console.log("Employee Details Employee:", employee);
     console.log("Employee Details Tickets:", tickets);
+    console.log("Employee Details Roles:", roles);
 
     return (
         <div className="employee-details">

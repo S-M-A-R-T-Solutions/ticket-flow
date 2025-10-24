@@ -4,6 +4,7 @@ import { csrfFetch } from './csrf';
 const GET_ALL_USERS = "session/getAllUsers";
 const GET_TOTAL_USERS_AMOUNT = "session/getTotalUsersAmount";
 const GET_USER = "session/getUser";
+const GET_USER_ROLES = "session/getUserRoles";
 const ADD_USER = "session/addUser";
 const EDIT_USER = "session/editUser";
 const DEACTIVATE_USER = "session/deactivateUser";
@@ -71,6 +72,13 @@ const setUser = (user) => {
     return {
         type: SET_USER,
         payload: user
+    };
+};
+
+const getUserRoles = (roles) => {
+    return {
+        type: GET_USER_ROLES,
+        payload: roles
     };
 };
 
@@ -218,8 +226,15 @@ export const signup = (user) => async (dispatch) => {
     return response;
 };
 
+export const fetchUserRolesThunk = (userId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/users/${userId}/roles`);
+    const data = await response.json();
+    dispatch(getUserRoles(data.roles));
+    return response;
+};
+
 //REDUCER
-const initialState = { user: null, selectedUser: null, allUsers: [], totalUsersAmount: 0 };
+const initialState = { user: null, selectedUser: null, selectedUserRoles: [], allUsers: [], totalUsersAmount: 0 };
 
 const sessionReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -269,6 +284,11 @@ const sessionReducer = (state = initialState, action) => {
         }
         case SET_USER: {
             return { ...state, user: action.payload };
+        }
+        case GET_USER_ROLES: {
+            const newState = { ...state };
+            newState.selectedUserRoles = action.payload;
+            return newState;
         }
         default:
             return state;

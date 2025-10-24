@@ -4,7 +4,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, requireAuth } = require('@utils/auth');
-const { User, EmployeePhoneNumber, Department } = require('@db/models');
+const { User, EmployeePhoneNumber, Department, Roles, UserRoles } = require('@db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('@utils/validation');
@@ -268,7 +268,7 @@ router.get('/:id', requireAuth, async (req, res) => {
             attributes: { exclude: ['createdAt', 'updatedAt'] }
         });
 
-        return res.json({ ...user.toJSON(), department: userDepartment, phoneNumbers: userPhoneNumbers });
+        return res.json({ ...user.toJSON(), department: userDepartment, phoneNumbers: userPhoneNumbers});
     } catch (error) {
         return res.status(500).json({ message: "Error fetching user", error: error.message });
     }

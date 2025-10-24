@@ -584,8 +584,6 @@ router.get('/employee/:employeeId', requireAuth, async (req, res, next) => {
     try {
         const { employeeId } = req.params;
 
-        console.log("Employee ID Param:", employeeId);
-
         const user = await User.findByPk(parseInt(employeeId));
 
         if (!user) {
@@ -599,9 +597,7 @@ router.get('/employee/:employeeId', requireAuth, async (req, res, next) => {
         });
 
         const ticketIds = assignments.map(assignment => assignment.ticketId);
-
-        console.log("Assigned Ticket IDs:", ticketIds);
-
+        
         const tickets = await Ticket.findAll({
             where: {
                 id: ticketIds
