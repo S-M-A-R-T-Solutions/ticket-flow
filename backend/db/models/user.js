@@ -78,6 +78,10 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: true,
       },
     },
+    phone: {
+      type: DataTypes.STRING(15),
+      allowNull: true,
+    },
     hashedPassword: {
       type: DataTypes.STRING.BINARY,
       allowNull: false,

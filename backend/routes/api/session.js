@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 const { setTokenCookie, restoreUser } = require('@utils/auth');
-const { User } = require('@db/models');
+const { User, UserRole, Role } = require('@db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('@utils/validation');
@@ -30,6 +30,12 @@ router.get('/', async (req, res, next) => {
             })
 
         const currentUser = await User.findByPk(parseInt(req.user.id));
+        
+        // Get the Roles associated with the user and add them to the user object
+        const roles = await UserRole.findAll({
+            where: { userId: currentUser.id },
+            include: Role
+        });
 
         res.json({
             user: {
@@ -38,9 +44,10 @@ router.get('/', async (req, res, next) => {
                 lastName: currentUser.lastName,
                 email: currentUser.email,
                 username: currentUser.username,
-                profilePicUrl: currentUser.profilePicUrl
+                profilePicUrl: currentUser.profilePicUrl,
+                roles: roles.map((userRole) => userRole.Role.name)
             }
-        } || { user: null });
+        });
     } catch (error) {
         next(error);
     }
@@ -96,11 +103,11 @@ router.post(
 );
 
 //Log out
-router.delete('/', (_req, res) => {
+router.delete('/', (_req, res, next) => {
     try {
         res.clearCookie('token');
         return res.json({ message: 'success' })
-    } catch (error) {
+    } catch (err) {
         next({
             message: 'Logout error. (DELETE) backend/routes/api/session.js'
         })

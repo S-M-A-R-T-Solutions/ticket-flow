@@ -203,7 +203,7 @@ export const signup = (user) => async (dispatch) => {
 };
 
 //REDUCER
-const initialState = { user: null, allUsers: [], totalUsersAmount: 0 };
+const initialState = { user: null, selectedUser: null, allUsers: [], totalUsersAmount: 0 };
 
 const sessionReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -219,7 +219,7 @@ const sessionReducer = (state = initialState, action) => {
         }
         case GET_USER: {
             const newState = { ...state };
-            newState.user = action.payload;
+            newState.selectedUser = action.payload;
             return newState;
         }
         case ADD_USER: {
