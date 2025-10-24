@@ -17,6 +17,7 @@ module.exports = {
         title: "Software Engineer",
         username: "DemoEmp1",
         email: "demo@aa.io",
+        phone: "+11234567890",
         hashedPassword: bcrypt.hashSync("password"),
         departmentId: 1
       },
@@ -27,6 +28,7 @@ module.exports = {
         title: "Product Manager",
         username: "DemoEmp2",
         email: "jane@aa.io",
+        phone: "+12345678901",
         hashedPassword: bcrypt.hashSync("password"),
         departmentId: 1
       },
@@ -37,6 +39,7 @@ module.exports = {
         title: "UX Designer",
         username: "DemoEmp3",
         email: "john@aa.io",
+        phone: "+13456789012",
         hashedPassword: bcrypt.hashSync("password"),
         departmentId: 1
       },
@@ -47,6 +50,7 @@ module.exports = {
         title: "Product Manager",
         username: "DemoEmp4",
         email: "jane1@aa.io",
+        phone: "+14567890123",
         hashedPassword: bcrypt.hashSync("password"),
         departmentId: 2
       },
@@ -57,6 +61,7 @@ module.exports = {
         title: "Data Scientist",
         username: "DemoEmp5",
         email: "george2@aa.io",
+        phone: "+15678901234",
         hashedPassword: bcrypt.hashSync("password"),
         departmentId: 2
       },
@@ -68,6 +73,7 @@ module.exports = {
         title: "CEO",
         username: "DemoEmp6",
         email: "steve3@aa.io",
+        phone: "+16789012345",
         hashedPassword: bcrypt.hashSync("password"),
       },
       {
@@ -76,6 +82,7 @@ module.exports = {
         profilePicUrl: "",
         title: "NA",
         username: "twilioautouser",
+        phone: "+17890123456",
         email: "autouser@thesmartsolution.net",
         hashedPassword: bcrypt.hashSync(twilioConfig.autoUserPassword),
       }

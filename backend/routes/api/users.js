@@ -279,7 +279,8 @@ router.get('/', requireAuth, async (_req, res) => {
         try {
             const page = parseInt(_req.query.page) || null;
             const size = parseInt(_req.query.size) || null;
-            const order = _req.query.order || 'ASC';
+            const sortlabel = _req.query.sort || 'firstName';
+            const sortvalue = _req.query.value || 'ASC';
 
             const offset = (page - 1) * size;
             const limit = size;
@@ -287,7 +288,7 @@ router.get('/', requireAuth, async (_req, res) => {
             const users = await User.findAll({
                 offset,
                 limit,
-                order: [['firstName', 'ASC']],
+                order: [[sortlabel, sortvalue]],
                 attributes: { exclude: ['hashedPassword', 'createdAt', 'updatedAt'] }
             });
 
