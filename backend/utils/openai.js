@@ -14,7 +14,7 @@ async function getTitleAndDescription(transcription) {
             input: [
                 {
                     role: "user",
-                    content: "Generate a concise title (max 50 characters) and a detailed description (max 100 words) for a support ticket based on the following conversation transcription. Format the response json as '{title, description}'. Give only the json response without any additional text. This transcription may include multiple languages, primarily English and Spanish.\n\nTranscription:\n" + transcription,
+                    content: "Task: Based on the following conversation transcription, write: 1.⁠ ⁠'title': a short, clear issue title in English only (maximum 50 characters). 2.⁠ 'description': a detailed, factual summary in English only (maximum 100 words) explaining the customer's problem, actions taken, results, and any pending tasks. Output rules: ⁠Respond ONLY with valid JSON formatted exactly as: {'title': '...','description': '...'} ⁠Use double quotes for all keys and values. ⁠Do not include explanations, markdown, or any text outside the JSON. ⁠Preserve technical names, error codes, IPs, and software terms exactly as mentioned. Ignore any Spanish or other non-English text in the transcription; translate to English where needed. ⁠Keep tone professional, concise, and suitable for CRM ticket entry." + transcription,
                 },
             ],
         });
@@ -43,7 +43,7 @@ async function getTranscriptionFromRecording(file) {
             file: file,
             model: "gpt-4o-transcribe",
             response_format: "text",
-            prompt: "Get the transcription text from the following audio recording URL. Provide only the transcription text without any additional text. The audio recording is from a customer support call. The call can be in multiple languages at the same time, mostly English and Spanish. If possible label the customer and agent parts.",
+            prompt: "Your task: Write a concise, well-structured summary of the call in English, followed by a short Spanish version if Spanish was used. Clearly describe what the customer reported, what troubleshooting or actions were taken, and the final outcome. Identify and list any pending tasks or follow-ups still required, written as short actionable bullet points (e.g., “Reset 3CX SIP trunk,” “Install Windows updates,” “Verify Open Dental backup”). Preserve all technical names, versions, IPs, or tools mentioned (e.g., 3CX, UDM, Open Dental, MySQL, Synology). Keep the tone professional, factual, and free of filler. If the transcript contains both English and Spanish, summarize bilingually while keeping each section clear and separate. Goal: Produce a clean, objective summary that a technician or client can quickly review to understand what occurred, what was resolved, and what tasks remain open.",
         });
         
         console.info('getTranscriptionFromRecording:\n' + JSON.stringify(response));
