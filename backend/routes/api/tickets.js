@@ -35,7 +35,9 @@ router.get('/', requireAuth, async (req, res, next) => {
         const tickets = await Ticket.findAll({
             where,
             limit: size,
-            offset: (page - 1) * size
+            offset: (page - 1) * size,
+            //Show newest tickets first
+            order: [['createdAt', 'DESC']]
         });
 
         let Tickets = [];
