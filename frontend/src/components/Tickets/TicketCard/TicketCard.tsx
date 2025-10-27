@@ -1,12 +1,16 @@
-import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { FaTrash } from 'react-icons/fa';
-import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+
+import moment from 'moment';
+
+import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
+
 import { getAllStatusThunk } from '../../../store/status';
-import ConfirmDeleteTicket from "../../ConfirmDeleteTicket";
-import OpenModalMenuItem from '../../Navigation/OpenModalMenuItem';
-import { NavLink } from 'react-router-dom';
+
+// import ConfirmDeleteTicket from "../../ConfirmDeleteTicket";
+// import OpenModalMenuItem from '../../Navigation/OpenModalMenuItem';
+// import { FaTrash } from 'react-icons/fa';
 
 import './TicketCard.scss';
 
@@ -57,7 +61,15 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
     return (
         <div className="ticket-card-wrapper">
             <NavLink to={"/tickets/" + ticket.id} className={`ticket-card-new status-${ticketStatus}`}>
-                <div className="ticket-title">{ticket.title}</div>
+                <div className='ticket-header'>
+                    <div className="ticket-title">{ticket.title}</div>
+                    {/* Add relative time using moment */}
+                    <div
+                        className="ticket-date"
+                    >
+                        {moment(ticket.createdAt).fromNow()}
+                    </div>
+                </div>
 
                 {typeof (ticket.createdBy) !== "number" && (<div className='ticket-author'>
                     Created by: <strong>{ticket.createdBy.firstName}</strong>
@@ -69,20 +81,21 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                         {ticket.clientId.companyName}
                     </div>
                 ) : (
-                    <div className='client-individual'>
-                        <BsFillPersonFill />
-                        {ticket.clientId.firstName} {ticket.clientId.lastName}
-                    </div>
+                    <>
+                        <div className='client-individual'>
+                            <BsFillPersonFill />
+                            {ticket.clientId.firstName} {ticket.clientId.lastName}
+                        </div>
+                    </>
                 )}
 
                 <PerforatedZone />
 
                 <div className='ticket-description'>{ticket.description}</div>
 
-                <div className="ticket-date">{formatDate(ticket.createdAt)}</div>
             </NavLink>
 
-            {user.id === ticket.createdBy.id && (
+            {/* {user.id === ticket.createdBy.id && (
                 <div className="delete-ticket-wrapper">
                     <OpenModalMenuItem
                         modalComponent={
@@ -96,7 +109,7 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                         </button>
                     </OpenModalMenuItem>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }
