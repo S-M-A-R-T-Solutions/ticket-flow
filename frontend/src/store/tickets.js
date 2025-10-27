@@ -102,6 +102,7 @@ export const addTicketThunk = (ticket) => async (dispatch) => {
 }
 
 export const updateTicketThunk = (ticket) => async (dispatch) => {
+    console.log("Updating ticket:", ticket);
     const res = await csrfFetch(`/api/tickets/${ticket.id}`, {
         method: 'PUT',
         body: JSON.stringify(ticket)
