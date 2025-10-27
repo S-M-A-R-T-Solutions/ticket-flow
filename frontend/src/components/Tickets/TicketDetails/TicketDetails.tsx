@@ -158,35 +158,43 @@ export default function TicketDetails() {
                     ) : (null)}
                 </h1>
 
-                {ticket.ClientInfo?.companyName === "" ?
-                    <div className="client">
-                        <div className="client-image">
-                            {ticket.ClientInfo?.profilePicUrl ?
-                                <img src={ticket.ClientInfo?.profilePicUrl} alt="Client" /> :
-                                <BsFillPersonFill />
-                            }
-                        </div>
+                {ticket.id === 28 ? (<div>
+                    <div className="assign-client"></div>
+                </div>) : (
+                    <>
+                        {ticket.ClientInfo?.companyName === "" ?
+                            <div className="client">
+                                <div className="client-image">
+                                    {ticket.ClientInfo?.profilePicUrl ?
+                                        <img src={ticket.ClientInfo?.profilePicUrl} alt="Client" /> :
+                                        <BsFillPersonFill />
+                                    }
+                                </div>
 
-                        <div className="client-info">
-                            <div className="client-name">
-                                {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
+                                <div className="client-info">
+                                    <div className="client-name">
+                                        {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
+                                    </div>
+                                </div>
+                            </div> :
+
+                            <div className="client">
+                                <div className="client-image">
+                                    <BsBuildingsFill />
+                                </div>
+
+                                <div className="client-info">
+                                    <div className="client-name">
+                                        {ticket.ClientInfo?.companyName}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div> :
+                        }
+                    </>)}
 
-                    <div className="client">
-                        <div className="client-image">
-                            <BsBuildingsFill />
-                        </div>
 
-                        <div className="client-info">
-                            <div className="client-name">
-                                {ticket.ClientInfo?.companyName}
-                            </div>
-                        </div>
-                    </div>
-                }
             </div>
+
 
             <div className="ticket-details-container">
                 <div className="ticket-info">
