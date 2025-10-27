@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee } = require('@db/models');
+const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, TwilioCall } = require('@db/models');
 
 const generateAlphanumericId = require('@utils/randomGenerator');
 
@@ -42,13 +42,15 @@ router.get('/', requireAuth, async (req, res, next) => {
 
         let Tickets = [];
 
+        
         for (const ticket of tickets) {
             ticket["status"] = await Status.findByPk(where.status);
             ticket.clientId = await Client.findByPk(where.client || ticket.clientId, { attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'email', 'phoneNumber', 'address'] } });
             ticket.createdBy = await User.findByPk(where.createdBy || ticket.createdBy, { attributes: { exclude: ['username', 'email', 'hashedPassword', 'createdAt', 'updatedAt', 'isActive', 'departmentId'] } });
+            ticket.calls = await TwilioCall.findAll({ where: { ticketId: ticket.id } });
 
             const values = ticket.toJSON();
-
+            
             Tickets.push(values);
         }
 
