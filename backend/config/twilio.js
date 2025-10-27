@@ -10,6 +10,7 @@ module.exports = {
     answerMessage: process.env.TWILIO_ANSWER_MESSAGE,
     autoUserId: process.env.TWILIO_AUTO_USER_ID,
     autoUserPassword: process.env.TWILIO_AUTO_USER_PASSWORD,
+    anonymousClientId: process.env.TWILIO_ANONYMOUS_CLIENT_ID,
     accountSid,
     authToken,
     client,

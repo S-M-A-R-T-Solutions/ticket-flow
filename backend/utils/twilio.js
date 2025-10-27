@@ -32,21 +32,26 @@ async function upsertCallAndTicket(req) {
             });
         } catch (error) {
             console.error(error);
-            return false;
+            return { success: false, created: null, anonymous: null };
         }
 
-        return true;
+        return { success: true, created: false, anonymous: null };
     }
 
     // If call does not exist, create a new ticket and call record
 
     const clientPhone = From === "" ? Caller : From;
 
-    const clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
+    let clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
 
     if (!clientByPhone) {
-        console.error(`Client with phone ${clientPhone} not found`);
-        return false;
+        console.error(`Client with phone ${clientPhone} not found, using anonymous client`);
+        clientByPhone = await Client.findOne({ where: { id: twilioConfig.anonymousClientId } });
+    }
+
+    if (!clientByPhone) {
+        console.error('Anonymous client not found');
+        return { success: false, created: null, anonymous: null };
     }
 
     try {
@@ -77,10 +82,10 @@ async function upsertCallAndTicket(req) {
         });
     } catch (err) {
         console.error(err);
-        return false;
+        return { success: false, created: null, anonymous: null };
     }
 
-    return true;
+    return { success: true, created: true, anonymous: clientByPhone.id === twilioConfig.anonymousClientId };
 }
 
 async function insertTranscription(req) {
@@ -168,7 +173,8 @@ async function updateTicketWithTranscription(callSid, transcription) {
         return false;
     }
 
-    const { title, description } = await getTitleAndDescription(transcription);
+    const anonymous = ticket.clientId === twilioConfig.anonymousClientId;
+    const { title, description } = await getTitleAndDescription(transcription, anonymous);
 
     try {
         await ticket.update({
