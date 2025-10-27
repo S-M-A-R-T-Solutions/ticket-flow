@@ -216,10 +216,11 @@ router.post('/', requireAuth, async (req, res, next) => {
 });
 
 // Update a Ticket
-router.put('/:id', requireAuth, properUserValidation, async (req, res, next) => {
+router.put('/:id', requireAuth, async (req, res, next) => {
     try {
-        const ticket = await Ticket.findByPk(req.params.id);
+        const {id} = req.params;
 
+        const ticket = await Ticket.findByPk(parseInt(id));
         if (!ticket) {
             return res.status(404).json({ message: 'Ticket not found' });
         }
