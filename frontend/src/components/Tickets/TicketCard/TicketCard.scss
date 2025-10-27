@@ -7,6 +7,52 @@
         padding: 0;
     }
 
+    .ticket-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .ticket-title {
+            position: relative;
+
+            // width: calc(100% + 48px);
+
+            margin: -8px -24px 8px;
+            padding: 8px 24px;
+
+            font-size: 18px;
+            font-weight: 600;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 0px;
+                z-index: 1;
+
+                width: 16px;
+                height: 14px;
+                background-color: var(--card-active-color);
+
+                border-radius: 0 20px 20px 0;
+
+                transform: translateY(-50%);
+            }
+        }
+
+        .ticket-date {
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    }
+
     .delete-ticket-wrapper {
         position: absolute;
         right: 16px;
@@ -70,37 +116,7 @@
 }
 
 .ticket-card-new {
-    .ticket-title {
-        position: relative;
-
-        width: calc(100% + 48px);
-
-        margin: -8px -24px 8px;
-        padding: 8px 24px;
-
-        font-size: 18px;
-        font-weight: 600;
-
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        &::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0px;
-            z-index: 1;
-
-            width: 16px;
-            height: 14px;
-            background-color: var(--card-active-color);
-
-            border-radius: 0 20px 20px 0;
-
-            transform: translateY(-50%);
-        }
-    }
+    
 
     .ticket-author {
         opacity: 0.7;
@@ -132,14 +148,6 @@
         width: 100%;
         height: 40px;
         overflow: hidden;
-        opacity: 0.7;
-    }
-
-    .ticket-date {
-        margin-top: 16px;
-
-        font-size: 14px;
-
         opacity: 0.7;
     }
 
