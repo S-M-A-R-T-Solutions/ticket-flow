@@ -32,6 +32,7 @@
 /* Common styling for each ticket status container (New, In Progress, Done) */
 .new-tickets-container,
 .in-progress-tickets-container,
+.pending-tickets-container,
 .done-tickets-container {
     display: flex;
     flex-direction: row;
@@ -56,6 +57,7 @@
 /* Heading inside each ticket container */
 .new-tickets-container h2,
 .in-progress-tickets-container h2,
+.pending-tickets-container h2,
 .done-tickets-container h2 {
     font-size: 1rem;
     font-weight: bold;
@@ -66,6 +68,7 @@
 /* Ticket count inside each ticket container */
 .new-tickets-container span,
 .in-progress-tickets-container span,
+.pending-tickets-container span,
 .done-tickets-container span {
     font-size: 2rem;
     font-weight: bold;
