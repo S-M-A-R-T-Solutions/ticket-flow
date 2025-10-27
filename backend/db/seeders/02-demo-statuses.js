@@ -21,6 +21,11 @@ module.exports = {
         description: "The ticket is being worked on"
       },
       {
+        name: "Pending",
+        color: "#ED1476",
+        description: "The ticket is pending further information"
+      },
+      {
         name: "Closed",
         color: "#4CAF50",
         description: "The ticket has been resolved"
