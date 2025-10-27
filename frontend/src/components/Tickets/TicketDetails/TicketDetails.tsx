@@ -158,7 +158,7 @@ export default function TicketDetails() {
                     ) : (null)}
                 </h1>
 
-                {ticket.id === 28 ? (<div>
+                {ticket.companyName === "Anonymous Client" ? (<div>
                     <div className="assign-client"></div>
                 </div>) : (
                     <>
@@ -191,8 +191,6 @@ export default function TicketDetails() {
                             </div>
                         }
                     </>)}
-
-
             </div>
 
 
