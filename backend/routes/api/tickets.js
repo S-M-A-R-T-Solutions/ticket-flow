@@ -138,7 +138,7 @@ router.get('/:id', requireAuth, async (req, res, next) => {
 
         const CreatedBy = await User.findByPk(ticket.createdBy, { attributes: { exclude: ['id', 'username', 'email', 'hashedPassword', 'createdAt', 'updatedAt', 'isActive', 'departmentId'] } });
 
-        const ClientInfo = await Client.findByPk(ticket.clientId, { attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'email', 'phoneNumber', 'address'] } });
+        const ClientInfo = await Client.findByPk(ticket.clientId, { attributes: { exclude: ['createdAt', 'updatedAt', 'email', 'phoneNumber', 'address'] } });
 
         const ticketParts = await TicketPart.findAll({
             where: { ticketId: ticket.id }
@@ -174,6 +174,12 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             });
         }
 
+        const CallInfo = await TwilioCall.findAll({
+            where: {
+                ticketId: ticket.id
+            }
+        });
+
         const safeTicket = {
             id: ticket.id,
             title: ticket.title,
@@ -186,7 +192,8 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             ClientInfo,
             Parts,
             Notes,
-            StatusInfo
+            StatusInfo,
+            CallInfo
         }
 
         return res.json(safeTicket);

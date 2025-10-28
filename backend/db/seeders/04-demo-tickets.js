@@ -13,7 +13,7 @@ module.exports = {
       {
         "title": "Network Connectivity Issues",
         "createdBy": 1,
-        "clientId": 1,
+        "clientId": 28,
         "description": "The office network is not working, can't connect to the internet.",
         "statusId": 1,
         hashedId: generateAlphanumericId(10)

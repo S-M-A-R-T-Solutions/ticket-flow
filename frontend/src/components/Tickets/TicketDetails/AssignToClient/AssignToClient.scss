@@ -1,0 +1,42 @@
+.assign-to-client {
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+
+    .assign-to-client-wrapper {
+        display: flex;
+        gap: 20px;
+
+        .assign-to-client-left {
+            width: 50%;
+            max-height: 400px;
+            overflow-y: auto;
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+
+                th, td {
+                    padding: 10px;
+                    text-align: left;
+                    border-bottom: 1px solid var(--border-color);
+                }
+
+                tr:hover {
+                    background-color: var(--hover-color);
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .assign-to-client-right {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
