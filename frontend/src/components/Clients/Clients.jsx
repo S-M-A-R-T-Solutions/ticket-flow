@@ -99,11 +99,9 @@ export default function Clients() {
             </div>
 
             <div className="clients-list-container">
-                <div>
-                    {allClients.map((client) => (
-                        <ClientCard key={client.id} client={client} setEditClientChecker={setEditClientChecker} setDeleteClientChecker={setDeleteClientChecker} />
-                    ))}
-                </div>
+                {allClients.map((client) => (
+                    <ClientCard key={client.id} client={client} setEditClientChecker={setEditClientChecker} setDeleteClientChecker={setDeleteClientChecker} />
+                ))}
             </div>
 
             <div className='clients-footer'>

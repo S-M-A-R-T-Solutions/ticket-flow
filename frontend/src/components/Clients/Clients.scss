@@ -3,8 +3,8 @@
     width: 100%;
     flex: 1;
     flex-direction: column;
-    align-content: space-between;
-    justify-content: space-between;
+    // align-content: space-between;
+    // justify-content: space-between;
 
     .clients-tab-header {
         display: flex;
@@ -46,9 +46,8 @@
     }
 
     .clients-list-container {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         gap: 12px;
         padding: 0 20px 20px 20px;
         overflow-y: auto;
