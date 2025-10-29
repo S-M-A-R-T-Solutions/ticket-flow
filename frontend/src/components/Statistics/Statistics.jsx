@@ -38,14 +38,14 @@ export default function Statistics({ myTickets, status }) {
                         <h2>Pending</h2>
                         <span>{pending}</span>
                     </div>
-                    <FaTicket style={{fontSize: "60px", color:`${status[2]?.color}A1` }}/>
+                    <FaTicket style={{fontSize: "60px", color:`${status[3]?.color}A1` }}/>
                 </div>
                 <div className="done-tickets-container">
                     <div className="left-side">
                         <h2>Done Tickets</h2>
                         <span>{completed}</span>
                     </div>
-                    <FaTicket style={{fontSize: "60px", color:`${status[3]?.color}A1` }}/>
+                    <FaTicket style={{fontSize: "60px", color:`${status[2]?.color}A1` }}/>
                 </div>
             </div>
         </section>
