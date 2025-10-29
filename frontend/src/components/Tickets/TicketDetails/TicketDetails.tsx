@@ -70,7 +70,7 @@ export default function TicketDetails() {
         setPartsChecker(false);
         setDeletePartChecker(false);
         setAssignToClient(false);
-    }, [ dispatch, ticketId, noteChecker,
+    }, [dispatch, ticketId, noteChecker,
         deleteNoteChecker, myWorkTickets,
         deletePartChecker, partsChecker,
         ticketChecker, assignToClient]);
@@ -170,7 +170,7 @@ export default function TicketDetails() {
                 {ticket.ClientInfo?.id === 28 ? (<div>
                     <div className="assign-client">
                         <OpenModalMenuItem
-                            modalComponent={<AssignToClient setAssignToClient={setAssignToClient}/>}
+                            modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
                             onModalClose={onModalClose}
                             dismisable={false}
                         >
@@ -207,7 +207,23 @@ export default function TicketDetails() {
                                 </div>
                             </div>
                         }
-                    </>)}
+                        {ticket.CallInfo?.length > 0 && (
+                            <div className="caller-info">
+                                {/* Search in ticket.ClientInfo.Locations for the phone number to be equal to the ticket.CallInfo[0]?.caller */}
+                                {ticket.ClientInfo?.Locations?.map((location: any) => (
+                                    location.PhoneNumbers?.map((phoneNumber: any) => (
+                                        phoneNumber.phoneNumber === ticket.CallInfo[0]?.caller && (
+                                            <>
+                                                <span> {location.name} </span>
+                                                <span key={phoneNumber.id}> {phoneNumber.phoneType} {phoneNumber.phoneNumber}</span>
+                                            </>
+                                        )
+                                    ))
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
 
 
