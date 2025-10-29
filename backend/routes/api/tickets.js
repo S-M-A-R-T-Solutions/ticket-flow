@@ -9,6 +9,8 @@ const { properUserValidation, properNoteValidation } = require('@utils/validatio
 
 const router = express.Router();
 
+const { Op } = require('sequelize');
+
 // Get all Tickets
 router.get('/', requireAuth, async (req, res, next) => {
     try {
@@ -17,6 +19,7 @@ router.get('/', requireAuth, async (req, res, next) => {
 
         const page = parseInt(req.query.page) || null;
         const size = parseInt(req.query.size) || null;
+        const today = req.query.today ? req.query.today === 'true' : undefined;
 
         const where = {};
 
@@ -32,6 +35,14 @@ router.get('/', requireAuth, async (req, res, next) => {
             where.createdBy = parseInt(createdBy);
         }
 
+        if (today) {
+            const now = new Date();
+            where.createdAt = {
+                [Op.gte]: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+                [Op.lt]: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+            };
+        }
+
         const tickets = await Ticket.findAll({
             where,
             limit: size,
@@ -42,7 +53,6 @@ router.get('/', requireAuth, async (req, res, next) => {
 
         let Tickets = [];
 
-        
         for (const ticket of tickets) {
             ticket["status"] = await Status.findByPk(where.status);
             ticket.clientId = await Client.findByPk(where.client || ticket.clientId, { attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'email', 'phoneNumber', 'address'] } });
@@ -50,7 +60,7 @@ router.get('/', requireAuth, async (req, res, next) => {
             ticket.calls = await TwilioCall.findAll({ where: { ticketId: ticket.id } });
 
             const values = ticket.toJSON();
-            
+
             Tickets.push(values);
         }
 
@@ -254,7 +264,7 @@ router.post('/', requireAuth, async (req, res, next) => {
 // Update a Ticket
 router.put('/:id', requireAuth, async (req, res, next) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
         const ticket = await Ticket.findByPk(parseInt(id));
         if (!ticket) {
