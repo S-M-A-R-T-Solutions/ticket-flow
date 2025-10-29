@@ -8,9 +8,10 @@ import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 import AddNote from "../../AddNote/AddNote";
 import AssignToClient from "./AssignToClient";
 
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaPhone } from "react-icons/fa";
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 import { HiOutlineChevronDown } from "react-icons/hi";
+import { IoPersonAddOutline } from "react-icons/io5";
 
 import OpenModalButton from "../../OpenModalButton";
 
@@ -23,6 +24,8 @@ import TicketPartCard from "../TicketPartCard";
 import TicketQR from "./TicketQR";
 import TicketEmployees from "./TicketEmployees";
 import TicketNoteCard from "../TicketNoteCard/TicketNoteCard";
+
+import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
 import './TicketDetails.scss';
 
@@ -170,30 +173,31 @@ export default function TicketDetails() {
                 </h1>
 
                 {ticket.ClientInfo?.id === 28 ? (
-                <div>
-                    <div 
-                        className="caller-info" 
-                        onClick={{
-                        /* call the to the caller number when clicked */
-
-                    }}>
-                        {/* Search for Caller Number in ticket.CallInfo[0] */}
-                        {ticket.CallInfo?.length > 0 ? (
-                            <span> Caller Number: {ticket.CallInfo[0]?.caller} </span>
-                        ) : (
-                            <span>No caller information available</span>
-                        )}
-                    </div>
-                    <div className="assign-client">
-                        <OpenModalMenuItem
-                            modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
-                            onModalClose={onModalClose}
-                            dismisable={false}
+                    <div style={{display: "flex", flexDirection: "row", alignContent: "center", justifyContent: "center", gap: "20px"}}>
+                        <div
+                            className="caller-info"
+                            onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}
                         >
-                            Assign Client
-                        </OpenModalMenuItem>
-                    </div>
-                </div>) : (
+                            {/* Search for Caller Number in ticket.CallInfo[0] */}
+
+                            <div className="phone-button">
+                                <FaPhone />
+                            </div>
+                            <div className="phone-number-and-title">
+                                <span className="phone-number-label">{formatPhoneNumber(ticket.CallInfo[0]?.caller)}</span>
+                            </div>
+                        </div>
+                        <div className="assign-client">
+                            <OpenModalMenuItem
+                                modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
+                                onModalClose={onModalClose}
+                                dismisable={false}
+                            >
+                                <IoPersonAddOutline className="assign-client-icon" />
+                                Assign Client
+                            </OpenModalMenuItem>
+                        </div>
+                    </div>) : (
                     <div>
                         {ticket.ClientInfo?.companyName === "" ? (
                             <div className="client">
