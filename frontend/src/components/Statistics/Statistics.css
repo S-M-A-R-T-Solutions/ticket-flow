@@ -73,3 +73,33 @@
     font-size: 2rem;
     font-weight: bold;
 }
+
+.statistics-tab .tabs-container {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+
+    margin-top: 16px;
+
+    border-bottom: 2px solid var(--ticket-card-bg);
+}
+
+.statistics-tab .tabs-container .tab-item {
+    padding: 8px 16px;
+    color: var(--text-color);
+
+    margin-bottom: -2px;
+
+    border-bottom: 2px solid transparent;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    user-select: none;
+}
+
+.statistics-tab .tabs-container .tab-item.active {
+    border-bottom: 2px solid var(--button-bg-color);
+    color: var(--button-bg-color);
+}
