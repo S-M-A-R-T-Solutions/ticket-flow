@@ -131,6 +131,8 @@ export default function TicketDetails() {
         setDeletePartChecker(true);
     }
 
+    console.log("TICKET CLIENT INFO:", ticket.ClientInfo);
+
     return (
         <section className="app-section ticket-details">
             <div className="section-header">
