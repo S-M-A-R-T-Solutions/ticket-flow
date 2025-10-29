@@ -47,6 +47,15 @@ module.exports = {
         "companyName": "",
         "email": "michelgr@smarttech.net",
         "phone": "+13059541866"
+      },
+      {
+        id: 28,
+        "firstName": "",
+        "lastName": "",
+        "companyName": "Anonymous Client",
+        "email": "anonymous@client.com",
+        "phone": "+10000000000",
+        "profilePicUrl": "https://www.pngall.com/wp-content/uploads/5/Profile-PNG-High-Quality-Image.png"
       }
     ], options)
   },

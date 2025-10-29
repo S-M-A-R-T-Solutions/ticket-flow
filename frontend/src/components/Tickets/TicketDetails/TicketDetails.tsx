@@ -1,10 +1,12 @@
-import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import { useModal } from "../../../context/Modal";
 
 import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 import AddNote from "../../AddNote/AddNote";
+import AssignToClient from "./AssignToClient";
 
 import { FaPlus } from "react-icons/fa";
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
@@ -38,6 +40,8 @@ export default function TicketDetails() {
     const [deleteNoteChecker, setDeleteNoteChecker] = useState(false);
     const [deletePartChecker, setDeletePartChecker] = useState(false);
 
+    const [assignToClient, setAssignToClient] = useState(false);
+
     const [showStatusMenu, setShowStatusMenu] = useState(false);
 
     const { ticketId } = useParams();
@@ -65,7 +69,11 @@ export default function TicketDetails() {
         setDeleteNoteChecker(false);
         setPartsChecker(false);
         setDeletePartChecker(false);
-    }, [dispatch, ticketId, noteChecker, deleteNoteChecker, myWorkTickets, deletePartChecker, partsChecker, ticketChecker]);
+        setAssignToClient(false);
+    }, [dispatch, ticketId, noteChecker,
+        deleteNoteChecker, myWorkTickets,
+        deletePartChecker, partsChecker,
+        ticketChecker, assignToClient]);
 
     useEffect(() => {
         setNoteChecker(false)
@@ -102,7 +110,7 @@ export default function TicketDetails() {
     const partsForTicket = parts.filter((part: any) => part.Ticket?.id === ticket.id);
 
     const handleStatusChange = (e: any) => {
-        dispatch(updateTicketThunk({ ...ticket, statusId: parseInt(e.target.value), StatusInfo: status.find((status: any) => status.id === parseInt(e.target.value)) }) as any);
+        dispatch(updateTicketThunk(ticket.id, { ...ticket, statusId: parseInt(e.target.value), StatusInfo: status.find((status: any) => status.id === parseInt(e.target.value)) }) as any);
         setTicketStatus(parseInt(e.target.value));
         setMyWorkTickets(true);
         setShowStatusMenu(false);
@@ -111,6 +119,7 @@ export default function TicketDetails() {
     const onModalClose = () => {
         setNoteChecker(true);
         setDeleteNoteChecker(true);
+        setAssignToClient(true);
     }
 
     const onModalCloseTickets = () => {
@@ -158,8 +167,16 @@ export default function TicketDetails() {
                     ) : (null)}
                 </h1>
 
-                {ticket.companyName === "Anonymous Client" ? (<div>
-                    <div className="assign-client"></div>
+                {ticket.ClientInfo?.id === 28 ? (<div>
+                    <div className="assign-client">
+                        <OpenModalMenuItem
+                            modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
+                            onModalClose={onModalClose}
+                            dismisable={false}
+                        >
+                            Assign Client
+                        </OpenModalMenuItem>
+                    </div>
                 </div>) : (
                     <>
                         {ticket.ClientInfo?.companyName === "" ?
@@ -190,7 +207,23 @@ export default function TicketDetails() {
                                 </div>
                             </div>
                         }
-                    </>)}
+                        {ticket.CallInfo?.length > 0 && (
+                            <div className="caller-info">
+                                {/* Search in ticket.ClientInfo.Locations for the phone number to be equal to the ticket.CallInfo[0]?.caller */}
+                                {ticket.ClientInfo?.Locations?.map((location: any) => (
+                                    location.PhoneNumbers?.map((phoneNumber: any) => (
+                                        phoneNumber.phoneNumber === ticket.CallInfo[0]?.caller && (
+                                            <>
+                                                <span> {location.name} </span>
+                                                <span key={phoneNumber.id}> {phoneNumber.phoneType} {phoneNumber.phoneNumber}</span>
+                                            </>
+                                        )
+                                    ))
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
 
 
