@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, TwilioCall } = require('@db/models');
+const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, TwilioCall, Location, locationEmail, LocationPhoneNumber } = require('@db/models');
 
 const generateAlphanumericId = require('@utils/randomGenerator');
 
@@ -138,7 +138,32 @@ router.get('/:id', requireAuth, async (req, res, next) => {
 
         const CreatedBy = await User.findByPk(ticket.createdBy, { attributes: { exclude: ['id', 'username', 'email', 'hashedPassword', 'createdAt', 'updatedAt', 'isActive', 'departmentId'] } });
 
-        const ClientInfo = await Client.findByPk(ticket.clientId, { attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'email', 'phoneNumber', 'address'] } });
+        const ClientInfo = await Client.findByPk(ticket.clientId, { attributes: { exclude: ['createdAt', 'updatedAt', 'email', 'phoneNumber', 'address'] } });
+
+        const Locations = await Location.findAll({
+            where: {
+                clientId: ClientInfo.id
+            }
+        });
+
+        for (const location of Locations) {
+            const emails = await locationEmail.findAll({
+                where: {
+                    locationId: location.id
+                }
+            });
+
+            const phoneNumbers = await LocationPhoneNumber.findAll({
+                where: {
+                    locationId: location.id
+                }
+            });
+
+            location.dataValues.Emails = emails;
+            location.dataValues.PhoneNumbers = phoneNumbers;
+        }
+
+        ClientInfo.dataValues.Locations = Locations;
 
         const ticketParts = await TicketPart.findAll({
             where: { ticketId: ticket.id }
@@ -174,6 +199,12 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             });
         }
 
+        const CallInfo = await TwilioCall.findAll({
+            where: {
+                ticketId: ticket.id
+            }
+        });
+
         const safeTicket = {
             id: ticket.id,
             title: ticket.title,
@@ -186,7 +217,8 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             ClientInfo,
             Parts,
             Notes,
-            StatusInfo
+            StatusInfo,
+            CallInfo
         }
 
         return res.json(safeTicket);

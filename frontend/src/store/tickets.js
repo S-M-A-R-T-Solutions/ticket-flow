@@ -101,11 +101,11 @@ export const addTicketThunk = (ticket) => async (dispatch) => {
     dispatch(addTicket(newTicket));
 }
 
-export const updateTicketThunk = (ticket) => async (dispatch) => {
-    console.log("Updating ticket:", ticket);
-    const res = await csrfFetch(`/api/tickets/${ticket.id}`, {
+export const updateTicketThunk = (ticketId, updatedData) => async (dispatch) => {
+    console.log("Updating ticket:", updatedData);
+    const res = await csrfFetch(`/api/tickets/${ticketId}`, {
         method: 'PUT',
-        body: JSON.stringify(ticket)
+        body: JSON.stringify(updatedData)
     });
     const updatedTicket = await res.json();
     dispatch(updateTicket(updatedTicket));
@@ -159,7 +159,15 @@ const ticketsReducer = (state = initialState, action) => {
             return { ...state, myTickets: [...state.myTickets, action.payload] };
         }
         case UPDATE_TICKET: {
-            return { ...state, myTickets: state.myTickets.map(ticket => ticket.id === action.payload.id ? action.payload : ticket) };
+            return {
+                ...state,
+                allTickets: state.allTickets.map(ticket =>{
+                    if(ticket.id === action.payload.id) {
+                        return action.payload;
+                    } else {
+                        return ticket;
+                    }})
+            }
         }
         case DELETE_TICKET: {
             return { ...state, myTickets: state.myTickets.filter(ticket => ticket.id !== action.payload.id) };
