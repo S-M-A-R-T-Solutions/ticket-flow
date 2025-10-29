@@ -169,7 +169,21 @@ export default function TicketDetails() {
                     ) : (null)}
                 </h1>
 
-                {ticket.ClientInfo?.id === 28 ? (<div>
+                {ticket.ClientInfo?.id === 28 ? (
+                <div>
+                    <div 
+                        className="caller-info" 
+                        onClick={{
+                        /* call the to the caller number when clicked */
+
+                    }}>
+                        {/* Search for Caller Number in ticket.CallInfo[0] */}
+                        {ticket.CallInfo?.length > 0 ? (
+                            <span> Caller Number: {ticket.CallInfo[0]?.caller} </span>
+                        ) : (
+                            <span>No caller information available</span>
+                        )}
+                    </div>
                     <div className="assign-client">
                         <OpenModalMenuItem
                             modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
@@ -180,8 +194,8 @@ export default function TicketDetails() {
                         </OpenModalMenuItem>
                     </div>
                 </div>) : (
-                    <>
-                        {ticket.ClientInfo?.companyName === "" ?
+                    <div>
+                        {ticket.ClientInfo?.companyName === "" ? (
                             <div className="client">
                                 <div className="client-image">
                                     {ticket.ClientInfo?.profilePicUrl ?
@@ -195,7 +209,7 @@ export default function TicketDetails() {
                                         {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
                                     </div>
                                 </div>
-                            </div> :
+                            </div>) : (
 
                             <div className="client">
                                 <div className="client-image">
@@ -208,7 +222,7 @@ export default function TicketDetails() {
                                     </div>
                                 </div>
                             </div>
-                        }
+                        )}
                         {ticket.CallInfo?.length > 0 && (
                             <div className="caller-info">
                                 {/* Search in ticket.ClientInfo.Locations for the phone number to be equal to the ticket.CallInfo[0]?.caller */}
@@ -224,7 +238,7 @@ export default function TicketDetails() {
                                 ))}
                             </div>
                         )}
-                    </>
+                    </div>
                 )}
             </div>
 
