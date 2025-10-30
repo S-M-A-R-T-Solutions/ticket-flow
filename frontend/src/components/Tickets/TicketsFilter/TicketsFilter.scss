@@ -1,0 +1,26 @@
+.tickets-filter {
+    display: flex;
+
+    background-color: var(--surface-color);
+
+    padding: 10px;
+    margin: 0 20px 24px;
+
+    border-radius: 8px;
+
+    box-shadow: 0 1px 1px rgba(#000000, 0.05);
+
+    animation: showTicketsAnimation 0.3s ease;
+}
+
+@keyframes showTicketsAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
