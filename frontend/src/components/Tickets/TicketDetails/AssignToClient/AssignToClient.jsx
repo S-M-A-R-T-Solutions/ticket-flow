@@ -127,7 +127,7 @@ export default function AssignToClient({ setAssignToClient }) {
                     )}
                 </div>
             </div>
-            <button onClick={handleAssign} disabled={!selectedClient}>Assign</button>
+            <button onClick={handleAssign} disabled={!selectedClient || !selectedLocation || !phoneName}>Assign</button>
         </div>
     );
 }

@@ -191,7 +191,7 @@ export default function TicketDetails() {
                             <OpenModalMenuItem
                                 modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
                                 onModalClose={onModalClose}
-                                dismisable={false}
+                                dismisable={true}
                             >
                                 <IoPersonAddOutline className="assign-client-icon" />
                                 Assign Client
