@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 //CONSTANTS
 const GET_ALL_TICKETS = 'tickets/getAllTickets';
+const GET_TODAY_TICKETS = 'tickets/getTodayTickets';
 const GET_TOTAL_TICKETS_AMOUNT = 'tickets/getTotalTicketsAmount';
 const GET_MY_TICKETS = 'tickets/getMyTickets';
 const GET_TICKET = 'tickets/getTicket';
@@ -15,6 +16,11 @@ const ADD_NOTE_TO_TICKET = 'tickets/addNoteToTicket';
 //ACTION CREATORS
 const getAllTickets = (tickets) => ({
     type: GET_ALL_TICKETS,
+    payload: tickets
+});
+
+const getTodayTickets = (tickets) => ({
+    type: GET_TODAY_TICKETS,
     payload: tickets
 });
 
@@ -64,6 +70,13 @@ export const getAllTicketsThunk = (page, size) => async (dispatch) => {
     const res = await csrfFetch(`/api/tickets?page=${page}&size=${size}`);
     const tickets = await res.json();
     dispatch(getAllTickets(tickets));
+};
+
+export const getTodayTicketsThunk = (page, size) => async (dispatch) => {
+    // console.log(page, size, "page and size");
+    const res = await csrfFetch(`/api/tickets?page=${page}&size=${size}&today=true`);
+    const tickets = await res.json();
+    dispatch(getTodayTickets(tickets));
 };
 
 export const getTicketByHashThunk = (hashedId) => async (dispatch) => {
@@ -132,6 +145,7 @@ export const addNoteToTicketThunk = (note, ticketId) => async (dispatch) => {
 //REDUCER
 const initialState = {
     allTickets: [],
+    todayTickets: [],
     myTickets: [],
     ticket: {},
     ticketByHash: {},
@@ -142,6 +156,9 @@ const ticketsReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_ALL_TICKETS: {
             return { ...state, allTickets: action.payload };
+        }
+        case GET_TODAY_TICKETS: {
+            return { ...state, todayTickets: action.payload };
         }
         case GET_TOTAL_TICKETS_AMOUNT: {
             return { ...state, totalTicketsAmount: action.payload };
@@ -161,12 +178,13 @@ const ticketsReducer = (state = initialState, action) => {
         case UPDATE_TICKET: {
             return {
                 ...state,
-                allTickets: state.allTickets.map(ticket =>{
-                    if(ticket.id === action.payload.id) {
+                allTickets: state.allTickets.map(ticket => {
+                    if (ticket.id === action.payload.id) {
                         return action.payload;
                     } else {
                         return ticket;
-                    }})
+                    }
+                })
             }
         }
         case DELETE_TICKET: {
