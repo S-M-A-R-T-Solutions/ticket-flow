@@ -172,6 +172,7 @@
 
             svg {
                 font-size: 16px;
+                margin-right: 4px;
             }
         }
     }
@@ -189,7 +190,7 @@
         flex-direction: column;
     }
 
-    .client {
+    .client-individual-client {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -225,6 +226,100 @@
         .client-info {
             font-size: 14px;
             opacity: 0.7;
+        }
+    }
+
+    .client-company-client {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: var(--jonquil);
+        color: var(--light-black);
+        padding: 4px 8px;
+        border-radius: 50px;
+
+        .client-image {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            overflow: hidden;
+
+            &::before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: var(--text-color);
+                opacity: 0.05;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+
+        .client-info {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    }
+
+    .caller-info-ticket {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        background-color: transparent;
+
+        .location-name-location-phone {
+            display: flex;
+            gap: 20px;
+            background-color: transparent;
+
+            .caller-location-name {
+                font-size: 13px;
+                font-weight: 500;
+                background-color: var(--surface-color);
+                padding: 8px 12px;
+                border-radius: 50px;
+            }
+
+            .caller-location-phone-number {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                margin-right: 25px;
+                background-color: var(--surface-color);
+                padding: 0;
+                border-radius: 50px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                .caller-location-phone-type {
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    color: var(--text-color);
+                    letter-spacing: 0.5px;
+                    background-color: var(--button-bg-color);
+                    padding: 8px 12px;
+                    border-radius: 50px 0px 0px 50px;
+                }
+
+                .caller-location-phone-number-number {
+                    font-size: 13px;
+                    font-weight: 500;
+                    padding: 4px 10px 4px 4px;
+                }
+            }
         }
     }
 
