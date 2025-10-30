@@ -134,6 +134,8 @@ export default function TicketDetails() {
         setDeletePartChecker(true);
     }
 
+    const clientClassName = ticket.ClientInfo?.companyName === "" ? "individual-client" : "company-client";
+
     console.log("TICKET CLIENT INFO:", ticket.ClientInfo);
 
     return (
@@ -173,7 +175,7 @@ export default function TicketDetails() {
                 </h1>
 
                 {ticket.ClientInfo?.id === 28 ? (
-                    <div style={{display: "flex", flexDirection: "row", alignContent: "center", justifyContent: "center", gap: "20px"}}>
+                    <div style={{ display: "flex", flexDirection: "row", alignContent: "center", justifyContent: "center", gap: "20px" }}>
                         <div
                             className="caller-info"
                             onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}
@@ -198,7 +200,7 @@ export default function TicketDetails() {
                             </OpenModalMenuItem>
                         </div>
                     </div>) : (
-                    <div>
+                    <div style={{ display: "flex", flexDirection: "row", alignContent: "center", justifyContent: "center", gap: "20px", padding: 0 }}>
                         {ticket.ClientInfo?.companyName === "" ? (
                             <div className="client">
                                 <div className="client-image">
@@ -215,7 +217,7 @@ export default function TicketDetails() {
                                 </div>
                             </div>) : (
 
-                            <div className="client">
+                            <div className={`client-${clientClassName}`}>
                                 <div className="client-image">
                                     <BsBuildingsFill />
                                 </div>
@@ -228,15 +230,24 @@ export default function TicketDetails() {
                             </div>
                         )}
                         {ticket.CallInfo?.length > 0 && (
-                            <div className="caller-info">
+                            <div className="caller-info-ticket">
                                 {/* Search in ticket.ClientInfo.Locations for the phone number to be equal to the ticket.CallInfo[0]?.caller */}
                                 {ticket.ClientInfo?.Locations?.map((location: any) => (
                                     location.PhoneNumbers?.map((phoneNumber: any) => (
                                         phoneNumber.phoneNumber === ticket.CallInfo[0]?.caller && (
-                                            <>
-                                                <span> {location.name} </span>
-                                                <span key={phoneNumber.id}> {phoneNumber.phoneType} {phoneNumber.phoneNumber}</span>
-                                            </>
+                                            <div className="location-name-location-phone" key={phoneNumber.id} onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                                <div className="caller-location-name">
+                                                    <span> {location.name} </span>
+                                                </div>
+                                                <div className="caller-location-phone-number">
+                                                    <div className="caller-location-phone-type">
+                                                        <span key={phoneNumber.id}>{phoneNumber.phoneType}</span>
+                                                    </div>
+                                                    <div className="caller-location-phone-number-number">
+                                                        <span key={phoneNumber.id}>{formatPhoneNumber(phoneNumber.phoneNumber)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         )
                                     ))
                                 ))}
@@ -275,8 +286,6 @@ export default function TicketDetails() {
                                 <FaPlus className="btn-icon-icon" />
                             </button>
                         </OpenModalMenuItem>
-
-
                     </div>
 
                     <div className="notes-list">
