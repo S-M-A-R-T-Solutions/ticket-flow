@@ -3,6 +3,7 @@ import './TicketsFilter.scss';
 import { useEffect } from 'react';
 import { getAllStatusThunk } from '../../../store/status';
 import { getAllClientsThunk } from '../../../store/clients';
+import { LuSearch } from "react-icons/lu";
 
 export default function TicketsFilter() {
 
@@ -17,31 +18,53 @@ export default function TicketsFilter() {
     }, [dispatch]);
 
     return (
-        <div className="tickets-filter">
-            <div className="status-filter">
-                {status && status.map((stat: any) => (
-                    <label htmlFor={`cb-status-${stat.id}`} key={stat.id}>
-                        <input type="checkbox" id={`cb-status-${stat.id}`} value={stat.id} />
-                        {stat.name}
-                    </label>
-                ))}
-            </div>
+        <div className="tickets-filter-wrapper">
+            <div className="tickets-filter">
+                <div className="filter-block status-filter">
+                    <small className="title">Status</small>
 
-            <div className="client-filter">
-                <select name="client_select" id="client-select-filter" className="client-select">
-                    <option value="">All</option>
-
-                    {clients && clients.map((client: any) => (
-                        client.companyName ?
-                            <option key={client.id} value={client.id}>{client.companyName}</option> :
-                            <option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>
+                    {status && status.map((stat: any) => (
+                        <label htmlFor={`cb-status-${stat.id}`} key={stat.id}>
+                            <input type="checkbox" id={`cb-status-${stat.id}`} value={stat.id} />
+                            {stat.name}
+                        </label>
                     ))}
-                </select>
+                </div>
 
-            </div>
+                <div className="divider"></div>
 
-            <div className="search-filter">
-                <input type="text" placeholder="Search tickets..." className="search-tickets-filter-input" />
+                <div className="filter-block client-filter">
+                    <small className="title">Client</small>
+
+                    <select name="client_select" id="client-select-filter" className="client-select">
+                        <option value="">All</option>
+
+                        {clients && clients.map((client: any) => (
+                            client.companyName ?
+                                <option key={client.id} value={client.id}>{client.companyName}</option> :
+                                <option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>
+                        ))}
+                    </select>
+
+                </div>
+
+                <div className="divider"></div>
+
+                <div className="filter-block search-filter">
+                    <small className="title">Search</small>
+
+                    <div className="search-filter-wrapper">
+                        <LuSearch className="search-filter-icon" />
+
+                        <input type="text" placeholder="Title, description, etc..." className="search-tickets-filter-input" />
+                    </div>
+                </div>
+
+                <div className="divider"></div>
+
+                <div className="actions">
+                    <button className="btn btn-clear-filters">Clear Filters</button>
+                </div>
             </div>
         </div>
     );
