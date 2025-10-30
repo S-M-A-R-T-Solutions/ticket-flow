@@ -264,7 +264,7 @@ export default function TicketDetails() {
                                         )
                                     ))
                                 ))}
-                                {/* <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
                                     <div className="caller-location-phone-number">
                                         <div className="caller-location-phone-type">
                                             <FaPhone style={{transform: "rotate(90deg)"}}/>
@@ -273,7 +273,7 @@ export default function TicketDetails() {
                                             <span>{formatPhoneNumber(ticket.ClientInfo?.phone)}</span>
                                         </div>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
                         ) : (
                             <div className="caller-info-ticket">
