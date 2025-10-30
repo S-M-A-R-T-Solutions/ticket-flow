@@ -174,7 +174,7 @@ export default function TicketDetails() {
                     ) : (null)}
                 </h1>
 
-                {ticket.ClientInfo?.id === 28 ? (
+                {ticket.ClientInfo?.id === 28 ? ( //Anonymous Client Case
                     <div style={{ display: "flex", flexDirection: "row", alignContent: "center", justifyContent: "center", gap: "20px" }}>
                         <div
                             className="caller-info"
@@ -228,12 +228,13 @@ export default function TicketDetails() {
                                 </div>
                             </div>
                         )}
+
                         {ticket.CallInfo?.length > 0 ? (
                             <div className="caller-info-ticket">
                                 {/* Search in ticket.ClientInfo.Locations for the phone number to be equal to the ticket.CallInfo[0]?.caller */}
                                 {ticket.ClientInfo?.Locations?.map((location: any) => (
                                     location.PhoneNumbers?.map((phoneNumber: any) => (
-                                        phoneNumber.phoneNumber === ticket.CallInfo[0]?.caller && (
+                                        phoneNumber.phoneNumber === ticket.CallInfo[0]?.caller ? (
                                             <div className="location-name-location-phone" key={phoneNumber.id} onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
                                                 <div className="caller-location-name">
                                                     <span> {location.name} </span>
@@ -244,6 +245,19 @@ export default function TicketDetails() {
                                                     </div>
                                                     <div className="caller-location-phone-number-number">
                                                         <span key={phoneNumber.id}>{formatPhoneNumber(phoneNumber.phoneNumber)}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="caller-info-ticket">
+                                                <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                                    <div className="caller-location-phone-number">
+                                                        <div className="caller-location-phone-type">
+                                                            <FaPhone style={{ transform: "rotate(90deg)" }} />
+                                                        </div>
+                                                        <div className="caller-location-phone-number-number">
+                                                            <span>{formatPhoneNumber(ticket.ClientInfo?.phone)}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
