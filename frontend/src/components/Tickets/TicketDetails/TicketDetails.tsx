@@ -136,7 +136,7 @@ export default function TicketDetails() {
 
     const clientClassName = ticket.ClientInfo?.companyName === "" ? "individual-client" : "company-client";
 
-    console.log("TICKET CLIENT INFO:", ticket.ClientInfo);
+    console.log("TICKET INFO:", ticket);
 
     return (
         <section className="app-section ticket-details">
@@ -228,7 +228,7 @@ export default function TicketDetails() {
                                 </div>
                             </div>
                         )}
-                        {ticket.CallInfo?.length > 0 && (
+                        {ticket.CallInfo?.length > 0 ? (
                             <div className="caller-info-ticket">
                                 {/* Search in ticket.ClientInfo.Locations for the phone number to be equal to the ticket.CallInfo[0]?.caller */}
                                 {ticket.ClientInfo?.Locations?.map((location: any) => (
@@ -250,6 +250,29 @@ export default function TicketDetails() {
                                         )
                                     ))
                                 ))}
+                                {/* <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                    <div className="caller-location-phone-number">
+                                        <div className="caller-location-phone-type">
+                                            <FaPhone style={{transform: "rotate(90deg)"}}/>
+                                        </div>
+                                        <div className="caller-location-phone-number-number">
+                                            <span>{formatPhoneNumber(ticket.ClientInfo?.phone)}</span>
+                                        </div>
+                                    </div>
+                                </div> */}
+                            </div>
+                        ) : (
+                            <div className="caller-info-ticket">
+                                <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                    <div className="caller-location-phone-number">
+                                        <div className="caller-location-phone-type">
+                                            <FaPhone style={{ transform: "rotate(90deg)" }} />
+                                        </div>
+                                        <div className="caller-location-phone-number-number">
+                                            <span>{formatPhoneNumber(ticket.ClientInfo?.phone)}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
