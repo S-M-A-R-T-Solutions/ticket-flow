@@ -59,28 +59,28 @@ export default function Statistics({ myTickets, todayTickets, status }) {
                             <h2>New Tickets</h2>
                             <span>{today.newTickets}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: `${status[0]?.color}A1` }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#FF6B6B' }} />
                     </div>
                     <div className="in-progress-tickets-container">
                         <div className="left-side">
                             <h2>In Progress</h2>
                             <span>{today.inProgress}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: `${status[1]?.color}A1` }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#FFD93D' }} />
                     </div>
                     <div className="pending-tickets-container">
                         <div className="left-side">
                             <h2>Pending</h2>
                             <span>{today.pending}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: `${status[3]?.color}A1` }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#ED1476' }} />
                     </div>
                     <div className="done-tickets-container">
                         <div className="left-side">
                             <h2>Done Tickets</h2>
                             <span>{today.completed}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: `${status[2]?.color}A1` }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#4CAF50' }} />
                     </div>
                 </div>
             )}
