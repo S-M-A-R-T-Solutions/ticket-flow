@@ -152,7 +152,7 @@ export default function TicketDetails() {
     console.log("PHONE DIRECTORY:", phoneDirectory);
 
     const selectedContactInfo: { phoneNumber?: string; phoneType?: string, locationName?: string } = {};
-    console.log("TICKET CALLER INFO:", ticket.CallInfo[0]);
+    console.log("TICKET:", ticket);
 
     if (ticket.CallInfo?.length > 0) {
         phoneDirectory.forEach((contactInfo: { phoneNumber: string; phoneType: string; }) => {
