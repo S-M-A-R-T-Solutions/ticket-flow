@@ -169,7 +169,7 @@ export default function TicketDetails() {
 
     console.log("SELECTED CONTACT INFO:", selectedContactInfo);
 
-    console.log("TICKET CALLER INFO:", ticket.CallerInfo[0]);
+    console.log("TICKET CALLER INFO:", ticket?.CallerInfo[0]);
 
     return (
         <section className="app-section ticket-details">
