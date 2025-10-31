@@ -136,7 +136,7 @@ export default function TicketDetails() {
 
     const clientClassName = ticket.ClientInfo?.companyName === "" ? "individual-client" : "company-client";
 
-    const getPhoneDirectoryOfAClient = (clientId: number) => {
+    const getPhoneDirectoryOfAClient = () => {
         const result = [];
         ticket.ClientInfo?.Locations?.forEach((location: any) => {
             location.PhoneNumbers?.forEach((phoneNumber: any) => {
@@ -148,7 +148,7 @@ export default function TicketDetails() {
         return result;
     }
 
-    const phoneDirectory = getPhoneDirectoryOfAClient(ticket.ClientInfo?.id);
+    const phoneDirectory = getPhoneDirectoryOfAClient();
     console.log("PHONE DIRECTORY:", phoneDirectory);
 
     const selectedContactInfo: { phoneNumber?: string; phoneType?: string, locationName?: string } = {};
@@ -161,11 +161,6 @@ export default function TicketDetails() {
                 selectedContactInfo['locationName'] = ticket.CallerInfo[0]?.locationName;
             }
         });
-
-        // If no match found, default to main phone number
-        if (Object.keys(selectedContactInfo).length === 0) {
-            Object.assign(selectedContactInfo, { phoneNumber: ticket.ClientInfo?.phone, phoneType: "Main" });
-        }
     } else {
         Object.assign(selectedContactInfo, { phoneNumber: ticket.ClientInfo?.phone, phoneType: "Client Phone" });
     }
@@ -173,6 +168,8 @@ export default function TicketDetails() {
     const locationInfoExists = selectedContactInfo.locationName ? `exists` : "";
 
     console.log("SELECTED CONTACT INFO:", selectedContactInfo);
+
+    console.log("TICKET CALLER INFO:", ticket.CallerInfo[0]);
 
     return (
         <section className="app-section ticket-details">
