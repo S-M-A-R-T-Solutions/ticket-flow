@@ -37,8 +37,6 @@ export default function Inventory() {
         setEditPartChecker(false);
     }, [dispatch, page, addPartCkecker, deletePartCkecker, editPartCkecker]);
 
-    console.log(totalParts, "totalParts");
-
     const lastPage = Math.ceil(totalParts / PARTS_PER_PAGE);
 
     const onModalClose = () => {

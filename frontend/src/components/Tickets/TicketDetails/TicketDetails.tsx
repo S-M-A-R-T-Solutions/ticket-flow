@@ -149,14 +149,12 @@ export default function TicketDetails() {
     }
 
     const phoneDirectory = getPhoneDirectoryOfAClient();
-    console.log("PHONE DIRECTORY:", phoneDirectory);
 
     const selectedContactInfo: { phoneNumber?: string; phoneType?: string, locationName?: string } = {};
-    console.log("TICKET:", ticket);
 
     if (ticket.CallInfo?.length > 0) {
         phoneDirectory.forEach((contactInfo: { phoneNumber: string; phoneType: string; }) => {
-            if (contactInfo.phoneNumber === ticket.CallInfo[0]?.caller) {
+            if (contactInfo.phoneNumber === ticket?.CallInfo[0]?.caller) {
                 selectedContactInfo['phoneNumber'] = contactInfo.phoneNumber;
                 selectedContactInfo['phoneType'] = contactInfo.phoneType;
                 selectedContactInfo['locationName'] = ticket.CallInfo[0]?.locationName;
@@ -167,9 +165,6 @@ export default function TicketDetails() {
     }
 
     const locationInfoExists = selectedContactInfo.locationName ? `exists` : "";
-
-    console.log("SELECTED CONTACT INFO:", selectedContactInfo);
-
 
     return (
         <section className="app-section ticket-details">

@@ -66,7 +66,6 @@ export default function AddPart({ setPartsChecker }) {
             setSelectedFile(file);
             const fileURL = URL.createObjectURL(file);
             setPartImageURL(fileURL);
-            // console.log(fileURL, "THIS IS THE FILE URL");
         }
     }
 
@@ -85,8 +84,6 @@ export default function AddPart({ setPartsChecker }) {
             active: active,
             imageUrl: selectedFile
         }
-
-        console.log(partImageURL, selectedFile, "<<< this is part image url and selected file");
 
         return dispatch(addPartThunk(newPart))
             .then(() => {

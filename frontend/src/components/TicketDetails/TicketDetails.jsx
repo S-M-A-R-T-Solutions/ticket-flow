@@ -92,8 +92,6 @@ export default function TicketDetails() {
         setDeletePartChecker(true);
     }
 
-    // console.log(ticket.hashedId, "TICKET HASHED ID");
-
     return (
         <section className="ticket-details-tab">
             <div className="ticket-details-header">

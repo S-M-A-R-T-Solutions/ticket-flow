@@ -158,8 +158,6 @@ export const addLocationToAClientThunk = (clientId, location) => async (dispatch
 
     const { name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl } = location;
 
-    console.log("LOCATION DATA IN THUNK", name, addressLine1, addressLine2, city, state, zipcode, profilePicUrl);
-
     // Append the location information to the form data
     formData.append('name', name);
     if (addressLine1) formData.append('addressLine1', addressLine1);

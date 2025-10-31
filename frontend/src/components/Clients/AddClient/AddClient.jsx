@@ -73,7 +73,6 @@ export default function AddClient({ setClientsChecker }) {
             setSelectedFile(file);
             const fileURL = URL.createObjectURL(file);
             setProfilePicUrl(fileURL);
-            console.log(fileURL, "THIS IS THE FILE URL");
         }
     };
 

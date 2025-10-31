@@ -66,7 +66,6 @@ const addNoteToTicket = (note) => ({
 
 //THUNKS
 export const getAllTicketsThunk = (page, size, filters = null) => async (dispatch) => {
-    // console.log(page, size, "page and size");
     let query = `/api/tickets?page=${page}&size=${size}`;
 
     if (filters) {
@@ -82,7 +81,6 @@ export const getAllTicketsThunk = (page, size, filters = null) => async (dispatc
 };
 
 export const getTodayTicketsThunk = (page, size) => async (dispatch) => {
-    // console.log(page, size, "page and size");
     const res = await csrfFetch(`/api/tickets?page=${page}&size=${size}&today=true`);
     const tickets = await res.json();
     dispatch(getTodayTickets(tickets));
@@ -90,7 +88,6 @@ export const getTodayTicketsThunk = (page, size) => async (dispatch) => {
 
 export const getTicketByHashThunk = (hashedId) => async (dispatch) => {
     const res = await csrfFetch(`/api/tickets/track/${hashedId}`);
-    console.log(res, "THIS IS RES");
     const ticket = await res.json();
     dispatch(getTicketByHash(ticket));
 }
@@ -98,7 +95,6 @@ export const getTicketByHashThunk = (hashedId) => async (dispatch) => {
 export const getTotalTicketsAmountThunk = () => async (dispatch) => {
     const res = await csrfFetch(`/api/tickets/`);
     const amount = await res.json();
-    // console.log(amount, "amount");
     dispatch(getTotalTicketsAmount(amount.length));
 }
 
@@ -124,7 +120,6 @@ export const addTicketThunk = (ticket) => async (dispatch) => {
 }
 
 export const updateTicketThunk = (ticketId, updatedData) => async (dispatch) => {
-    console.log("Updating ticket:", updatedData);
     const res = await csrfFetch(`/api/tickets/${ticketId}`, {
         method: 'PUT',
         body: JSON.stringify(updatedData)

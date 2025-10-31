@@ -61,7 +61,6 @@ export default function AddLocation({ setLocationAddedChecker, clientId }) {
             setSelectedFile(file);
             const fileURL = URL.createObjectURL(file);
             setProfilePicUrl(fileURL);
-            console.log(fileURL, "THIS IS THE FILE URL");
         }
     };
 

@@ -38,8 +38,6 @@ export default function Statistics({ myTickets, todayTickets, status }) {
         </section>
     )
 
-    console.log(status);
-
     return (
         <section className="statistics-tab">
             <h1>Insights</h1>

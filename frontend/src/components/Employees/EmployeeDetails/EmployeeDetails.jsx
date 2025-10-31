@@ -18,8 +18,6 @@ export default function EmployeeDetails() {
         dispatch(getUserThunk(employeeId));
     }, [dispatch, employeeId]);
 
-    console.log("Employee Details Employee:", employee);
-
     return (
         <div className="employee-details">
             {employee ? (

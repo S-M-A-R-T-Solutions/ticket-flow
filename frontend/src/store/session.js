@@ -151,7 +151,6 @@ export const deactivateUserThunk = (user) => async (dispatch) => {
 };
 
 export const login = (user) => async (dispatch) => {
-    // console.log(user, "THIS IS USER");
     const { credential, password } = user;
     const response = await csrfFetch("/api/session", {
         method: "POST",
@@ -181,8 +180,6 @@ export const logout = () => async (dispatch) => {
 
 export const signup = (user) => async (dispatch) => {
     const { username, firstName, lastName, email, password, image } = user;
-
-    console.log(username, "THIS IS USERNAME");
 
     const formData = new FormData();
     formData.append("username", username);

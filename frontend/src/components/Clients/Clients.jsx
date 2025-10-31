@@ -38,8 +38,6 @@ export default function Clients() {
         setEditClientChecker(false);
     }, [dispatch, page, clientsAddChecker, deleteClientChecker, editClientChecker]);
 
-    console.log(totalClients, "totalClients");
-
     const lastPage = Math.ceil(totalClients / CLIENTS_PER_PAGE);
 
     const onModalClose = () => {

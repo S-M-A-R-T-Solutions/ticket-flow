@@ -68,8 +68,6 @@ router.post(
 
             const partImageURL = req.file ? await singleFileUpload({ file: req.file, public: true }) : null;
 
-            console.log(partImageURL, "<<< this is the part image URL");
-
             const newPart = await Part.create({
                 sku,
                 name,
@@ -87,8 +85,6 @@ router.post(
                 partId: newPart.id,
                 partImageURL: partImageURL || "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
             });
-
-            console.log(newPart, partImage, "<<< this is new part and part image");
 
             return res.status(201).json(newPart);
         } catch (error) {
