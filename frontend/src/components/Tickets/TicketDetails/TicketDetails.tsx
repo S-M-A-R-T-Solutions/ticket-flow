@@ -152,14 +152,14 @@ export default function TicketDetails() {
     console.log("PHONE DIRECTORY:", phoneDirectory);
 
     const selectedContactInfo: { phoneNumber?: string; phoneType?: string, locationName?: string } = {};
+    console.log("TICKET CALLER INFO:", ticket.CallInfo[0]);
 
-    if (ticket.CallerInfo?.length > 0) {
-        console.log("TICKET CALLER INFO:", ticket?.CallerInfo[0]);
+    if (ticket.CallInfo?.length > 0) {
         phoneDirectory.forEach((contactInfo: { phoneNumber: string; phoneType: string; }) => {
-            if (contactInfo.phoneNumber === ticket.CallerInfo[0]?.caller) {
+            if (contactInfo.phoneNumber === ticket.CallInfo[0]?.caller) {
                 selectedContactInfo['phoneNumber'] = contactInfo.phoneNumber;
                 selectedContactInfo['phoneType'] = contactInfo.phoneType;
-                selectedContactInfo['locationName'] = ticket.CallerInfo[0]?.locationName;
+                selectedContactInfo['locationName'] = ticket.CallInfo[0]?.locationName;
             }
         });
     } else {
