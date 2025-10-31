@@ -65,9 +65,18 @@ const addNoteToTicket = (note) => ({
 });
 
 //THUNKS
-export const getAllTicketsThunk = (page, size) => async (dispatch) => {
+export const getAllTicketsThunk = (page, size, filters = null) => async (dispatch) => {
     // console.log(page, size, "page and size");
-    const res = await csrfFetch(`/api/tickets?page=${page}&size=${size}`);
+    let query = `/api/tickets?page=${page}&size=${size}`;
+
+    if (filters) {
+        const { status, clientId, search } = filters;
+        if (status) query += `&status=${status.join(',')}`;
+        if (clientId) query += `&clientId=${clientId}`;
+        if (search) query += `&search=${search}`;
+    }
+    
+    const res = await csrfFetch(query);
     const tickets = await res.json();
     dispatch(getAllTickets(tickets));
 };

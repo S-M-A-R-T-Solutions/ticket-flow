@@ -31,6 +31,25 @@ export default function Tickets() {
     const [searchFilter, setSearchFilter] = useState('');
     const [selectedClient, setSelectedClient] = useState(null);
 
+    // Eliminado el estado innecesario para el debounce
+
+    useEffect(() => {
+        console.log('Filters changed:', { selectedStatus, selectedClient, searchFilter });
+
+        const handler = setTimeout(() => {
+            dispatch(getAllTicketsThunk(page, 8, {
+                status: selectedStatus,
+                clientId: selectedClient,
+                search: searchFilter
+            }));
+
+            console.log('Apllying filters with debounce');
+        }, 1000);
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [selectedStatus, selectedClient, searchFilter, page, dispatch]);
+
     const toggleStatus = (status) => {
         if (selectedStatus.includes(status)) {
             setSelectedStatus(selectedStatus.filter(s => s !== status));
