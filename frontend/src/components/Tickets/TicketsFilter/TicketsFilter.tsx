@@ -4,8 +4,14 @@ import { useEffect } from 'react';
 import { getAllStatusThunk } from '../../../store/status';
 import { getAllClientsThunk } from '../../../store/clients';
 import { LuSearch } from "react-icons/lu";
+import { FaCheck } from "react-icons/fa6";
 
-export default function TicketsFilter() {
+interface TicketsFilterProps {
+    selectedStatus: number[];
+    toggleStatus: (status: number) => void;
+}
+
+export default function TicketsFilter({ selectedStatus, toggleStatus }: TicketsFilterProps) {
 
     const dispatch = useDispatch();
 
@@ -24,9 +30,14 @@ export default function TicketsFilter() {
                     <small className="title">Status</small>
 
                     {status && status.map((stat: any) => (
-                        <label htmlFor={`cb-status-${stat.id}`} key={stat.id}>
-                            <input type="checkbox" id={`cb-status-${stat.id}`} value={stat.id} />
-                            {stat.name}
+                        <label htmlFor={`cb-status-${stat.id}`} key={stat.id} onClick={() => toggleStatus(stat.id)}>
+                            <span className="checkmark" style={{
+                                borderColor: stat.color,
+                                backgroundColor: selectedStatus.includes(stat.id) ? stat.color : 'transparent'
+                            }}>
+                                <FaCheck size={12} color='var(--surface-color)' />
+                            </span> {stat.name}
+
                         </label>
                     ))}
                 </div>
