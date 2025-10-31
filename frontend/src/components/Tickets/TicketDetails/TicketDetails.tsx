@@ -154,6 +154,7 @@ export default function TicketDetails() {
     const selectedContactInfo: { phoneNumber?: string; phoneType?: string, locationName?: string } = {};
 
     if (ticket.CallerInfo?.length > 0) {
+        console.log("TICKET CALLER INFO:", ticket?.CallerInfo[0]);
         phoneDirectory.forEach((contactInfo: { phoneNumber: string; phoneType: string; }) => {
             if (contactInfo.phoneNumber === ticket.CallerInfo[0]?.caller) {
                 selectedContactInfo['phoneNumber'] = contactInfo.phoneNumber;
@@ -169,7 +170,6 @@ export default function TicketDetails() {
 
     console.log("SELECTED CONTACT INFO:", selectedContactInfo);
 
-    console.log("TICKET CALLER INFO:", ticket?.CallerInfo[0]);
 
     return (
         <section className="app-section ticket-details">
