@@ -5,7 +5,7 @@ import { getAllStatusThunk } from '../../../store/status';
 import { getAllClientsThunk } from '../../../store/clients';
 
 import { LuSearch } from "react-icons/lu";
-import { FaCheck } from "react-icons/fa6";
+import { FaCheck, FaTicket } from "react-icons/fa6";
 
 import './TicketsFilter.scss';
 
@@ -50,18 +50,19 @@ export default function TicketsFilter({
             <div className="tickets-filter">
                 <div className="filter-block status-filter">
                     <small className="title">Status</small>
-
-                    {status && status.map((stat: any) => (
-                        <label htmlFor={`cb-status-${stat.id}`} key={stat.id} onClick={() => toggleStatus(stat.id)}>
-                            <span className="checkmark" style={{
+                    <div className='status-list-status-list'>
+                        {status && status.map((stat: any) => (
+                            <div key={stat.id} onClick={() => toggleStatus(stat.id)}>
+                                {/* <span className="checkmark" style={{
                                 borderColor: stat.color,
                                 backgroundColor: selectedStatus.includes(stat.id) ? stat.color : 'transparent'
                             }}>
                                 <FaCheck size={12} color='var(--surface-color)' />
-                            </span> {stat.name}
-
-                        </label>
-                    ))}
+                            </span> {stat.name} */}
+                                <FaTicket style={{ color: selectedStatus.includes(stat.id) ? stat.color : `${stat.color}A1`, fontSize: "32px" }} />
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="divider"></div>

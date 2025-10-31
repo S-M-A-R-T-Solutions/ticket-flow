@@ -30,12 +30,13 @@ export default function Tickets() {
     const [selectedStatus, setSelectedStatus] = useState([]);
     const [searchFilter, setSearchFilter] = useState('');
     const [selectedClient, setSelectedClient] = useState(null);
-
+    
+    const TICKETS_PER_PAGE = 10;
     // Eliminado el estado innecesario para el debounce
 
     useEffect(() => {
         const handler = setTimeout(() => {
-            dispatch(getAllTicketsThunk(page, 8, {
+            dispatch(getAllTicketsThunk(page, TICKETS_PER_PAGE, {
                 statusList: selectedStatus,
                 client: selectedClient,
                 search: searchFilter
@@ -60,7 +61,6 @@ export default function Tickets() {
         setSelectedClient(null);
     };
 
-    const TICKETS_PER_PAGE = 8;
 
     useEffect(() => {
         dispatch(getTotalTicketsAmountThunk());
