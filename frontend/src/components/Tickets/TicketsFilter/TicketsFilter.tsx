@@ -9,6 +9,13 @@ import { FaCheck, FaTicket } from "react-icons/fa6";
 
 import './TicketsFilter.scss';
 
+const STATUS: [{ id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }] = [
+    { id: 1, name: 'Open', color: '#FF6B6B' },
+    { id: 2, name: 'In Progress', color: '#FFB84C' },
+    { id: 3, name: 'Closed', color: '#4CAF50' },
+    { id: 4, name: 'Pending', color: '#7C3AED' },
+];
+
 interface TicketsFilterProps {
     selectedStatus: number[];
     selectedClient: number | null;
@@ -45,20 +52,17 @@ export default function TicketsFilter({
         setSelectedClientLocal(selectedClient || '');
     }, [selectedClient]);
 
+    console.log("STATUS IN FILTER", status);
+
     return (
         <div className="tickets-filter-wrapper">
             <div className="tickets-filter">
                 <div className="filter-block status-filter">
                     <small className="title">Status</small>
+                    
                     <div className='status-list-status-list'>
-                        {status && status.map((stat: any) => (
+                        {STATUS && STATUS.map((stat: any) => (
                             <div key={stat.id} onClick={() => toggleStatus(stat.id)}>
-                                {/* <span className="checkmark" style={{
-                                borderColor: stat.color,
-                                backgroundColor: selectedStatus.includes(stat.id) ? stat.color : 'transparent'
-                            }}>
-                                <FaCheck size={12} color='var(--surface-color)' />
-                            </span> {stat.name} */}
                                 <FaTicket className={`status-icon${selectedStatus.includes(stat.id) ? 'hovered' : ''}`} style={{ color: selectedStatus.includes(stat.id) ? stat.color : `${stat.color}A1`, fontSize: "64px" }} />
                             </div>
                         ))}
