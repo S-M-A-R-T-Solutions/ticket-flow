@@ -25,8 +25,11 @@ export default function Tickets() {
     const [page, setPage] = useState(1);
     const [deleteTicketChecker, setDeleteTicketChecker] = useState(false);
     const [ticketsChecker, setTicketsChecker] = useState(false);
+
     const [showFilters, setShowFilters] = useState(true);
     const [selectedStatus, setSelectedStatus] = useState([]);
+    const [searchFilter, setSearchFilter] = useState('');
+    const [selectedClient, setSelectedClient] = useState(null);
 
     const toggleStatus = (status) => {
         if (selectedStatus.includes(status)) {
@@ -35,6 +38,12 @@ export default function Tickets() {
             setSelectedStatus([...selectedStatus, status]);
         }
     }
+
+    const clearFilters = () => {
+        setSelectedStatus([]);
+        setSearchFilter('');
+        setSelectedClient(null);
+    };
 
     const TICKETS_PER_PAGE = 8;
 
@@ -110,7 +119,15 @@ export default function Tickets() {
                 </OpenModalMenuItem>
             </div>
 
-            {showFilters && <TicketsFilter selectedStatus={selectedStatus} toggleStatus={toggleStatus} />}
+            {showFilters && <TicketsFilter
+                selectedStatus={selectedStatus}
+                selectedClient={selectedClient}
+                searchFilter={searchFilter}
+                toggleStatus={toggleStatus}
+                clearFilters={clearFilters}
+                setSelectedClient={setSelectedClient}
+                setSearchFilter={setSearchFilter}
+            />}
 
             <div className='tickets-container'>
                 {allTickets.map(ticket => (
