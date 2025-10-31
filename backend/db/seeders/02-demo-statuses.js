@@ -17,12 +17,12 @@ module.exports = {
       },
       {
         name: "In Progress",
-        color: "#FFD93D",
+        color: "#FFB84C",
         description: "The ticket is being worked on"
       },
       {
         name: "Pending",
-        color: "#ED1476",
+        color: "#7C3AED",
         description: "The ticket is pending further information"
       },
       {
