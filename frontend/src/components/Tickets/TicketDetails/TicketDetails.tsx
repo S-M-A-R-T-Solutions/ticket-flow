@@ -149,7 +149,30 @@ export default function TicketDetails() {
     }
 
     const phoneDirectory = getPhoneDirectoryOfAClient(ticket.ClientInfo?.id);
-    // console.log("TICKET INFO:", ticket);
+    console.log("PHONE DIRECTORY:", phoneDirectory);
+
+    const selectedContactInfo: { phoneNumber?: string; phoneType?: string, locationName?: string } = {};
+
+    if (ticket.CallerInfo?.length > 0) {
+        phoneDirectory.forEach((contactInfo: { phoneNumber: string; phoneType: string; }) => {
+            if (contactInfo.phoneNumber === ticket.CallerInfo[0]?.caller) {
+                selectedContactInfo['phoneNumber'] = contactInfo.phoneNumber;
+                selectedContactInfo['phoneType'] = contactInfo.phoneType;
+                selectedContactInfo['locationName'] = ticket.CallerInfo[0]?.locationName;
+            }
+        });
+
+        // If no match found, default to main phone number
+        if (Object.keys(selectedContactInfo).length === 0) {
+            Object.assign(selectedContactInfo, { phoneNumber: ticket.ClientInfo?.phone, phoneType: "Main" });
+        }
+    } else {
+        Object.assign(selectedContactInfo, { phoneNumber: ticket.ClientInfo?.phone, phoneType: "Client Phone" });
+    }
+
+    const locationInfoExists = selectedContactInfo.locationName ? `exists` : "";
+
+    console.log("SELECTED CONTACT INFO:", selectedContactInfo);
 
     return (
         <section className="app-section ticket-details">
@@ -241,7 +264,23 @@ export default function TicketDetails() {
                             </div>
                         )}
 
-                        {ticket.CallInfo?.length > 0 ? ( //Client has call info
+                        <div className="caller-info-ticket">
+                            <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                <div className={`caller-location-name-${locationInfoExists}`}>
+                                    <span> {selectedContactInfo.locationName} </span>
+                                </div>
+                                <div className="caller-location-phone-number">
+                                    <div className="caller-location-phone-type">
+                                        <span>{selectedContactInfo.phoneType}</span>
+                                    </div>
+                                    <div className="caller-location-phone-number-number">
+                                        <span>{formatPhoneNumber(selectedContactInfo.phoneNumber)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* {ticket.CallInfo?.length > 0 ? ( //Client has call info
                             <div className="caller-info-ticket">
                                 {ticket.ClientInfo?.Locations?.map((location: any) => (
                                     phoneDirectory.map((phoneNumber: any) => (
@@ -329,7 +368,7 @@ export default function TicketDetails() {
                                     </div>
                                 </div>
                             </div>
-                        )}
+                        )} */}
                     </div>
                 )}
             </div>
