@@ -59,13 +59,13 @@ export default function TicketsFilter({
                             }}>
                                 <FaCheck size={12} color='var(--surface-color)' />
                             </span> {stat.name} */}
-                                <FaTicket style={{ color: selectedStatus.includes(stat.id) ? stat.color : `${stat.color}A1`, fontSize: "32px" }} />
+                                <FaTicket className={`status-icon${selectedStatus.includes(stat.id) ? 'hovered' : ''}`} style={{ color: selectedStatus.includes(stat.id) ? stat.color : `${stat.color}A1`, fontSize: "64px" }} />
                             </div>
                         ))}
                     </div>
                 </div>
 
-                <div className="divider"></div>
+                {/* <div className="divider"></div> */}
 
                 <div className="filter-block client-filter">
                     <small className="title">Client</small>
@@ -89,7 +89,7 @@ export default function TicketsFilter({
 
                 </div>
 
-                <div className="divider"></div>
+                {/* <div className="divider"></div> */}
 
                 <div className="filter-block search-filter">
                     <small className="title">Search</small>
@@ -100,7 +100,7 @@ export default function TicketsFilter({
                     </div>
                 </div>
 
-                <div className="divider"></div>
+                {/* <div className="divider"></div> */}
 
                 <div className="actions">
                     <button className="btn btn-clear-filters" onClick={clearFilters}>Clear Filters</button>
