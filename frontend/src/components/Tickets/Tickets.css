@@ -17,6 +17,14 @@
     padding-right: 20px;
 }
 
+.tickets-section-header .spacer {
+    flex: 1 1 auto;
+}
+
+.tickets-section-header .btn-toggle-filters {
+    width: fit-content;
+}
+
 .section-header h1 {
     font-size: 2rem;
     color: var(--text-color);
@@ -102,6 +110,14 @@
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: auto;
+}
+
+.btn-toggle-filters .btn-icon {
+    transition: all 0.3s ease;
+}
+
+.btn-toggle-filters.active .btn-icon {
+    transform: rotate(180deg);
 }
 
 /* Spin Animation for Loader */
