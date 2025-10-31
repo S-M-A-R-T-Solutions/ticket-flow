@@ -21,14 +21,14 @@ module.exports = {
         description: "The ticket is being worked on"
       },
       {
-        name: "Pending",
-        color: "#7C3AED",
-        description: "The ticket is pending further information"
-      },
-      {
         name: "Closed",
         color: "#4CAF50",
         description: "The ticket has been resolved"
+      },
+      {
+        name: "Pending",
+        color: "#7C3AED",
+        description: "The ticket is pending further information"
       }
     ], options);
   },
