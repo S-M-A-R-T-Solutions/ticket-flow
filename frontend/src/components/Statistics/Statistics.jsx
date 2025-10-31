@@ -66,14 +66,14 @@ export default function Statistics({ myTickets, todayTickets, status }) {
                             <h2>In Progress</h2>
                             <span>{today.inProgress}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: '#FFD93D' }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#FFB84C' }} />
                     </div>
                     <div className="pending-tickets-container">
                         <div className="left-side">
                             <h2>Pending</h2>
                             <span>{today.pending}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: '#ED1476' }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#7C3AED' }} />
                     </div>
                     <div className="done-tickets-container">
                         <div className="left-side">
@@ -99,14 +99,14 @@ export default function Statistics({ myTickets, todayTickets, status }) {
                             <h2>In Progress</h2>
                             <span>{all.inProgress}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: '#FFD93D' }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#FFB84C' }} />
                     </div>
                     <div className="pending-tickets-container">
                         <div className="left-side">
                             <h2>Pending</h2>
                             <span>{all.pending}</span>
                         </div>
-                        <FaTicket style={{ fontSize: "60px", color: '#ED1476' }} />
+                        <FaTicket style={{ fontSize: "60px", color: '#7C3AED' }} />
                     </div>
                     <div className="done-tickets-container">
                         <div className="left-side">

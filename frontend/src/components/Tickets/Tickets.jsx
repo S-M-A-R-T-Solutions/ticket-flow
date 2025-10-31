@@ -32,6 +32,7 @@ export default function Tickets() {
     const [selectedClient, setSelectedClient] = useState(null);
     
     const TICKETS_PER_PAGE = 10;
+    
     // Eliminado el estado innecesario para el debounce
 
     useEffect(() => {
