@@ -70,12 +70,12 @@ export const getAllTicketsThunk = (page, size, filters = null) => async (dispatc
     let query = `/api/tickets?page=${page}&size=${size}`;
 
     if (filters) {
-        const { status, clientId, search } = filters;
-        if (status) query += `&status=${status.join(',')}`;
-        if (clientId) query += `&clientId=${clientId}`;
+        const { statusList, client, search } = filters;
+        if (statusList) query += `&statusList=${statusList.join(',')}`;
+        if (client) query += `&client=${client}`;
         if (search) query += `&search=${search}`;
     }
-    
+
     const res = await csrfFetch(query);
     const tickets = await res.json();
     dispatch(getAllTickets(tickets));

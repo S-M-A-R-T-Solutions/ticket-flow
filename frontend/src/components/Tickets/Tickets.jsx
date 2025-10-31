@@ -34,16 +34,12 @@ export default function Tickets() {
     // Eliminado el estado innecesario para el debounce
 
     useEffect(() => {
-        console.log('Filters changed:', { selectedStatus, selectedClient, searchFilter });
-
         const handler = setTimeout(() => {
             dispatch(getAllTicketsThunk(page, 8, {
-                status: selectedStatus,
-                clientId: selectedClient,
+                statusList: selectedStatus,
+                client: selectedClient,
                 search: searchFilter
             }));
-
-            console.log('Apllying filters with debounce');
         }, 1000);
         return () => {
             clearTimeout(handler);
