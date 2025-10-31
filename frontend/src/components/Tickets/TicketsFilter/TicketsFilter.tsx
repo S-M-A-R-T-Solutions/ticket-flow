@@ -1,10 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
-import './TicketsFilter.scss';
 import { useEffect, useState } from 'react';
+
 import { getAllStatusThunk } from '../../../store/status';
 import { getAllClientsThunk } from '../../../store/clients';
+
 import { LuSearch } from "react-icons/lu";
 import { FaCheck } from "react-icons/fa6";
+
+import './TicketsFilter.scss';
 
 interface TicketsFilterProps {
     selectedStatus: number[];
@@ -92,7 +95,6 @@ export default function TicketsFilter({
 
                     <div className="search-filter-wrapper">
                         <LuSearch className="search-filter-icon" />
-
                         <input type="text" placeholder="Title, description, etc..." className="search-tickets-filter-input" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)} />
                     </div>
                 </div>
