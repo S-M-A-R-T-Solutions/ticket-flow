@@ -15,6 +15,11 @@ import { getAllTicketsThunk, getMyTicketsThunk, getTotalTicketsAmountThunk } fro
 import TicketCard from './TicketCard';
 import AddTicket from '../AddTicket/AddTicket';
 
+const SORT_OPTIONS = [
+    { label: 'createdAt', value: 'DESC', description: "Newest First" },
+    { label: 'createdAt', value: 'ASC', description: "Oldest First" }
+]
+
 export default function Tickets() {
 
     const dispatch = useDispatch();
@@ -30,9 +35,10 @@ export default function Tickets() {
     const [selectedStatus, setSelectedStatus] = useState([]);
     const [searchFilter, setSearchFilter] = useState('');
     const [selectedClient, setSelectedClient] = useState(null);
-    
+    const [sortOption, setSortOption] = useState(SORT_OPTIONS[0]);
+
     const TICKETS_PER_PAGE = 10;
-    
+
     // Eliminado el estado innecesario para el debounce
 
     useEffect(() => {
@@ -42,6 +48,7 @@ export default function Tickets() {
                 client: selectedClient,
                 search: searchFilter
             }));
+            dispatch(getTotalTicketsAmountThunk());
         }, 1000);
         return () => {
             clearTimeout(handler);
@@ -79,11 +86,24 @@ export default function Tickets() {
         setTicketsChecker(true);
     }
 
+    const handleSortChange = () => {
+        if (sortOption === SORT_OPTIONS[SORT_OPTIONS.length - 1]) {
+            setSortOption(SORT_OPTIONS[0]);
+            return;
+        }
+
+        const currentIndex = SORT_OPTIONS.findIndex(option => option.label === sortOption.label && option.value === sortOption.value);
+        const selectedOption = SORT_OPTIONS[currentIndex + 1];
+        setSortOption(selectedOption);
+    }
+
     if (!allTickets || !totalTickets) return (
         <section className='tickets-tab'>
             <div>
                 <div className="tickets-section-header">
-                    <h1>Tickets</h1>
+                    <div className='tickets-header-left'>
+                        <h1>Tickets</h1>
+                    </div>
 
                     <div className="spacer"></div>
 
@@ -117,7 +137,23 @@ export default function Tickets() {
     return (
         <section className='tickets-tab'>
             <div className="tickets-section-header">
-                <h1>Tickets</h1>
+                <div className='tickets-header-left'>
+                    <h1>Tickets</h1>
+                    <div className='sorting-button' onClick={handleSortChange}>
+                        {sortOption.description === 'Newest First' && (
+                            <>
+                                <HiOutlineChevronRight />
+                                <p>Newest First</p>
+                            </>
+                        )}
+                        {sortOption.description === 'Oldest First' && (
+                            <>
+                                <HiOutlineChevronLeft />
+                                <p>Oldest First</p>
+                            </>
+                        )}
+                    </div>
+                </div>
 
                 <div className="spacer"></div>
 
