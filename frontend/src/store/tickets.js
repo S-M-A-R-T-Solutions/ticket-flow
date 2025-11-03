@@ -8,6 +8,7 @@ const GET_MY_TICKETS = 'tickets/getMyTickets';
 const GET_TICKET = 'tickets/getTicket';
 const ADD_TICKET = 'tickets/addTicket';
 const ASSIGN_TICKET_TO_USER = 'tickets/assignTicketToUser';
+const UNASSIGN_TICKET_FROM_USER = 'tickets/unassignTicketFromUser';
 const UPDATE_TICKET = 'tickets/updateTicket';
 const DELETE_TICKET = 'tickets/deleteTicket';
 const GET_TICKET_BY_HASH = 'tickets/getTicketByHash';
@@ -55,6 +56,11 @@ const assignTicketToUser = (assignment) => ({
     payload: assignment
 });
 
+const unassignTicketFromUser = (assignment) => ({
+    type: UNASSIGN_TICKET_FROM_USER,
+    payload: assignment
+});
+
 const updateTicket = (ticket) => ({
     type: UPDATE_TICKET,
     payload: ticket
@@ -72,7 +78,7 @@ const addNoteToTicket = (note) => ({
 
 //THUNKS
 export const getAllTicketsThunk = (page, size, filters = null, sortLabel, sortValue) => async (dispatch) => {
-    let query = `/api/tickets?page=${page}&size=${size}&sort=${sortLabel}&value=${sortValue }`;
+    let query = `/api/tickets?page=${page}&size=${size}&sort=${sortLabel}&value=${sortValue}`;
 
     if (filters) {
         const { statusList, client, search } = filters;
@@ -132,6 +138,22 @@ export const assignTicketToUserThunk = (ticketId, userId) => async (dispatch) =>
     });
     const assignment = await res.json();
     dispatch(assignTicketToUser(assignment));
+};
+
+export const unassignTicketFromUserThunk = (ticketId, userId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/tickets/${ticketId}/assignees/${userId}`, {
+        method: 'DELETE'
+    });
+
+    // Handle both 204 or JSON response
+    let assignment = null;
+    try {
+        assignment = await res.json();
+    } catch {
+        assignment = { ticketId, userId };
+    }
+
+    dispatch(unassignTicketFromUser(assignment));
 };
 
 export const updateTicketThunk = (ticketId, updatedData) => async (dispatch) => {
@@ -194,7 +216,7 @@ const ticketsReducer = (state = initialState, action) => {
         case ADD_TICKET: {
             return { ...state, myTickets: [...state.myTickets, action.payload] };
         }
-        
+
         case ASSIGN_TICKET_TO_USER: {
             return {
                 ...state,
@@ -202,7 +224,25 @@ const ticketsReducer = (state = initialState, action) => {
                     if (ticket.id === action.payload.ticketId) {
                         return {
                             ...ticket,
-                            TicketEmployees: [...ticket.TicketEmployees, action.payload]
+                            TicketEmployees: [
+                                ...ticket.TicketEmployees,
+                                { userId: action.payload.userId, User: action.payload.user || {} }
+                            ]
+                        };
+                    }
+                    return ticket;
+                })
+            };
+        }
+        
+        case UNASSIGN_TICKET_FROM_USER: {
+            return {
+                ...state,
+                allTickets: state.allTickets.map(ticket => {
+                    if (ticket.id === action.payload.ticketId) {
+                        return {
+                            ...ticket,
+                            TicketEmployees: ticket.TicketEmployees.filter(te => te.userId !== action.payload.userId)
                         };
                     } else {
                         return ticket;
@@ -210,6 +250,7 @@ const ticketsReducer = (state = initialState, action) => {
                 })
             };
         }
+
         case UPDATE_TICKET: {
             return {
                 ...state,

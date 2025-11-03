@@ -175,7 +175,33 @@ router.post('/:id/assignees', requireAuth, async (req, res, next) => {
             userId
         });
 
-        res.status(201).json({ message: 'User assigned to ticket successfully' });
+        res.status(201).json({
+            message: 'User assigned successfully',
+            ticketId: ticket.id,
+            userId: userId
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+//Remove an assignee from a Ticket
+router.delete('/:id/assignees/:userId', requireAuth, async (req, res, next) => {
+    try {
+        const { id, userId } = req.params;
+
+        const ticket = await Ticket.findByPk(id);
+        if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+
+        const assignment = await TicketEmployee.findOne({
+            where: { ticketId: id, userId }
+        });
+        if (!assignment) return res.status(404).json({ message: 'Assignment not found' });
+
+        await assignment.destroy();
+
+        // ✅ Return info for Redux to update state
+        res.json({ message: 'User unassigned successfully', ticketId: parseInt(id), userId: parseInt(userId) });
     } catch (error) {
         next(error);
     }
