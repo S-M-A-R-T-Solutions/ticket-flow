@@ -1,12 +1,15 @@
-import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import moment from 'moment';
 
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
+import { HiOutlinePlusSm } from "react-icons/hi";
 
 import { getAllStatusThunk } from '../../../store/status';
+import { getAllUsersThunk } from '../../../store/session';
+import { assignEmployeeToTicketThunk } from '../../../store/tickets';
 
 import './TicketCard.scss';
 
@@ -38,15 +41,35 @@ function PerforatedZone() {
 
 export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
     const dispatch = useDispatch();
-    const user = useSelector((state: any) => state.session.user);
+    const ulRef = useRef<HTMLUListElement>(null);
+
+    const users = useSelector((state: any) => state.session?.allUsers);
+    const user = useSelector((state: any) => state.session?.user);
     const status = useSelector((state: any) => state.status);
 
-    const ticketAssignees = ticket.TicketEmployees.map((te: any) => te.User);
+    const [showAssignDropdown, setShowAssignDropdown] = useState(false);
+
+    const ticketAssignees = ticket.TicketEmployees?.map((te: any) => te.User);
 
     useEffect(() => {
-        // dispatch(getAllStatusThunk(ticket.statusId) as any);
         dispatch(getAllStatusThunk() as any);
+        dispatch(getAllUsersThunk() as any);
     }, [dispatch, ticket.statusId]);
+
+    useEffect(() => {
+        if (!showAssignDropdown) return;
+
+        const closeMenu = (e: any) => {
+            if (ulRef.current && !ulRef.current.contains(e.target)) {
+                setShowAssignDropdown(false);
+            }
+        }
+        document.addEventListener("click", closeMenu);
+
+        return () => document.removeEventListener("click", closeMenu);
+    }, [showAssignDropdown]);
+
+    const ulClassName = "assign-employee-dropdown" + (showAssignDropdown ? "" : "-hidden");
 
     const ticketStatus = ticket.statusId;
 
@@ -56,7 +79,11 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
         e.stopPropagation();
     };
 
-    console.log("TICKET ASSIGNEES", ticketAssignees);
+    const toggleMenu = (e: any) => {
+        e.preventDefault();
+        e.stopPropagation(); // prevent immediate close
+        setShowAssignDropdown(!showAssignDropdown);
+    };
 
     return (
         <div className="ticket-card-wrapper">
@@ -93,14 +120,59 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
 
                 <div className='ticket-bottom'>
                     <div className='ticket-description'>{ticket.description}</div>
-                    {ticket.TicketEmployees && ticket.TicketEmployees.length > 0 && (
-                        <div className='ticket-assignees'>
-                            {ticket.TicketEmployees.map((employee: any) => (
-                                <div key={employee.id} className='ticket-assignee'>
-                                    <img src={employee.User.profilePicUrl || '/default-profile.png'} alt={`${employee.User.firstName[0]} ${employee.User.lastName[0]}`} title={`${employee.User.firstName} ${employee.User.lastName}`} />
+                    <>
+                        {ticket.TicketEmployees && ticket.TicketEmployees.length > 0 ? (
+                            <div
+                                className='ticket-assignees'
+                                style={{ zIndex: 5 }}
+                                onClick={toggleMenu}
+                            >
+                                <div className='assign-employee-button'>
+                                    <HiOutlinePlusSm />
                                 </div>
+                                {ticket.TicketEmployees.length < 3 ? (ticket.TicketEmployees.map((employee: any) => (
+                                    <div key={employee.id} className='ticket-assignee'>
+                                        <img src={employee.User.profilePicUrl || '/default-profile.png'} alt={`${employee.User.firstName[0]} ${employee.User.lastName[0]}`} title={`${employee.User.firstName} ${employee.User.lastName}`} />
+                                    </div>
+                                ))) : (
+                                    <>
+                                        <div className='ticket-assignee'>
+                                            <img src={ticket.TicketEmployees[0].User.profilePicUrl || '/default-profile.png'} alt={`${ticket.TicketEmployees[0].User.firstName[0]} ${ticket.TicketEmployees[0].User.lastName[0]}`} title={`${ticket.TicketEmployees[0].User.firstName} ${ticket.TicketEmployees[0].User.lastName}`} />
+                                        </div>
+                                        <div className='ticket-assignee-more'>
+                                            + {ticket.TicketEmployees.length - 1}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        ) : (
+                            <div className='ticket-assignees'>
+                                <div className='assign-employee-button'>
+                                    <HiOutlinePlusSm />
+                                </div>
+                                <div className='ticket-assignee'>
+                                    <img src={'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'} />
+                                </div>
+                            </div>
+                        )}
+                    </>
+                    {showAssignDropdown && (
+                        <ul className={ulClassName} ref={ulRef}>
+                            {users && users.map((user: any) => (
+                                <li
+                                    key={user.id}
+                                    className="assign-employee-option"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        dispatch(assignEmployeeToTicketThunk(ticket.id, user.id) as any);
+                                        setShowAssignDropdown(false);
+                                    }}
+                                >
+                                    <img src={user.profilePicUrl || '/default-profile.png'} alt={`${user.firstName[0]} ${user.lastName[0]}`} />
+                                    <span>{user.firstName} {user.lastName}</span>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     )}
                 </div>
 

@@ -67,11 +67,25 @@ const setUser = (user) => {
 };
 
 //THUNKS
-export const getAllUsersThunk = (page, size, sortLabel, sortValue) => async (dispatch) => {
-    const response = await csrfFetch(`/api/users?page=${page}&size=${size}&sort=${sortLabel}&value=${sortValue }`);
-    const data = await response.json();
-    dispatch(getAllUsers(data));
-}
+export const getAllUsersThunk = (
+    page = 1,
+    size = 100,
+    sortLabel = 'firstName',
+    sortValue = 'ASC'
+) => async (dispatch) => {
+    try {
+        const response = await csrfFetch(
+            `/api/users?page=${page}&size=${size}&sort=${sortLabel}&value=${sortValue}`
+        );
+
+        if (!response.ok) throw new Error('Failed to fetch users');
+        const data = await response.json();
+        dispatch(getAllUsers(data));
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+};
+
 
 export const getTotalUsersAmountThunk = () => async (dispatch) => {
     const response = await csrfFetch('/api/users');

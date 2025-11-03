@@ -95,7 +95,7 @@ router.post(
     async (req, res, next) => {
         try {
             const { email, password, username, firstName, lastName } = req.body;
-            
+
             const profilePicUrl = req.file ?
                 await singleFileUpload({ file: req.file, public: true }) :
                 null;
@@ -252,7 +252,7 @@ router.delete('/:userId/phones/:phoneId', requireAuth, async (req, res) => {
 //Get a User by ID
 router.get('/:id', requireAuth, async (req, res) => {
     const { id } = req.params;
-    
+
     try {
         const user = await User.findByPk(id);
         if (!user) {
@@ -276,27 +276,29 @@ router.get('/:id', requireAuth, async (req, res) => {
 
 //Get all Users
 router.get('/', requireAuth, async (_req, res) => {
-        try {
-            const page = parseInt(_req.query.page) || null;
-            const size = parseInt(_req.query.size) || null;
-            const sortlabel = _req.query.sort || 'firstName';
-            const sortvalue = _req.query.value || 'ASC';
+    try {
+        const page = parseInt(_req.query.page) || 1;
+        const size = parseInt(_req.query.size) || null;
+        const sortlabel = _req.query.sort || 'firstName';
+        const sortvalue = _req.query.value || 'ASC';
 
-            const offset = (page - 1) * size;
-            const limit = size;
+        const queryOptions = {
+            order: [[sortlabel, sortvalue]],
+            attributes: { exclude: ['hashedPassword', 'createdAt', 'updatedAt'] }
+        };
 
-            const users = await User.findAll({
-                offset,
-                limit,
-                order: [[sortlabel, sortvalue]],
-                attributes: { exclude: ['hashedPassword', 'createdAt', 'updatedAt'] }
-            });
-
-            return res.json(users);
-        } catch (error) {
-            return res.status(500).json({ message: "Error fetching users", error: error.message });
+        if (size) {
+            queryOptions.limit = size;
+            queryOptions.offset = (page - 1) * size;
         }
+
+        const users = await User.findAll(queryOptions);
+
+        return res.json(users);
+    } catch (error) {
+        return res.status(500).json({ message: "Error fetching users", error: error.message });
     }
+}
 );
 
 //Deactivate a User

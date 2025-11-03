@@ -141,7 +141,6 @@ router.get('/track/:hashedId', async (req, res) => {
         StatusInfo
     }
 
-
     // If valid, send ticket data for tracking
     res.json(safeTicket);
 });

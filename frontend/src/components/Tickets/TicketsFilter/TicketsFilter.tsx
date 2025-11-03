@@ -12,8 +12,8 @@ import './TicketsFilter.scss';
 const STATUS: [{ id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }] = [
     { id: 1, name: 'Open', color: '#FF6B6B' },
     { id: 2, name: 'In Progress', color: '#FFB84C' },
-    { id: 3, name: 'Closed', color: '#4CAF50' },
     { id: 4, name: 'Pending', color: '#7C3AED' },
+    { id: 3, name: 'Closed', color: '#4CAF50' },
 ];
 
 interface TicketsFilterProps {
