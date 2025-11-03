@@ -9,7 +9,7 @@ import { HiOutlinePlusSm } from "react-icons/hi";
 
 import { getAllStatusThunk } from '../../../store/status';
 import { getAllUsersThunk } from '../../../store/session';
-import { assignEmployeeToTicketThunk } from '../../../store/tickets';
+// import { assignEmployeeToTicketThunk } from '../../../store/tickets';
 
 import './TicketCard.scss';
 
