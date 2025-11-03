@@ -7,6 +7,7 @@ const GET_TOTAL_TICKETS_AMOUNT = 'tickets/getTotalTicketsAmount';
 const GET_MY_TICKETS = 'tickets/getMyTickets';
 const GET_TICKET = 'tickets/getTicket';
 const ADD_TICKET = 'tickets/addTicket';
+const ASSIGN_TICKET_TO_USER = 'tickets/assignTicketToUser';
 const UPDATE_TICKET = 'tickets/updateTicket';
 const DELETE_TICKET = 'tickets/deleteTicket';
 const GET_TICKET_BY_HASH = 'tickets/getTicketByHash';
@@ -47,6 +48,11 @@ const getTicket = (ticket) => ({
 const addTicket = (ticket) => ({
     type: ADD_TICKET,
     payload: ticket
+});
+
+const assignTicketToUser = (assignment) => ({
+    type: ASSIGN_TICKET_TO_USER,
+    payload: assignment
 });
 
 const updateTicket = (ticket) => ({
@@ -119,6 +125,15 @@ export const addTicketThunk = (ticket) => async (dispatch) => {
     dispatch(addTicket(newTicket));
 }
 
+export const assignTicketToUserThunk = (ticketId, userId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/tickets/${ticketId}/assignees`, {
+        method: 'POST',
+        body: JSON.stringify({ userId })
+    });
+    const assignment = await res.json();
+    dispatch(assignTicketToUser(assignment));
+};
+
 export const updateTicketThunk = (ticketId, updatedData) => async (dispatch) => {
     const res = await csrfFetch(`/api/tickets/${ticketId}`, {
         method: 'PUT',
@@ -178,6 +193,22 @@ const ticketsReducer = (state = initialState, action) => {
         }
         case ADD_TICKET: {
             return { ...state, myTickets: [...state.myTickets, action.payload] };
+        }
+        
+        case ASSIGN_TICKET_TO_USER: {
+            return {
+                ...state,
+                allTickets: state.allTickets.map(ticket => {
+                    if (ticket.id === action.payload.ticketId) {
+                        return {
+                            ...ticket,
+                            TicketEmployees: [...ticket.TicketEmployees, action.payload]
+                        };
+                    } else {
+                        return ticket;
+                    }
+                })
+            };
         }
         case UPDATE_TICKET: {
             return {

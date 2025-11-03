@@ -70,7 +70,20 @@ router.get('/', requireAuth, async (req, res, next) => {
             where,
             limit: size,
             offset: (page - 1) * size,
-            order: [[sortLabel, sortValue]]
+            order: [[sortLabel, sortValue]],
+            //Include associated TicketEmployees and the user data of every userId assigned to the ticket
+            include: [
+                {
+                    model: TicketEmployee,
+                    attributes: { exclude: ['id', 'createdAt', 'updatedAt', 'ticketId'] },
+                    include: [
+                        {
+                            model: User,
+                            attributes: { exclude: ['username', 'email', 'hashedPassword', 'createdAt', 'updatedAt', 'isActive', 'departmentId'] }
+                        }
+                    ]
+                }
+            ]
         });
 
         let Tickets = [];
@@ -85,8 +98,6 @@ router.get('/', requireAuth, async (req, res, next) => {
 
             Tickets.push(values);
         }
-
-        console.log('SORT:', sortLabel, sortValue);
 
         return res.json(Tickets);
 
@@ -133,6 +144,42 @@ router.get('/track/:hashedId', async (req, res) => {
 
     // If valid, send ticket data for tracking
     res.json(safeTicket);
+});
+
+// Add an Assignee to a Ticket
+router.post('/:id/assignees', requireAuth, async (req, res, next) => {
+    try {
+        const { userId } = req.body;
+
+        // Find the ticket
+        const ticket = await Ticket.findByPk(req.params.id);
+
+        if (!ticket) {
+            return res.status(404).json({ message: 'Ticket not found' });
+        }
+
+        // Check if the user is already assigned
+        const existingAssignment = await TicketEmployee.findOne({
+            where: {
+                ticketId: ticket.id,
+                userId
+            }
+        });
+
+        if (existingAssignment) {
+            return res.status(400).json({ message: 'User is already assigned to this ticket' });
+        }
+
+        // Assign the user to the ticket
+        await TicketEmployee.create({
+            ticketId: ticket.id,
+            userId
+        });
+
+        res.status(201).json({ message: 'User assigned to ticket successfully' });
+    } catch (error) {
+        next(error);
+    }
 });
 
 // Get Tickets created by Current User

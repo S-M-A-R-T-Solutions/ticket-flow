@@ -52,8 +52,6 @@ export default function TicketsFilter({
         setSelectedClientLocal(selectedClient || '');
     }, [selectedClient]);
 
-    console.log("STATUS IN FILTER", status);
-
     return (
         <div className="tickets-filter-wrapper">
             <div className="tickets-filter">

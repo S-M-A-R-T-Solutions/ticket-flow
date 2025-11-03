@@ -8,10 +8,6 @@ import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 
 import { getAllStatusThunk } from '../../../store/status';
 
-// import ConfirmDeleteTicket from "../../ConfirmDeleteTicket";
-// import OpenModalMenuItem from '../../Navigation/OpenModalMenuItem';
-// import { FaTrash } from 'react-icons/fa';
-
 import './TicketCard.scss';
 
 function formatDate(dateString: string) {
@@ -45,6 +41,8 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
     const user = useSelector((state: any) => state.session.user);
     const status = useSelector((state: any) => state.status);
 
+    const ticketAssignees = ticket.TicketEmployees.map((te: any) => te.User);
+
     useEffect(() => {
         // dispatch(getAllStatusThunk(ticket.statusId) as any);
         dispatch(getAllStatusThunk() as any);
@@ -57,6 +55,8 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
     const handleDeleteClick = (e: Event) => {
         e.stopPropagation();
     };
+
+    console.log("TICKET ASSIGNEES", ticketAssignees);
 
     return (
         <div className="ticket-card-wrapper">
@@ -91,7 +91,18 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
 
                 <PerforatedZone />
 
-                <div className='ticket-description'>{ticket.description}</div>
+                <div className='ticket-bottom'>
+                    <div className='ticket-description'>{ticket.description}</div>
+                    {ticket.TicketEmployees && ticket.TicketEmployees.length > 0 && (
+                        <div className='ticket-assignees'>
+                            {ticket.TicketEmployees.map((employee: any) => (
+                                <div key={employee.id} className='ticket-assignee'>
+                                    <img src={employee.User.profilePicUrl || '/default-profile.png'} alt={`${employee.User.firstName[0]} ${employee.User.lastName[0]}`} title={`${employee.User.firstName} ${employee.User.lastName}`} />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
             </NavLink>
 
