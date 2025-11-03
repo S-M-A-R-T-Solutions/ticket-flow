@@ -1,9 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 
-import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
+import { HiSortAscending, HiSortDescending, HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import { FaAngleDown } from "react-icons/fa6";
-
 import { LuTicketPlus } from "react-icons/lu";
 
 import OpenModalMenuItem from '../Navigation/OpenModalMenuItem';
@@ -40,7 +39,6 @@ export default function Tickets() {
     const TICKETS_PER_PAGE = 10;
 
     // Eliminado el estado innecesario para el debounce
-
     useEffect(() => {
     const handler = setTimeout(() => {
         dispatch(getAllTicketsThunk(page, TICKETS_PER_PAGE, {
@@ -144,13 +142,13 @@ export default function Tickets() {
                     <div className='sorting-button' onClick={handleSortChange}>
                         {sortOption.description === 'Newest First' && (
                             <>
-                                <HiOutlineChevronRight />
+                                <HiSortDescending />
                                 <p>Newest First</p>
                             </>
                         )}
                         {sortOption.description === 'Oldest First' && (
                             <>
-                                <HiOutlineChevronLeft />
+                                <HiSortAscending />
                                 <p>Oldest First</p>
                             </>
                         )}

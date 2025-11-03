@@ -17,6 +17,38 @@
     padding-right: 20px;
 }
 
+.tickets-header-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.sorting-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background-color: transparent;
+    border: 1px solid var(--tiffany-blue);
+    color: var(--tiffany-blue);
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 5px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(29, 161, 242, 0.1);
+        color: var(--text-color);
+    }
+
+    svg {
+        font-size: 16px;
+    }
+}
+
 .tickets-section-header .spacer {
     flex: 1 1 auto;
 }
