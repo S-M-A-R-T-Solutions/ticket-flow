@@ -42,18 +42,16 @@ export default function Tickets() {
     // Eliminado el estado innecesario para el debounce
 
     useEffect(() => {
-        const handler = setTimeout(() => {
-            dispatch(getAllTicketsThunk(page, TICKETS_PER_PAGE, {
-                statusList: selectedStatus,
-                client: selectedClient,
-                search: searchFilter
-            }));
-            dispatch(getTotalTicketsAmountThunk());
-        }, 1000);
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [selectedStatus, selectedClient, searchFilter, page, dispatch]);
+    const handler = setTimeout(() => {
+        dispatch(getAllTicketsThunk(page, TICKETS_PER_PAGE, {
+            statusList: selectedStatus,
+            client: selectedClient,
+            search: searchFilter
+        }, sortOption.label, sortOption.value));
+        dispatch(getTotalTicketsAmountThunk());
+    }, 500);
+    return () => clearTimeout(handler);
+}, [page, selectedStatus, selectedClient, searchFilter, sortOption, dispatch]);
 
     const toggleStatus = (status) => {
         if (selectedStatus.includes(status)) {
@@ -72,12 +70,16 @@ export default function Tickets() {
 
     useEffect(() => {
         dispatch(getTotalTicketsAmountThunk());
-        dispatch(getAllTicketsThunk(page, TICKETS_PER_PAGE));
+        dispatch(getAllTicketsThunk(page, TICKETS_PER_PAGE, {
+            statusList: selectedStatus,
+            client: selectedClient,
+            search: searchFilter
+        }, sortOption.label, sortOption.value));
         dispatch(getMyTicketsThunk());
         setDeleteTicketChecker(false);
         setTicketsChecker(false);
 
-    }, [dispatch, page, ticketsChecker, deleteTicketChecker]);
+    }, [dispatch, page, ticketsChecker, deleteTicketChecker, sortOption, selectedStatus, selectedClient, searchFilter]);
 
     const lastPage = Math.ceil(totalTickets / TICKETS_PER_PAGE);
 

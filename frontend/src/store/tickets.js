@@ -65,8 +65,8 @@ const addNoteToTicket = (note) => ({
 });
 
 //THUNKS
-export const getAllTicketsThunk = (page, size, filters = null) => async (dispatch) => {
-    let query = `/api/tickets?page=${page}&size=${size}`;
+export const getAllTicketsThunk = (page, size, filters = null, sortLabel, sortValue) => async (dispatch) => {
+    let query = `/api/tickets?page=${page}&size=${size}&sort=${sortLabel}&value=${sortValue }`;
 
     if (filters) {
         const { statusList, client, search } = filters;

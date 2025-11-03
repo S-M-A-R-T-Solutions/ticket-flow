@@ -16,7 +16,9 @@ module.exports = {
         "clientId": 28,
         "description": "The office network is not working, can't connect to the internet.",
         "statusId": 1,
-        hashedId: generateAlphanumericId(10)
+        hashedId: generateAlphanumericId(10),
+        "createdAt": "2021-05-20 08:30:00",
+        "updatedAt": "2021-05-20 08:30:00"
       },
       {
         "title": "Slow Computer Performance",
@@ -33,7 +35,9 @@ module.exports = {
         "description": "I'm having trouble setting up my email on Outlook. I tried to follow the instructions but it's not working. I'm having trouble setting up my email on Outlook. I tried to follow the instructions but it's not working.",
         "checkIn": "2021-06-01 10:00:00",
         "statusId": 2,
-        hashedId: generateAlphanumericId(10)
+        hashedId: generateAlphanumericId(10),
+        "createdAt": "2021-06-01 10:00:00",
+        "updatedAt": "2021-06-01 10:00:00"
       },
       {
         "title": "Keyboard Not Responding",

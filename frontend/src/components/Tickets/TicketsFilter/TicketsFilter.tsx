@@ -58,18 +58,18 @@ export default function TicketsFilter({
         <div className="tickets-filter-wrapper">
             <div className="tickets-filter">
                 <div className="filter-block status-filter">
-                    <small className="title">Status</small>
-                    
                     <div className='status-list-status-list'>
                         {STATUS && STATUS.map((stat: any) => (
-                            <div key={stat.id} onClick={() => toggleStatus(stat.id)}>
-                                <FaTicket className={`status-icon${selectedStatus.includes(stat.id) ? 'hovered' : ''}`} style={{ color: selectedStatus.includes(stat.id) ? stat.color : `${stat.color}A1`, fontSize: "64px" }} />
+                            <div className='status-ticket' key={stat.id} onClick={() => toggleStatus(stat.id)}>
+                                <FaTicket 
+                                    className={`status-icon${selectedStatus.includes(stat.id) ? 'hovered' : ''}`} 
+                                    style={{ color: selectedStatus.includes(stat.id) ? stat.color : `${stat.color}A1`, fontSize: "64px" }} 
+                                    />
+                                <span className={`status-name${selectedStatus.includes(stat.id) ? ' selected' : ''}`}>{stat.name}</span>
                             </div>
                         ))}
                     </div>
                 </div>
-
-                {/* <div className="divider"></div> */}
 
                 <div className="filter-block client-filter">
                     <small className="title">Client</small>

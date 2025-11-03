@@ -22,6 +22,8 @@ router.get('/', requireAuth, async (req, res, next) => {
         const page = parseInt(req.query.page) || null;
         const size = parseInt(req.query.size) || null;
         const today = req.query.today ? req.query.today === 'true' : undefined;
+        const sortLabel = req.query.sort || 'createdAt';
+        const sortValue = req.query.value || 'ASC';
 
         const where = {};
 
@@ -68,8 +70,7 @@ router.get('/', requireAuth, async (req, res, next) => {
             where,
             limit: size,
             offset: (page - 1) * size,
-            //Show newest tickets first
-            order: [['createdAt', 'DESC']]
+            order: [[sortLabel, sortValue]]
         });
 
         let Tickets = [];
@@ -84,6 +85,8 @@ router.get('/', requireAuth, async (req, res, next) => {
 
             Tickets.push(values);
         }
+
+        console.log('SORT:', sortLabel, sortValue);
 
         return res.json(Tickets);
 
@@ -126,6 +129,7 @@ router.get('/track/:hashedId', async (req, res) => {
         // Parts,
         StatusInfo
     }
+
 
     // If valid, send ticket data for tracking
     res.json(safeTicket);
