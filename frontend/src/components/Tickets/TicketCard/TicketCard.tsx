@@ -1,15 +1,22 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState, useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-
+import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 import { HiOutlinePlusSm } from "react-icons/hi";
+import { FiX } from "react-icons/fi";
 
 import { getAllStatusThunk } from '../../../store/status';
 import { getAllUsersThunk } from '../../../store/session';
+<<<<<<< HEAD
 // import { assignEmployeeToTicketThunk } from '../../../store/tickets';
+=======
+import {
+    assignTicketToUserThunk,
+    unassignTicketFromUserThunk
+} from '../../../store/tickets';
+>>>>>>> feature-tickets-filtering
 
 import './TicketCard.scss';
 
@@ -39,7 +46,7 @@ function PerforatedZone() {
     );
 }
 
-export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
+export default function TicketCard({ ticket, setDeleteTicketChecker }: TicketCardProps) {
     const dispatch = useDispatch();
     const ulRef = useRef<HTMLUListElement>(null);
 
@@ -58,14 +65,12 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
 
     useEffect(() => {
         if (!showAssignDropdown) return;
-
         const closeMenu = (e: any) => {
             if (ulRef.current && !ulRef.current.contains(e.target)) {
                 setShowAssignDropdown(false);
             }
-        }
+        };
         document.addEventListener("click", closeMenu);
-
         return () => document.removeEventListener("click", closeMenu);
     }, [showAssignDropdown]);
 
@@ -73,34 +78,27 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
 
     const ticketStatus = ticket.statusId;
 
-    const thisStatus = status.allStatus?.find((status: any) => status.id === ticket.statusId);
-
-    const handleDeleteClick = (e: Event) => {
-        e.stopPropagation();
-    };
-
     const toggleMenu = (e: any) => {
         e.preventDefault();
-        e.stopPropagation(); // prevent immediate close
+        e.stopPropagation();
         setShowAssignDropdown(!showAssignDropdown);
     };
 
     return (
         <div className="ticket-card-wrapper">
-            <NavLink to={"/tickets/" + ticket.id} className={`ticket-card-new status-${ticketStatus}`}>
+            <NavLink to={`/tickets/${ticket.id}`} className={`ticket-card-new status-${ticketStatus}`}>
                 <div className='ticket-header'>
                     <div className="ticket-title">{ticket.title}</div>
-                    {/* Add relative time using moment */}
-                    <div
-                        className="ticket-date"
-                    >
+                    <div className="ticket-date">
                         {moment(ticket.createdAt).fromNow()}
                     </div>
                 </div>
 
-                {typeof (ticket.createdBy) !== "number" && (<div className='ticket-author'>
-                    Created by: <strong>{ticket.createdBy.firstName}</strong>
-                </div>)}
+                {typeof (ticket.createdBy) !== "number" && (
+                    <div className='ticket-author'>
+                        Created by: <strong>{ticket.createdBy.firstName}</strong>
+                    </div>
+                )}
 
                 {ticket.clientId.companyName !== '' ? (
                     <div className='client-corporate'>
@@ -108,12 +106,10 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                         {ticket.clientId.companyName}
                     </div>
                 ) : (
-                    <>
-                        <div className='client-individual'>
-                            <BsFillPersonFill />
-                            {ticket.clientId.firstName} {ticket.clientId.lastName}
-                        </div>
-                    </>
+                    <div className='client-individual'>
+                        <BsFillPersonFill />
+                        {ticket.clientId.firstName} {ticket.clientId.lastName}
+                    </div>
                 )}
 
                 <PerforatedZone />
@@ -130,14 +126,23 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                                 <div className='assign-employee-button'>
                                     <HiOutlinePlusSm />
                                 </div>
-                                {ticket.TicketEmployees.length < 3 ? (ticket.TicketEmployees.map((employee: any) => (
-                                    <div key={employee.id} className='ticket-assignee'>
-                                        <img src={employee.User.profilePicUrl || '/default-profile.png'} alt={`${employee.User.firstName[0]} ${employee.User.lastName[0]}`} title={`${employee.User.firstName} ${employee.User.lastName}`} />
-                                    </div>
-                                ))) : (
+                                {ticket.TicketEmployees.length < 3 ? (
+                                    ticket.TicketEmployees.map((employee: any) => (
+                                        <div key={employee.id} className='ticket-assignee'>
+                                            <img
+                                                src={employee.User?.profilePicUrl || '/default-profile.png'}
+                                                title={`${employee.User?.firstName} ${employee.User?.lastName}`}
+                                            />
+                                        </div>
+                                    ))
+                                ) : (
                                     <>
                                         <div className='ticket-assignee'>
-                                            <img src={ticket.TicketEmployees[0].User.profilePicUrl || '/default-profile.png'} alt={`${ticket.TicketEmployees[0].User.firstName[0]} ${ticket.TicketEmployees[0].User.lastName[0]}`} title={`${ticket.TicketEmployees[0].User.firstName} ${ticket.TicketEmployees[0].User.lastName}`} />
+                                            <img
+                                                src={ticket.TicketEmployees[0].User?.profilePicUrl || '/default-profile.png'}
+                                                alt={`${ticket.TicketEmployees[0].User?.firstName[0]} ${ticket.TicketEmployees[0].User?.lastName[0]}`}
+                                                title={`${ticket.TicketEmployees[0].User?.firstName} ${ticket.TicketEmployees[0].User?.lastName}`}
+                                            />
                                         </div>
                                         <div className='ticket-assignee-more'>
                                             + {ticket.TicketEmployees.length - 1}
@@ -146,7 +151,11 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                                 )}
                             </div>
                         ) : (
-                            <div className='ticket-assignees'>
+                            <div
+                                className='ticket-assignees'
+                                style={{ zIndex: 5 }}
+                                onClick={toggleMenu}
+                            >
                                 <div className='assign-employee-button'>
                                     <HiOutlinePlusSm />
                                 </div>
@@ -158,41 +167,46 @@ export default function ({ ticket, setDeleteTicketChecker }: TicketCardProps) {
                     </>
                     {showAssignDropdown && (
                         <ul className={ulClassName} ref={ulRef}>
-                            {users && users.map((user: any) => (
-                                <li
-                                    key={user.id}
-                                    className="assign-employee-option"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        dispatch(assignEmployeeToTicketThunk(ticket.id, user.id) as any);
-                                        setShowAssignDropdown(false);
-                                    }}
-                                >
-                                    <img src={user.profilePicUrl || '/default-profile.png'} alt={`${user.firstName[0]} ${user.lastName[0]}`} />
-                                    <span>{user.firstName} {user.lastName}</span>
-                                </li>
-                            ))}
+                            {users && users.map((user: any) => {
+                                const isAssigned = ticketAssignees.some(
+                                    (assignee: any) => assignee.id === user.id
+                                );
+
+                                return (
+                                    <li
+                                        key={user.id}
+                                        className={`assign-employee-option ${isAssigned ? 'assigned' : ''}`}
+                                        title={isAssigned ? "Click to unassign" : "Click to assign"}
+                                        onClick={async (e) => {
+                                            e.preventDefault();
+                                            if (isAssigned) {
+                                                await dispatch(unassignTicketFromUserThunk(ticket.id, user.id) as any);
+                                            } else {
+                                                await dispatch(assignTicketToUserThunk(ticket.id, user.id) as any);
+                                            }
+                                            setShowAssignDropdown(false);
+                                            setTimeout(() => {
+                                                dispatch(getAllUsersThunk() as any);
+                                                setDeleteTicketChecker((prev: boolean) => !prev);
+                                            }, 200);
+                                        }}
+                                    >
+                                        <img
+                                            src={
+                                                user.profilePicUrl ||
+                                                'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
+                                            }
+                                            alt={`${user.firstName[0]} ${user.lastName[0]}`}
+                                        />
+                                        <span>{user.firstName} {user.lastName}</span>
+                                        {isAssigned && <span className="assigned-check"><FiX /></span>}
+                                    </li>
+                                );
+                            })}
                         </ul>
                     )}
                 </div>
-
             </NavLink>
-
-            {/* {user.id === ticket.createdBy.id && (
-                <div className="delete-ticket-wrapper">
-                    <OpenModalMenuItem
-                        modalComponent={
-                            <ConfirmDeleteTicket ticket={ticket} setDeleteTicketChecker={setDeleteTicketChecker} />
-                        }
-                        onModalClose={() => { }}
-
-                    >
-                        <button className="btn btn-delete-ticket">
-                            <FaTrash className="btn-icon-icon" />
-                        </button>
-                    </OpenModalMenuItem>
-                </div>
-            )} */}
         </div>
     );
 }
