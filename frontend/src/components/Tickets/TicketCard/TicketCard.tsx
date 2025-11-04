@@ -9,14 +9,10 @@ import { FiX } from "react-icons/fi";
 
 import { getAllStatusThunk } from '../../../store/status';
 import { getAllUsersThunk } from '../../../store/session';
-<<<<<<< HEAD
-// import { assignEmployeeToTicketThunk } from '../../../store/tickets';
-=======
 import {
     assignTicketToUserThunk,
     unassignTicketFromUserThunk
 } from '../../../store/tickets';
->>>>>>> feature-tickets-filtering
 
 import './TicketCard.scss';
 
