@@ -45,7 +45,7 @@ function Layout() {
 
             <div className="main-panel">
               <header className="main-header">
-                <TopBar />
+                {/* <TopBar /> */}
               </header>
 
               <main className='main-zone'>

@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import ThemeSwitch from '../../ThemeSwitch';
 
 import {
     HiOutlineUserGroup,
@@ -9,6 +10,7 @@ import {
 } from "react-icons/hi";
 
 import './SideBar.scss';
+import ProfileControl from '../ProfileControl';
 
 export default function SideBar() {
     return (
@@ -49,6 +51,8 @@ export default function SideBar() {
                     </NavLink>
                 </li>
             </ul>
+            <ThemeSwitch />
+            <ProfileControl />
         </nav >
     );
 }
