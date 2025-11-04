@@ -34,6 +34,10 @@
 }
 
 .sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     .brand {
         display: flex;
         align-items: center;
@@ -58,6 +62,9 @@
         list-style: none;
         padding: 0 0 0 24px;
         margin-top: 24px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
     }
 
     .nav-item {

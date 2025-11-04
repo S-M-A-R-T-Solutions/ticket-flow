@@ -1,32 +1,46 @@
 const express = require('express');
 const { requireAuth } = require('@utils/auth');
 
+const { Op } = require('sequelize');
+const { sequelize } = require('@db/models');
+
 const { Client, Ticket, Location, LocationPhoneNumber, locationEmail } = require('@db/models');
 const { singleFileUpload, singleMulterUpload } = require('@backend/awsS3');
-const { where } = require('sequelize');
 
 const router = express.Router();
 
 //Get All Clients
 router.get('/', requireAuth, async (req, res, next) => {
     try {
-        const page = parseInt(req.query.page) || null;
-        const size = parseInt(req.query.size) || null;
+        const page = parseInt(req.query.page);
+        const size = parseInt(req.query.size);
+        const search = req.query.search || '';
 
         const where = {};
 
-        const clients = await Client.findAll({
-            where,
-            limit: size,
-            offset: (page - 1) * size
-        });
+        if (search && search.trim() !== '') {
+            const dialect = sequelize.getDialect();
+            const searchOp = dialect === 'sqlite' ? Op.like : Op.iLike;
+
+            where[Op.or] = [
+                { firstName: { [searchOp]: `%${search}%` } },
+                { lastName: { [searchOp]: `%${search}%` } },
+                { companyName: { [searchOp]: `%${search}%` } }
+            ];
+        }
+
+        const options = {};
+        if (!isNaN(size)) options.limit = size;
+        if (!isNaN(page)) options.offset = (page - 1) * size;
+
+        const clients = await Client.findAll({ where, ...options });
 
         return res.json(clients);
-
     } catch (error) {
         next(error);
     }
 });
+
 
 //Get a Client by clientId
 router.get('/:id', requireAuth, async (req, res, next) => {
@@ -141,13 +155,13 @@ router.post('/', requireAuth, singleMulterUpload('image'), async (req, res, next
 router.post('/:id/locations', requireAuth, singleMulterUpload('image'), async (req, res, next) => {
     try {
         const { name, addressLine1, addressLine2, city, state, zipcode } = req.body;
-        
+
         const client = await Client.findByPk(req.params.id);
-        
+
         if (!client) {
             return res.status(404).json({ message: 'Client not found' });
         }
-        
+
         const profilePicUrl = req.file
             ? await singleFileUpload({ file: req.file, public: true })
             : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';

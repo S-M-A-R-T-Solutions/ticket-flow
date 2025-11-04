@@ -1,33 +1,89 @@
 .assign-to-client {
     display: flex;
     flex-direction: column;
-    width: 900px;
+    justify-content: space-between;
+    align-items: center;
+    width: 750px;
+    height: 650px;
     background-color: var(--surface-color);
     color: var(--text-color);
     border-radius: 10px;
-    padding: 20px;
+    padding: 30px;
 
-    h3 {
+    h1 {
         margin-bottom: 20px;
-        font-size: 1.4rem;
-        text-align: sta;
-        font-weight: 600;
+        text-align: center;
     }
 
     .assign-to-client-wrapper {
         display: flex;
+        flex: 1;
         gap: 25px;
         margin-bottom: 20px;
 
         .assign-to-client-left {
             width: 50%;
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
+
+            .filter-block {
+                width: 100%;
+                display: flex;
+                margin-bottom: 20px;
+                flex-direction: column;
+                align-content: space-between;
+                justify-content: start;
+                gap: 4px;
+                position: sticky;
+                top: 0;
+                background-color: var(--surface-color);
+                z-index: 1;
+            }
+
+            .title {
+                font-size: 12px;
+                opacity: 0.6;
+            }
+
+            .search-filter-wrapper {
+                position: relative;
+
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+
+                overflow: hidden;
+
+                .search-filter-icon {
+                    position: absolute;
+                    top: 50%;
+                    left: 12px;
+                    transform: translateY(-50%);
+                    z-index: 1;
+
+                    pointer-events: none;
+                    user-select: none;
+                }
+
+                input {
+                    border: none;
+                    outline: none;
+                    background: none;
+
+                    padding-left: 36px;
+
+                    color: var(--text-color);
+                }
+            }
 
             .clients-list {
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
+                padding: 10px;
             }
 
             .client-card-selectable {
@@ -89,7 +145,8 @@
             width: 50%;
             display: flex;
             flex-direction: column;
-            align-items: start;
+            align-items: center;
+            justify-content: center;
             gap: 15px;
 
             h2 {
@@ -184,8 +241,8 @@
     }
 
     button {
-        // width: 50%;
-        padding: 6px 12px;
+        width: fit-content;
+        padding: 6px 20px;
         border-radius: 8px;
         border: none;
         cursor: pointer;

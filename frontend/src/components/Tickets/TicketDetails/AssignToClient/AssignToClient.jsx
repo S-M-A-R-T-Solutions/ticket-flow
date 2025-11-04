@@ -5,6 +5,8 @@ import { updateTicketThunk } from '../../../../store/tickets';
 import { useModal } from '../../../../context/Modal';
 import { formatPhoneNumber } from '../../../../utils/helperFunctions';
 
+import { LuSearch } from "react-icons/lu";
+
 import './AssignToClient.scss';
 
 export default function AssignToClient({ setAssignToClient }) {
@@ -18,10 +20,11 @@ export default function AssignToClient({ setAssignToClient }) {
     const [selectedClient, setSelectedClient] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [phoneName, setPhoneName] = useState('');
+    const [searchFilter, setSearchFilter] = useState('');
 
     useEffect(() => {
-        dispatch(getAllClientsThunk());
-    }, [dispatch]);
+        dispatch(getAllClientsThunk(null, null, searchFilter));
+    }, [dispatch, searchFilter]);
 
     useEffect(() => {
         if (selectedClient) {
@@ -61,9 +64,15 @@ export default function AssignToClient({ setAssignToClient }) {
 
     return (
         <div className="assign-to-client">
-            <h3>Assign Ticket to Client</h3>
+            <h1>Assign Ticket to Client</h1>
             <div className="assign-to-client-wrapper">
                 <div className="assign-to-client-left">
+                    <div className="filter-block search-filter">
+                        <div className="search-filter-wrapper">
+                            <LuSearch className="search-filter-icon" />
+                            <input type="text" placeholder="Title, description, etc..." className="search-tickets-filter-input" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)} />
+                        </div>
+                    </div>
                     {clients && clients.length > 0 ? (
                         <div className="clients-list">
                             {clients.map(client => (
@@ -127,7 +136,7 @@ export default function AssignToClient({ setAssignToClient }) {
                     )}
                 </div>
             </div>
-            <button onClick={handleAssign} disabled={!selectedClient || !selectedLocation || !phoneName}>Assign</button>
+            <button onClick={handleAssign} disabled={!selectedClient || !selectedLocation || !phoneName}>Assign Ticket to Client</button>
         </div>
     );
 }

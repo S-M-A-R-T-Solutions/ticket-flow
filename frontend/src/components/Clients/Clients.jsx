@@ -26,11 +26,11 @@ export default function Clients() {
     const [clientsAddChecker, setClientsAddChecker] = useState(false);
     const [editClientChecker, setEditClientChecker] = useState(false);
 
-    const CLIENTS_PER_PAGE = 8;
+    const CLIENTS_PER_PAGE = 10;
 
     useEffect(() => {
         dispatch(getTotalClientsAmountThunk());
-        dispatch(getAllClientsThunk(page, CLIENTS_PER_PAGE));
+        dispatch(getAllClientsThunk(page, CLIENTS_PER_PAGE, null));
         dispatch(getMyTicketsThunk());
         dispatch(getAllStatusThunk());
         setDeleteClientChecker(false);
@@ -95,6 +95,8 @@ export default function Clients() {
                     </div>
                 </OpenModalMenuItem>
             </div>
+
+            <div className=""></div>
 
             <div className="clients-list-container">
                 {allClients.map((client) => (

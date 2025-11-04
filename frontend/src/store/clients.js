@@ -96,8 +96,13 @@ const deleteEmailFromALocation = (email) => ({
 });
 
 //Thunks
-export const getAllClientsThunk = (page, size) => async (dispatch) => {
-    const res = await csrfFetch(`/api/clients?page=${page}&size=${size}`);
+export const getAllClientsThunk = (page = 1, size = 10, searchFilter = '') => async (dispatch) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page);
+    if (size) params.append('size', size);
+    if (searchFilter) params.append('search', searchFilter);
+
+    const res = await csrfFetch(`/api/clients?${params.toString()}`);
     const clients = await res.json();
     dispatch(getAllClients(clients));
 };

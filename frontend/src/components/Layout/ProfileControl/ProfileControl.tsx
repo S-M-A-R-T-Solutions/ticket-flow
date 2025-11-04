@@ -41,9 +41,9 @@ export default function ProfileControl() {
                 <span className="username">{user.username}</span>
             </div>
 
-            <button className="btn btn-icon btn-logout" title="Logout" onClick={(e: any) => handleLogout(e)}>
+            <div className="btn-logout" onClick={(e: any) => handleLogout(e)}>
                 <TbLogout className="btn-icon-icon" />
-            </button>
+            </div>
 
         </div >
     );
