@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, TwilioCall, Location, locationEmail, LocationPhoneNumber } = require('@db/models');
+const { StockMovement, Ticket, TicketPart, Status, Client, User, Part, Note, TicketEmployee, TwilioCall, TwilioRecording, Location, locationEmail, LocationPhoneNumber } = require('@db/models');
 
 const generateAlphanumericId = require('@utils/randomGenerator');
 
@@ -312,6 +312,12 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             }
         });
 
+        const Recordings = await TwilioRecording.findAll({
+            where: {
+                callId: CallInfo[0]?.id || null
+            }
+        });
+
         const safeTicket = {
             id: ticket.id,
             title: ticket.title,
@@ -325,7 +331,8 @@ router.get('/:id', requireAuth, async (req, res, next) => {
             Parts,
             Notes,
             StatusInfo,
-            CallInfo
+            CallInfo,
+            Recordings
         }
 
         return res.json(safeTicket);
