@@ -5,6 +5,7 @@ import { getAllStatusThunk } from '../../../store/status';
 import { getAllClientsThunk } from '../../../store/clients';
 
 import { LuSearch } from "react-icons/lu";
+import { MdFilterListOff } from "react-icons/md";
 import { FaCheck, FaTicket } from "react-icons/fa6";
 
 import './TicketsFilter.scss';
@@ -55,23 +56,14 @@ export default function TicketsFilter({
     return (
         <div className="tickets-filter-wrapper">
             <div className="tickets-filter">
-                <div className="filter-block status-filter">
-                    <div className='status-list-status-list'>
-                        {STATUS && STATUS.map((stat: any) => (
-                            <div className='status-ticket' key={stat.id} onClick={() => toggleStatus(stat.id)}>
-                                <FaTicket 
-                                    className={`status-icon${selectedStatus.includes(stat.id) ? 'hovered' : ''}`} 
-                                    style={{ color: selectedStatus.includes(stat.id) ? stat.color : `${stat.color}A1`, fontSize: "64px" }} 
-                                    />
-                                <span className={`status-name${selectedStatus.includes(stat.id) ? ' selected' : ''}`}>{stat.name}</span>
-                            </div>
-                        ))}
+                <div className="search-filter">
+                    <div className="search-filter-wrapper">
+                        <LuSearch className="search-filter-icon" />
+                        <input type="text" placeholder="Title, description, etc..." className="search-tickets-filter-input" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)} />
                     </div>
                 </div>
-
-                <div className="filter-block client-filter">
-                    <small className="title">Client</small>
-
+                
+                <div className="client-filter">
                     <select name="client_select" id="client-select-filter" className="client-select" value={selectedClientLocal} onChange={(e) => {
                         const value = e.target.value;
                         if (value === "") {
@@ -80,32 +72,36 @@ export default function TicketsFilter({
                             setSelectedClient(Number(value));
                         }
                     }}>
-                        <option value="">All</option>
-
+                        <option value="">Select Client</option>
                         {clients && clients.map((client: any) => (
                             client.companyName ?
                                 <option key={client.id} value={client.id}>{client.companyName}</option> :
                                 <option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>
                         ))}
                     </select>
-
                 </div>
-
-                {/* <div className="divider"></div> */}
-
-                <div className="filter-block search-filter">
-                    <small className="title">Search</small>
-
-                    <div className="search-filter-wrapper">
-                        <LuSearch className="search-filter-icon" />
-                        <input type="text" placeholder="Title, description, etc..." className="search-tickets-filter-input" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)} />
+                
+                <div className="status-filter">
+                    <div className='status-list-status-list'>
+                        {STATUS && STATUS.map((stat: any) => (
+                            <div className='status-ticket' key={stat.id} onClick={() => toggleStatus(stat.id)}>
+                                <div className={`status-icon${selectedStatus.includes(stat.id) ? '-hovered' : ''}-${stat.id}`}>
+                                    <FaTicket />
+                                </div>
+                                {/* <span className={`status-name${selectedStatus.includes(stat.id) ? '-selected' : ''}`}>{stat.name}</span> */}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* <div className="divider"></div> */}
-
                 <div className="actions">
-                    <button className="btn btn-clear-filters" onClick={clearFilters}>Clear Filters</button>
+                    <div
+                        className="btn-clear-filters"
+                        onClick={clearFilters}
+                    >
+                        <MdFilterListOff />
+                        Clear Filters
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,7 +10,7 @@
 
 /* Main Title */
 .my-work-tab h1 {
-    font-size: 24px;
+    font-size: 2rem;
     color: var(--text-color);
     margin-bottom: 15px;
     text-align: left;
@@ -20,9 +20,6 @@
     /* padding: 24px; */
     margin-bottom: 24px;
 
-    background-color: var(--surface-color);
-
-    border-radius: 16px;
 }
 
 /* Ticket List Container */
