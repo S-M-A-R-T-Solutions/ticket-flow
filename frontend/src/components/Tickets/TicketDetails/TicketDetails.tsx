@@ -22,6 +22,7 @@ import { getAllPartsThunk } from "../../../store/parts";
 import TicketPartCard from "../TicketPartCard";
 
 import TicketQR from "./TicketQR";
+import AudioPlayer from "./AudioPlayer";
 import TicketEmployees from "./TicketEmployees";
 import TicketNoteCard from "../TicketNoteCard/TicketNoteCard";
 
@@ -286,7 +287,9 @@ export default function TicketDetails() {
                 </div>
 
                 <div className="share-container">
-                    <TicketQR ticketHashedId={ticket.hashedId} />
+                    {ticket.Recordings?.length > 0 && (
+                        <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl} />
+                    )}
                 </div>
             </div>
 
