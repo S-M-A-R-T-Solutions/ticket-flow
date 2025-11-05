@@ -64,7 +64,6 @@ export default function LocationCard({ location, setLocationChecker, locationInd
                         {location.addressLine1} {location.addressLine2 && `, ${location.addressLine2}`} {location.city}, {location.state} {location.zipcode}
                     </a>
                 </div>
-                <div className="divider"></div>
             </div>
         </div>
     );
