@@ -62,20 +62,26 @@ export default function AssignToClient({ setAssignToClient }) {
         closeModal();
     };
 
+    const sortingClients = clients?.sort((a, b) => {
+        const nameA = a.companyName ? a.companyName.toLowerCase() : (a.firstName + ' ' + a.lastName).toLowerCase();
+        const nameB = b.companyName ? b.companyName.toLowerCase() : (b.firstName + ' ' + b.lastName).toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+
     return (
         <div className="assign-to-client">
             <h1>Assign Ticket to Client</h1>
             <div className="assign-to-client-wrapper">
                 <div className="assign-to-client-left">
-                    <div className="filter-block search-filter">
+                    <div className="filter-block">
                         <div className="search-filter-wrapper">
                             <LuSearch className="search-filter-icon" />
                             <input type="text" placeholder="Title, description, etc..." className="search-tickets-filter-input" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)} />
                         </div>
                     </div>
-                    {clients && clients.length > 0 ? (
+                    {sortingClients && sortingClients.length > 0 ? (
                         <div className="clients-list">
-                            {clients.map(client => (
+                            {sortingClients.map(client => (
                                 <div
                                     key={client.id}
                                     className={`client-card-selectable ${selectedClient === client.id ? 'selected' : ''}`}

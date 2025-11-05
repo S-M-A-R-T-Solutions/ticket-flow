@@ -81,6 +81,12 @@ export default function Clients() {
             </section>
         );
 
+        const sortClients = allClients.sort((a, b) => {
+            const nameA = a.companyName ? a.companyName.toLowerCase() : (a.firstName + ' ' + a.lastName).toLowerCase();
+            const nameB = b.companyName ? b.companyName.toLowerCase() : (b.firstName + ' ' + b.lastName).toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
+
     return (
         <section className="clients-tab">
             <div className="clients-tab-header">
@@ -99,7 +105,7 @@ export default function Clients() {
             <div className=""></div>
 
             <div className="clients-list-container">
-                {allClients.map((client) => (
+                {sortClients.map((client) => (
                     <ClientCard key={client.id} client={client} setEditClientChecker={setEditClientChecker} setDeleteClientChecker={setDeleteClientChecker} />
                 ))}
             </div>
