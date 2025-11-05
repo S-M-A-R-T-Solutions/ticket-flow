@@ -42,11 +42,10 @@ function Layout() {
         sessionUser ? (
           <>
             <SideBar />
-
             <div className="main-panel">
-              <header className="main-header">
-                {/* <TopBar /> */}
-              </header>
+              {/* <header className="main-header">
+                <TopBar />
+              </header> */}
 
               <main className='main-zone'>
                 <div className="section-container">

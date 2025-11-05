@@ -25,7 +25,7 @@ export default function MyWork({ myTickets, status }) {
                     {
                         newTickets.length > 0 ? (
                             newTickets.map(ticket => (
-                                <div key={ticket.id} style={{ width: "90%" }}>
+                                <div key={ticket.id} style={{ width: "100%" }}>
                                     <MyWorkTicketCards key={ticket.id} ticket={ticket} />
                                 </div>
                             ))
