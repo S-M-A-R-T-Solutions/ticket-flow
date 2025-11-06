@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useModal } from "../../../context/Modal";
 
+import moment from "moment";
+
 import OpenModalMenuItem from "../../Navigation/OpenModalMenuItem";
 import AddNote from "../../AddNote/AddNote";
 import AssignToClient from "./AssignToClient";
@@ -12,6 +14,7 @@ import { FaPlus, FaPhone } from "react-icons/fa";
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { IoPersonAddOutline } from "react-icons/io5";
+import { MdOutlineCall, MdOutlineDownload } from "react-icons/md";
 
 import OpenModalButton from "../../OpenModalButton";
 
@@ -29,6 +32,7 @@ import TicketNoteCard from "../TicketNoteCard/TicketNoteCard";
 import { formatPhoneNumber } from "../../../utils/helperFunctions";
 
 import './TicketDetails.scss';
+import { FaTicket } from "react-icons/fa6";
 
 export default function TicketDetails() {
     const { closeModal } = useModal();
@@ -165,20 +169,36 @@ export default function TicketDetails() {
         Object.assign(selectedContactInfo, { phoneNumber: ticket.ClientInfo?.phone, phoneType: "Client Phone" });
     }
 
+    const handleDownloadAudio = () => {
+        if (ticket.CallInfo?.length > 0) {
+            const recordingUrl = ticket.CallInfo[0]?.recordingUrl;
+            if (recordingUrl) {
+                const link = document.createElement('a');
+                link.href = recordingUrl;
+                link.download = `ticket_${ticket.id}_recording.mp3`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    };
+
     const locationInfoExists = selectedContactInfo.locationName ? `exists` : "";
 
     return (
-        <section className="app-section ticket-details">
+        <section className="ticket-details">
             <div className="section-header">
-
-                <h1>
-                    {ticket.title}
+                <div className="ticket-title-and-status">
+                    <h1>
+                        {ticket.title}
+                    </h1>
                     <span
                         className="ticket-status"
                         title={ticket.StatusInfo?.description}
                         style={{ backgroundColor: ticket.StatusInfo?.color }}
                         onClick={toggleMenu}
                     >
+                        <FaTicket />
                         {ticket.StatusInfo?.name}
                         <HiOutlineChevronDown className="status-dropdown-icon" />
                     </span>
@@ -191,6 +211,7 @@ export default function TicketDetails() {
                                         value={statusOption.id}
                                         onClick={(e) => handleStatusChange(e)}
                                     >
+                                        <FaTicket />
                                         <span
                                             className="status-color-indicator"
                                             style={{ backgroundColor: statusOption.color }}
@@ -201,92 +222,107 @@ export default function TicketDetails() {
                             ))}
                         </ul>
                     ) : (null)}
-                </h1>
-
-                {ticket.ClientInfo?.id === 28 ? ( //Anonymous Client Case
-                    <div style={{ display: "flex", flexDirection: "row", alignContent: "center", justifyContent: "center", gap: "20px" }}>
-                        <div
-                            className="caller-info"
-                            onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}
-                        >
-                            {/* Search for Caller Number in ticket.CallInfo[0] */}
-                            <div className="phone-button">
-                                <FaPhone />
-                            </div>
-                            <div className="phone-number-and-title">
-                                <span className="phone-number-label">{formatPhoneNumber(ticket.CallInfo[0]?.caller)}</span>
-                            </div>
-                        </div>
-                        <div className="assign-client">
-                            <OpenModalMenuItem
-                                modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
-                                onModalClose={onModalClose}
-                            >
-                                <IoPersonAddOutline className="assign-client-icon" />
-                                Assign Client
-                            </OpenModalMenuItem>
-                        </div>
-                    </div>) : ( // Assigned Client Case
-                    <div style={{ display: "flex", flexDirection: "row", alignContent: "center", justifyContent: "center", gap: "20px", padding: 0 }}>
-                        {ticket.ClientInfo?.companyName === "" ? (
-                            <div className="client">
-                                <div className="client-image">
-                                    {ticket.ClientInfo?.profilePicUrl ?
-                                        <img src={ticket.ClientInfo?.profilePicUrl} alt="Client" /> :
-                                        <BsFillPersonFill />
-                                    }
-                                </div>
-
-                                <div className="client-info">
-                                    <div className="client-name">
-                                        {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
-                                    </div>
-                                </div>
-                            </div>) : (
-
-                            <div className={`client-${clientClassName}`}>
-                                <div className="client-image">
-                                    <BsBuildingsFill />
-                                </div>
-
-                                <div className="client-info">
-                                    <div className="client-name">
-                                        {ticket.ClientInfo?.companyName}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="caller-info-ticket">
-                            <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
-                                <div className={`caller-location-name-${locationInfoExists}`}>
-                                    <span> {selectedContactInfo.locationName} </span>
-                                </div>
-                                <div className="caller-location-phone-number">
-                                    <div className="caller-location-phone-type">
-                                        <span>{selectedContactInfo.phoneType}</span>
-                                    </div>
-                                    <div className="caller-location-phone-number-number">
-                                        <span>{formatPhoneNumber(selectedContactInfo.phoneNumber)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                </div>
             </div>
 
             <div className="ticket-details-container">
                 <div className="ticket-info">
+                    <h2>Ticket Info</h2>
                     <div className="ticket-description">
                         <div className="description-title">Description</div>
                         <div className="description-content">{ticket.description}</div>
                     </div>
-
                     <TicketEmployees author={ticket.CreatedBy} employees={ticket.AssignedEmployees} />
                 </div>
-
                 <div className="share-container">
+                    <div className="ticket-call-info-header">
+                        <h2>Call Info</h2>
+                        <div className="download-audio" onClick={handleDownloadAudio}>
+                            <MdOutlineDownload />
+                        </div>
+                    </div>
+                    <div className="call-time-and-date">
+                        <div className="call-icon">
+                            <MdOutlineCall />
+                        </div>
+                        <div className="call-date">
+                            {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('YYYY-MM-DD') : "N/A"}
+                        </div>
+                        <div className="call-time">
+                            {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"}
+                        </div>
+                        <div className="call-duration">
+                            {ticket.CallInfo?.length > 0 ? moment.duration(ticket.CallInfo[0]?.recordingDuration, "seconds").humanize() : "N/A"}
+                        </div>
+                    </div>
+                    {ticket.ClientInfo?.id === 28 ? ( //Anonymous Client Case
+                        <div className="client-caller-details">
+                            <div
+                                className="caller-info"
+                                onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}
+                            >
+                                {/* Search for Caller Number in ticket.CallInfo[0] */}
+                                <div className="phone-button">
+                                    <FaPhone />
+                                </div>
+                                <div className="phone-number-and-title">
+                                    <span className="phone-number-label">{formatPhoneNumber(ticket.CallInfo[0]?.caller)}</span>
+                                </div>
+                            </div>
+                            <div className="assign-client">
+                                <OpenModalMenuItem
+                                    modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
+                                    onModalClose={onModalClose}
+                                >
+                                    <IoPersonAddOutline className="assign-client-icon" />
+                                    Assign Client
+                                </OpenModalMenuItem>
+                            </div>
+                        </div>) : ( // Assigned Client Case
+                        <div className="client-caller-details">
+                            {ticket.ClientInfo?.companyName === "" ? (
+                                <div className="client">
+                                    <div className="client-image">
+                                        {ticket.ClientInfo?.profilePicUrl ?
+                                            <img src={ticket.ClientInfo?.profilePicUrl} alt="Client" /> :
+                                            <BsFillPersonFill />
+                                        }
+                                    </div>
+                                    <div className="client-info">
+                                        <div className="client-name">
+                                            {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
+                                        </div>
+                                    </div>
+                                </div>) : (
+                                <div className={`client-${clientClassName}`}>
+                                    <div className="client-image">
+                                        <BsBuildingsFill />
+                                    </div>
+                                    <div className="client-info">
+                                        <div className="client-name">
+                                            {ticket.ClientInfo?.companyName}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="caller-info-ticket">
+                                <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                    <div className={`caller-location-name-${locationInfoExists}`}>
+                                        <span> {selectedContactInfo.locationName} </span>
+                                    </div>
+                                    <div className="caller-location-phone-number">
+                                        <div className="caller-location-phone-type">
+                                            <span>{selectedContactInfo.phoneType}</span>
+                                        </div>
+                                        <div className="caller-location-phone-number-number">
+                                            <span>{formatPhoneNumber(selectedContactInfo.phoneNumber)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     {ticket.Recordings?.length > 0 && (
                         <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl} />
                     )}
@@ -297,7 +333,6 @@ export default function TicketDetails() {
                 <div className="notes-container">
                     <div className="notes-header">
                         <div className="notes-title">Notes</div>
-
                         <OpenModalMenuItem
                             modalComponent={<AddNote userId={user.id} ticketId={ticket.id} setNotesChecker={setNoteChecker} />}
                             onModalClose={onModalClose}
@@ -307,7 +342,6 @@ export default function TicketDetails() {
                             </button>
                         </OpenModalMenuItem>
                     </div>
-
                     <div className="notes-list">
                         {
                             notesForTicket.length > 0 ? (
@@ -324,12 +358,10 @@ export default function TicketDetails() {
                 <div className="parts-container">
                     <div className="parts-header">
                         <div className="parts-title">Parts</div>
-
                         <button className="btn btn-icon btn-add-part" title="Add Part to Ticket">
                             <FaPlus className="btn-icon-icon" />
                         </button>
                     </div>
-
                     {ticket.Parts?.length > 0 ?
                         <div className="parts-list">
                             {
