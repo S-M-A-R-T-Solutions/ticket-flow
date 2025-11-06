@@ -1,4 +1,4 @@
-.app-section.ticket-details {
+.ticket-details {
     display: flex;
     width: 100%;
     flex-grow: 1;
@@ -9,31 +9,42 @@
     .section-header {
         flex-direction: column;
         align-items: flex-start;
+        background-color: var(--surface-color);
+        border-radius: 8px;
         gap: 12px;
-
-        h1 {
+    
+        .ticket-title-and-status {
             display: flex;
             align-items: center;
-            font-size: 2rem;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 15px 20px;
+            border-radius: 8px;
+
+            h1 {
+                display: flex;
+                align-items: center;
+                font-size: 2rem;
+                gap: 8px;
+            }
 
             span.ticket-status {
                 display: flex;
                 align-items: center;
                 gap: 4px;
-                padding: 4px 8px;
+                padding: 8px 10px;
                 border-radius: 8px;
                 background-color: var(--surface-color);
-                color: var(--text-color-inverted);
-                font-size: 18px;
+                color: var(--light-white);
+                font-size: 16px;
                 cursor: pointer;
             }
 
             .status-dropdown-menu {
                 position: absolute;
                 padding: 15px 20px;
-                left: 680px;
-                top: 40px;
+                left: 1050px;
+                top: 90px;
                 background-color: var(--surface-color);
                 border-radius: 8px;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -55,6 +66,7 @@
                         width: 100%;
                         border: none;
                         cursor: pointer;
+                        color: var(--light-white);
                         font-size: 14px;
                         border-radius: 6px;
                         transition: background-color 0.2s ease;
@@ -180,14 +192,21 @@
 
 .ticket-details {
     .ticket-details-container {
-        display: grid;
-        grid-template-columns: 1fr 220px;
+        display: flex;
+        flex-direction: row;
         gap: 24px;
+        margin-top: 20px;
     }
 
-    .ticket-info {
+    .ticket-info,
+    .share-container {
         display: flex;
         flex-direction: column;
+        background-color: var(--surface-color);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        width: 50%;
     }
 
     .client {
@@ -363,26 +382,150 @@
     }
 
     .ticket-description {
+        display: flex;
+        flex-direction: column;
+        margin-top: 16px;
+        background-color: var(--background-color);
+        padding: 20px;
+        border-radius: 8px;
+
         .description-title {
-            font-size: 12px;
+            font-size: 14px;
             opacity: 0.7;
             margin-bottom: 4px;
         }
+
+        .description-content {
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 250px;
+            overflow-y: auto;
+        }
     }
 
-    .ticket-qr {
-        display: flex;
-        flex-direction: column;
-        width: 220px;
+    .share-container { 
+        .ticket-call-info-header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
 
-        .qr {
-            padding: 10px;
-            border-radius: 10px;
-            background-color: var(--button-text-color);
+            h2 {
+                margin-bottom: 12px;
+            }
+
+            
         }
 
-        button {
-            width: 100%;
+        .call-time-and-date {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 12px;
+        }
+
+        .client-caller-details {
+            display: flex;
+            flex-direction: row;
+            align-content: center;
+            justify-content: center;
+            background-color: var(--background-color);
+            padding: 20px;
+            border-radius: 8px;
+            gap: 20px;
+            margin-top: 20px;
+
+            .caller-info {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                // padding: 12px 18px;
+                border-radius: 50px;
+                background-color: var(--surface-color);
+                color: var(--text-color);
+                cursor: pointer;
+                width: fit-content;
+                transition: box-shadow 0.25s ease, transform 0.25s ease;
+                animation: fadeIn 0.25s ease-in-out;
+
+                &:hover {
+                    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+                    transform: translateY(-1px);
+                    cursor: pointer;
+                }
+
+                .phone-button {
+                    background-color: var(--button-bg-color);
+                    color: var(--light-white);
+                    padding: 10px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 16px;
+                    min-width: 38px;
+                    min-height: 38px;
+                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+                    transition: transform 0.2s ease, background-color 0.2s ease;
+                    transform: rotate(90deg);
+
+                    &:hover {
+                        background-color: var(--tiffany-blue);
+                        transform: scale(1.1) rotate(90deg);
+                    }
+                }
+
+                .phone-number-and-title {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                    padding: 0px;
+                    margin-right: 20px;
+
+                    .phone-type-label {
+                        font-size: 11px;
+                        text-transform: uppercase;
+                        color: var(--text-color);
+                        opacity: 0.6;
+                        letter-spacing: 0.5px;
+                    }
+
+                    .phone-number-label {
+                        font-size: 13px;
+                        font-weight: 500;
+                        color: var(--dark-text, var(--text-color));
+                    }
+                }
+                
+                .assign-client {
+                display: flex;
+                align-items: center;
+                width: fit-content;
+                justify-content: end;
+                gap: 6px;
+                background-color: transparent;
+                border: 1px solid var(--tiffany-blue);
+                color: var(--tiffany-blue);
+                font-size: 14px;
+                cursor: pointer;
+                border-radius: 8px;
+                transition: background-color 0.3s ease, color 0.3s ease;
+
+                &:hover {
+                    background-color: rgba(29, 161, 242, 0.1);
+                    color: var(--text-color);
+                }
+
+                svg {
+                    font-size: 16px;
+                    margin-right: 4px;
+                }
+            }
+            }
         }
     }
 
