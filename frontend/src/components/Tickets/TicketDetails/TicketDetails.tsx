@@ -252,7 +252,7 @@ export default function TicketDetails() {
                             {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"}
                         </div>
                         <div className="call-duration">
-                            {ticket.CallInfo?.length > 0 ? moment.duration(ticket.CallInfo[0]?.recordingDuration, "seconds").humanize() : "N/A"}
+                            {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.recordingDuration).format("mm:ss") : "N/A"}
                         </div>
                     </div>
                     {ticket.ClientInfo?.id === 28 ? ( //Anonymous Client Case
