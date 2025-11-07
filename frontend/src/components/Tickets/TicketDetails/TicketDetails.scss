@@ -380,17 +380,38 @@
                 background-color: var(--surface-color);
                 padding: 20px;
                 border-radius: 8px;
-                gap: 12px;
+                gap: 20px;
 
                 .ticket-call-info-header {
                     display: flex;
-
+                    flex-direction: row;
+                    width: 100%;
                     align-items: center;
                     justify-content: space-between;
                     gap: 12px;
 
-                    h2 {
-                        margin-bottom: 12px;
+                    .download-audio {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 6px;
+                        background-color: transparent;
+                        border: 1px solid var(--tiffany-blue);
+                        color: var(--tiffany-blue);
+                        font-size: 14px;
+                        cursor: pointer;
+                        padding: 8px 14px;
+                        border-radius: 8px;
+                        transition: background-color 0.3s ease, color 0.3s ease;
+
+                        &:hover {
+                            background-color: rgba(29, 161, 242, 0.1);
+                            color: var(--text-color);
+                        }
+
+                        svg {
+                            font-size: 16px;
+                        }
                     }
                 }
 

@@ -307,9 +307,12 @@ export default function TicketDetails() {
                     <div className="share-container">
                         <div className="ticket-call-info-header">
                             <h2>Call Info</h2>
-                            <div className="download-audio" onClick={handleDownloadAudio}>
-                                <MdOutlineDownload />
-                            </div>
+                            {ticket.Recordings?.length > 0 && (
+                                <a className="download-audio" href={ticket.Recordings[0]?.recordingUrl}>
+                                    <MdOutlineDownload />
+                                    <span>Download Audio</span>
+                                </a>
+                            )}
                         </div>
                         <div className="call-time-and-date">
                             <div className="call-icon">
