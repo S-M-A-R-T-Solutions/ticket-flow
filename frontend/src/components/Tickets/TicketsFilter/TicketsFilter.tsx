@@ -62,7 +62,7 @@ export default function TicketsFilter({
                         <input type="text" placeholder="Title, description, etc..." className="search-tickets-filter-input" value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)} />
                     </div>
                 </div>
-                
+
                 <div className="client-filter">
                     <select name="client_select" id="client-select-filter" className="client-select" value={selectedClientLocal} onChange={(e) => {
                         const value = e.target.value;
@@ -80,11 +80,11 @@ export default function TicketsFilter({
                         ))}
                     </select>
                 </div>
-                
+
                 <div className="status-filter">
                     <div className='status-list-status-list'>
                         {STATUS && STATUS.map((stat: any) => (
-                            <div className='status-ticket' key={stat.id} onClick={() => toggleStatus(stat.id)}>
+                            <div className='status-ticket' key={stat.id} title={stat.name} onClick={() => toggleStatus(stat.id)}>
                                 <div className={`status-icon${selectedStatus.includes(stat.id) ? '-hovered' : ''}-${stat.id}`}>
                                     <FaTicket />
                                 </div>
@@ -93,6 +93,8 @@ export default function TicketsFilter({
                         ))}
                     </div>
                 </div>
+
+                <div className="spacer"></div>
 
                 <div className="actions">
                     <div
