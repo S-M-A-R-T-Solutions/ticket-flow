@@ -14,7 +14,7 @@ import { FaPlus, FaPhone } from "react-icons/fa";
 import { BsBuildingsFill, BsFillPersonFill } from "react-icons/bs";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { IoPersonAddOutline } from "react-icons/io5";
-import { MdOutlineCall, MdOutlineDownload } from "react-icons/md";
+import { MdOutlineCall, MdOutlineDownload, MdOutlineCalendarMonth, MdOutlineAccessTime } from "react-icons/md";
 
 import OpenModalButton from "../../OpenModalButton";
 
@@ -314,18 +314,17 @@ export default function TicketDetails() {
                         <div className="call-time-and-date">
                             <div className="call-icon">
                                 <MdOutlineCall />
+                                <span>{formatPhoneNumber(selectedContactInfo.phoneNumber)}</span>
                             </div>
                             <div className="call-date">
+                                <MdOutlineCalendarMonth />
                                 {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('YYYY-MM-DD') : "N/A"}
                                 {/* {moment(TESTING_RECORDING.recordingStartTime).format('YYYY-MM-DD')} */}
                             </div>
                             <div className="call-time">
+                                <MdOutlineAccessTime />
                                 {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"}
                                 {/* {moment(TESTING_RECORDING.recordingStartTime).format('HH:mm A')} */}
-                            </div>
-                            <div className="call-duration">
-                                {ticket.CallInfo?.length > 0 ? `${Math.floor(ticket.CallInfo[0]?.recordingDuration / 60)}m ${ticket.CallInfo[0]?.recordingDuration % 60}s` : "N/A"}
-                                {/* {Math.floor(TESTING_RECORDING.recordingDuration / 60)}m {TESTING_RECORDING.recordingDuration % 60}s */}
                             </div>
                         </div>
                         {ticket.Recordings?.length > 0 ? (
