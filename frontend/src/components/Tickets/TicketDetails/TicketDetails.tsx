@@ -326,7 +326,7 @@ export default function TicketDetails() {
                             </div>
                             <div className="call-time">
                                 <MdOutlineAccessTime />
-                                {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm') : "N/A"}
+                                {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('hh:mm A') : "N/A"}
                                 {/* {moment(TESTING_RECORDING.recordingStartTime).format('HH:mm A')} */}
                             </div>
                         </div>
