@@ -34,15 +34,6 @@ import { formatPhoneNumber } from "../../../utils/helperFunctions";
 import './TicketDetails.scss';
 import { FaTicket } from "react-icons/fa6";
 
-const TESTING_RECORDING = {
-    callId: 314,
-    recordingSid: "REe6d93309492402865b072aa4bcef99f4",
-    callSid: "CA8ed4b1eda597573713adfff89887e9ea",
-    recordingUrl: "https://api.twilio.com/2010-04-01/Accounts/AC472ce832975154f3d5a7c3d7df0555c2/Recordings/RE1171b72c4e1c09ca93e1e35e842d3807",
-    recordingDuration: 483,
-    recordingStartTime: "Thu, 06 Nov 2025 17:31:46 +0000"
-}
-
 export default function TicketDetails() {
     const { closeModal } = useModal();
     const dispatch = useDispatch();
@@ -325,21 +316,22 @@ export default function TicketDetails() {
                                 <MdOutlineCall />
                             </div>
                             <div className="call-date">
-                                {/* {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('YYYY-MM-DD') : "N/A"} */}
-                                {moment(TESTING_RECORDING.recordingStartTime).format('YYYY-MM-DD')}
+                                {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('YYYY-MM-DD') : "N/A"}
+                                {/* {moment(TESTING_RECORDING.recordingStartTime).format('YYYY-MM-DD')} */}
                             </div>
                             <div className="call-time">
-                                {/* {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"} */}
-                                {moment(TESTING_RECORDING.recordingStartTime).format('HH:mm A')}
+                                {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"}
+                                {/* {moment(TESTING_RECORDING.recordingStartTime).format('HH:mm A')} */}
                             </div>
                             <div className="call-duration">
-                                {Math.floor(TESTING_RECORDING.recordingDuration / 60)}m {TESTING_RECORDING.recordingDuration % 60}s
+                                {ticket.CallInfo?.length > 0 ? `${Math.floor(ticket.CallInfo[0]?.recordingDuration / 60)}m ${ticket.CallInfo[0]?.recordingDuration % 60}s` : "N/A"}
+                                {/* {Math.floor(TESTING_RECORDING.recordingDuration / 60)}m {TESTING_RECORDING.recordingDuration % 60}s */}
                             </div>
                         </div>
                         {ticket.Recordings?.length > 0 ? (
-                            <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl || TESTING_RECORDING.recordingUrl} />
+                            <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl} />
                         ) : (
-                            <AudioPlayer audioPlayerUrl={TESTING_RECORDING.recordingUrl} />
+                            <div className="no-audio-placeholder">No call recording available</div>
                         )}
                     </div>
                 </div>
