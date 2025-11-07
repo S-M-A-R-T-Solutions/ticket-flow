@@ -317,7 +317,7 @@ export default function TicketDetails() {
                         <div className="call-time-and-date">
                             <div className="call-icon">
                                 <MdOutlineCall />
-                                <span>{formatPhoneNumber(ticket.CallInfo[0]?.caller)}</span>
+                                {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).fromNow() : "N/A"}
                             </div>
                             <div className="call-date">
                                 <MdOutlineCalendarMonth />
