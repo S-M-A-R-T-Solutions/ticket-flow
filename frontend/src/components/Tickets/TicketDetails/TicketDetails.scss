@@ -103,66 +103,7 @@
             }
         }
 
-        /* --- Caller Info Section --- */
-        .caller-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border-radius: 50px;
-            background-color: var(--surface-color);
-            color: var(--text-color);
-            cursor: pointer;
-            width: fit-content;
-            transition: box-shadow 0.25s ease, transform 0.25s ease;
-            animation: fadeIn 0.25s ease-in-out;
-
-            &:hover {
-                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-                transform: translateY(-1px);
-            }
-
-            .phone-button {
-                background-color: var(--button-bg-color);
-                color: var(--light-white);
-                padding: 10px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                min-width: 38px;
-                min-height: 38px;
-                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-                transition: transform 0.2s ease, background-color 0.2s ease;
-                transform: rotate(90deg);
-
-                &:hover {
-                    background-color: var(--tiffany-blue);
-                    transform: scale(1.1) rotate(90deg);
-                }
-            }
-
-            .phone-number-and-title {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-                margin-right: 20px;
-
-                .phone-type-label {
-                    font-size: 11px;
-                    text-transform: uppercase;
-                    color: var(--text-color);
-                    opacity: 0.6;
-                    letter-spacing: 0.5px;
-                }
-
-                .phone-number-label {
-                    font-size: 13px;
-                    font-weight: 500;
-                    color: var(--dark-text, var(--text-color));
-                }
-            }
-        }
+        
     }
 
     /* === TICKET DETAILS CONTAINER === */
@@ -228,6 +169,67 @@
                     align-content: center;
                     justify-content: center;
                     gap: 20px;
+
+                    /* --- Caller Info Section --- */
+                    .caller-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 14px;
+                        border-radius: 50px;
+                        background-color: var(--surface-color);
+                        color: var(--text-color);
+                        cursor: pointer;
+                        width: fit-content;
+                        transition: box-shadow 0.25s ease, transform 0.25s ease;
+                        animation: fadeIn 0.25s ease-in-out;
+
+                        &:hover {
+                            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+                            transform: translateY(-1px);
+                        }
+
+                        .phone-button {
+                            background-color: var(--button-bg-color);
+                            color: var(--light-white);
+                            padding: 10px;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 16px;
+                            min-width: 38px;
+                            min-height: 38px;
+                            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+                            transition: transform 0.2s ease, background-color 0.2s ease;
+                            transform: rotate(90deg);
+
+                            &:hover {
+                                background-color: var(--tiffany-blue);
+                                transform: scale(1.1) rotate(90deg);
+                            }
+                        }
+
+                        .phone-number-and-title {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 2px;
+                            margin-right: 20px;
+
+                            .phone-type-label {
+                                font-size: 11px;
+                                text-transform: uppercase;
+                                color: var(--text-color);
+                                opacity: 0.6;
+                                letter-spacing: 0.5px;
+                            }
+
+                            .phone-number-label {
+                                font-size: 13px;
+                                font-weight: 500;
+                                color: var(--dark-text, var(--text-color));
+                            }
+                        }
+                    }
 
                     .assign-client {
                         display: flex;
