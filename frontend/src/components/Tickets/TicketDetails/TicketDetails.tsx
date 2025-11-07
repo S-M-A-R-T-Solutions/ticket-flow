@@ -175,7 +175,6 @@ export default function TicketDetails() {
             if (recordingUrl) {
                 const link = document.createElement('a');
                 link.href = recordingUrl;
-                link.download = `ticket_${ticket.id}_recording.mp3`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -252,7 +251,10 @@ export default function TicketDetails() {
                             {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"}
                         </div>
                         <div className="call-duration">
-                            {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.recordingDuration).format("mm:ss") : "N/A"}
+                            {ticket.CallInfo?.length > 0 && ticket.CallInfo[0]?.recordingUrl ? 
+                                `${Math.floor((new Audio(ticket.CallInfo[0]?.recordingUrl).duration || 0) / 60)}m ${Math.floor((new Audio(ticket.CallInfo[0]?.recordingUrl).duration || 0) % 60)}s` 
+                                : "N/A"}
+
                         </div>
                     </div>
                     {ticket.ClientInfo?.id === 28 ? ( //Anonymous Client Case
