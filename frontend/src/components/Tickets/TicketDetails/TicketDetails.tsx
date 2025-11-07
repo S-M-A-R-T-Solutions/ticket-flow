@@ -326,12 +326,14 @@ export default function TicketDetails() {
                             </div>
                             <div className="call-time">
                                 <MdOutlineAccessTime />
-                                {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"}
+                                {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm') : "N/A"}
                                 {/* {moment(TESTING_RECORDING.recordingStartTime).format('HH:mm A')} */}
                             </div>
                         </div>
                         {ticket.Recordings?.length > 0 ? (
-                            <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl} />
+                            <div className="audio-player-container">
+                                <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl} />
+                            </div>
                         ) : (
                             <div className="no-audio-placeholder">No call recording available</div>
                         )}

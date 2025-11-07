@@ -395,6 +395,7 @@
                         align-items: center;
                         justify-content: center;
                         gap: 6px;
+                        text-decoration: none;
                         background-color: transparent;
                         border: 1px solid var(--tiffany-blue);
                         color: var(--tiffany-blue);
@@ -445,6 +446,11 @@
                         gap: 8px;
                         font-size: 16px;
                     }
+                }
+
+                .audio-player-container {
+                    width: 100%;
+                    margin-top: 10px;
                 }
             }
         }
