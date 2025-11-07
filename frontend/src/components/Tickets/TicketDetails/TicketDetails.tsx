@@ -34,6 +34,15 @@ import { formatPhoneNumber } from "../../../utils/helperFunctions";
 import './TicketDetails.scss';
 import { FaTicket } from "react-icons/fa6";
 
+const TESTING_RECORDING = {
+    callId: 314,
+    recordingSid: "REe6d93309492402865b072aa4bcef99f4",
+    callSid: "CA8ed4b1eda597573713adfff89887e9ea",
+    recordingUrl: "https://api.twilio.com/2010-04-01/Accounts/AC472ce832975154f3d5a7c3d7df0555c2/Recordings/RE1171b72c4e1c09ca93e1e35e842d3807",
+    recordingDuration: 483,
+    recordingStartTime: "Thu, 06 Nov 2025 17:31:46 +0000"
+}
+
 export default function TicketDetails() {
     const { closeModal } = useModal();
     const dispatch = useDispatch();
@@ -233,101 +242,106 @@ export default function TicketDetails() {
                     </div>
                     <TicketEmployees author={ticket.CreatedBy} employees={ticket.AssignedEmployees} />
                 </div>
-                <div className="share-container">
-                    <div className="ticket-call-info-header">
-                        <h2>Call Info</h2>
-                        <div className="download-audio" onClick={handleDownloadAudio}>
-                            <MdOutlineDownload />
-                        </div>
-                    </div>
-                    <div className="call-time-and-date">
-                        <div className="call-icon">
-                            <MdOutlineCall />
-                        </div>
-                        <div className="call-date">
-                            {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('YYYY-MM-DD') : "N/A"}
-                        </div>
-                        <div className="call-time">
-                            {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"}
-                        </div>
-                        <div className="call-duration">
-                            {ticket.CallInfo?.length > 0 && ticket.CallInfo[0]?.recordingUrl ? 
-                                `${Math.floor((new Audio(ticket.CallInfo[0]?.recordingUrl).duration || 0) / 60)}m ${Math.floor((new Audio(ticket.CallInfo[0]?.recordingUrl).duration || 0) % 60)}s` 
-                                : "N/A"}
-
-                        </div>
-                    </div>
-                    {ticket.ClientInfo?.id === 28 ? ( //Anonymous Client Case
-                        <div className="client-caller-details">
-                            <div
-                                className="caller-info"
-                                onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}
-                            >
-                                {/* Search for Caller Number in ticket.CallInfo[0] */}
-                                <div className="phone-button">
-                                    <FaPhone />
-                                </div>
-                                <div className="phone-number-and-title">
-                                    <span className="phone-number-label">{formatPhoneNumber(ticket.CallInfo[0]?.caller)}</span>
-                                </div>
-                            </div>
-                            <div className="assign-client">
-                                <OpenModalMenuItem
-                                    modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
-                                    onModalClose={onModalClose}
+                <div className="client-right-info">
+                    <div className="client-information-right-info">
+                        <h2>Client Info</h2>
+                        {ticket.ClientInfo?.id === 28 ? ( //Anonymous Client Case
+                            <div className="client-caller-details">
+                                <div
+                                    className="caller-info"
+                                    onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}
                                 >
-                                    <IoPersonAddOutline className="assign-client-icon" />
-                                    Assign Client
-                                </OpenModalMenuItem>
+                                    {/* Search for Caller Number in ticket.CallInfo[0] */}
+                                    <div className="phone-button">
+                                        <FaPhone />
+                                    </div>
+                                    <div className="phone-number-and-title">
+                                        <span className="phone-number-label">{formatPhoneNumber(ticket.CallInfo[0]?.caller)}</span>
+                                    </div>
+                                </div>
+                                <div className="assign-client">
+                                    <OpenModalMenuItem
+                                        modalComponent={<AssignToClient setAssignToClient={setAssignToClient} />}
+                                        onModalClose={onModalClose}
+                                    >
+                                        <IoPersonAddOutline className="assign-client-icon" />
+                                        Assign Client
+                                    </OpenModalMenuItem>
+                                </div>
+                            </div>) : ( // Assigned Client Case
+                            <div className="client-caller-details">
+                                {ticket.ClientInfo?.companyName === "" ? (
+                                    <div className="client">
+                                        <div className="client-image">
+                                            {ticket.ClientInfo?.profilePicUrl ?
+                                                <img src={ticket.ClientInfo?.profilePicUrl} alt="Client" /> :
+                                                <BsFillPersonFill />
+                                            }
+                                        </div>
+                                        <div className="client-info">
+                                            <div className="client-name">
+                                                {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
+                                            </div>
+                                        </div>
+                                    </div>) : (
+                                    <div className={`client-${clientClassName}`}>
+                                        <div className="client-image">
+                                            <BsBuildingsFill />
+                                        </div>
+                                        <div className="client-info">
+                                            <div className="client-name">
+                                                {ticket.ClientInfo?.companyName}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="caller-info-ticket">
+                                    <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
+                                        <div className={`caller-location-name-${locationInfoExists}`}>
+                                            <span> {selectedContactInfo.locationName} </span>
+                                        </div>
+                                        <div className="caller-location-phone-number">
+                                            <div className="caller-location-phone-type">
+                                                <span>{selectedContactInfo.phoneType}</span>
+                                            </div>
+                                            <div className="caller-location-phone-number-number">
+                                                <span>{formatPhoneNumber(selectedContactInfo.phoneNumber)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>) : ( // Assigned Client Case
-                        <div className="client-caller-details">
-                            {ticket.ClientInfo?.companyName === "" ? (
-                                <div className="client">
-                                    <div className="client-image">
-                                        {ticket.ClientInfo?.profilePicUrl ?
-                                            <img src={ticket.ClientInfo?.profilePicUrl} alt="Client" /> :
-                                            <BsFillPersonFill />
-                                        }
-                                    </div>
-                                    <div className="client-info">
-                                        <div className="client-name">
-                                            {ticket.ClientInfo?.firstName} {ticket.ClientInfo?.lastName}
-                                        </div>
-                                    </div>
-                                </div>) : (
-                                <div className={`client-${clientClassName}`}>
-                                    <div className="client-image">
-                                        <BsBuildingsFill />
-                                    </div>
-                                    <div className="client-info">
-                                        <div className="client-name">
-                                            {ticket.ClientInfo?.companyName}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="caller-info-ticket">
-                                <div className="location-name-location-phone" onClick={() => { window.location.href = `tel:${ticket.CallInfo[0]?.caller}`; }}>
-                                    <div className={`caller-location-name-${locationInfoExists}`}>
-                                        <span> {selectedContactInfo.locationName} </span>
-                                    </div>
-                                    <div className="caller-location-phone-number">
-                                        <div className="caller-location-phone-type">
-                                            <span>{selectedContactInfo.phoneType}</span>
-                                        </div>
-                                        <div className="caller-location-phone-number-number">
-                                            <span>{formatPhoneNumber(selectedContactInfo.phoneNumber)}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                        )}
+                    </div>
+                    <div className="share-container">
+                        <div className="ticket-call-info-header">
+                            <h2>Call Info</h2>
+                            <div className="download-audio" onClick={handleDownloadAudio}>
+                                <MdOutlineDownload />
                             </div>
                         </div>
-                    )}
-                    {ticket.Recordings?.length > 0 && (
-                        <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl} />
-                    )}
+                        <div className="call-time-and-date">
+                            <div className="call-icon">
+                                <MdOutlineCall />
+                            </div>
+                            <div className="call-date">
+                                {/* {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('YYYY-MM-DD') : "N/A"} */}
+                                {moment(TESTING_RECORDING.recordingStartTime).format('YYYY-MM-DD')}
+                            </div>
+                            <div className="call-time">
+                                {/* {ticket.CallInfo?.length > 0 ? moment(ticket.CallInfo[0]?.createdAt).format('HH:mm:ss') : "N/A"} */}
+                                {moment(TESTING_RECORDING.recordingStartTime).format('HH:mm A')}
+                            </div>
+                            <div className="call-duration">
+                                {Math.floor(TESTING_RECORDING.recordingDuration / 60)}m {TESTING_RECORDING.recordingDuration % 60}s
+                            </div>
+                        </div>
+                        {ticket.Recordings?.length > 0 ? (
+                            <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl || TESTING_RECORDING.recordingUrl} />
+                        ) : (
+                            <AudioPlayer audioPlayerUrl={TESTING_RECORDING.recordingUrl} />
+                        )}
+                    </div>
                 </div>
             </div>
 

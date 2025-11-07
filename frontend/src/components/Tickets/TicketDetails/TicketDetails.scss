@@ -6,13 +6,15 @@
     color: var(--text-color);
     padding: 20px;
 
+    /* === SECTION HEADER === */
     .section-header {
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
         background-color: var(--surface-color);
         border-radius: 8px;
         gap: 12px;
-    
+
         .ticket-title-and-status {
             display: flex;
             align-items: center;
@@ -99,12 +101,11 @@
             }
         }
 
-        /* --- Caller Info Section (Updated to match location-contact-info-wrapper) --- */
+        /* --- Caller Info Section --- */
         .caller-info {
             display: flex;
             align-items: center;
             gap: 14px;
-            // padding: 12px 18px;
             border-radius: 50px;
             background-color: var(--surface-color);
             color: var(--text-color);
@@ -116,7 +117,6 @@
             &:hover {
                 box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
                 transform: translateY(-1px);
-                cursor: pointer;
             }
 
             .phone-button {
@@ -144,7 +144,6 @@
                 display: flex;
                 flex-direction: column;
                 gap: 2px;
-                padding: 0px;
                 margin-right: 20px;
 
                 .phone-type-label {
@@ -188,421 +187,275 @@
             }
         }
     }
-}
 
-.ticket-details {
+    /* === TICKET DETAILS CONTAINER === */
     .ticket-details-container {
         display: flex;
         flex-direction: row;
         gap: 24px;
         margin-top: 20px;
-    }
 
-    .ticket-info,
-    .share-container {
-        display: flex;
-        flex-direction: column;
-        background-color: var(--surface-color);
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        width: 50%;
-    }
-
-    .client {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 8px;
-
-        .client-image {
-            position: relative;
+        .ticket-info,
+        .share-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            overflow: hidden;
-
-            &::before {
-                content: "";
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background-color: var(--text-color);
-                opacity: 0.05;
-            }
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
-            }
+            flex-direction: column;
+            background-color: var(--surface-color);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 50%;
         }
 
-        .client-info {
-            font-size: 14px;
-            opacity: 0.7;
-        }
-    }
-
-    .client-individual-client {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 8px;
-
-        .client-image {
-            position: relative;
+        .ticket-description {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            overflow: hidden;
-
-            &::before {
-                content: "";
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background-color: var(--text-color);
-                opacity: 0.05;
-            }
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
-            }
-        }
-
-        .client-info {
-            font-size: 14px;
-            opacity: 0.7;
-        }
-    }
-
-    .client-company-client {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background-color: var(--jonquil);
-        color: var(--light-black);
-        padding: 4px 8px;
-        border-radius: 50px;
-
-        .client-image {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            overflow: hidden;
-
-            &::before {
-                content: "";
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background-color: var(--text-color);
-                opacity: 0.05;
-            }
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
-            }
-        }
-
-        .client-info {
-            font-size: 14px;
-            opacity: 0.7;
-        }
-    }
-
-    .caller-info-ticket {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 12px;
-        background-color: transparent;
-
-        .location-name-location-phone {
-            display: flex;
-            gap: 20px;
-            background-color: transparent;
-
-            .caller-location-name {
-                font-size: 13px;
-                font-weight: 500;
-                background-color: var(--surface-color);
-                padding: 8px 12px;
-                border-radius: 50px;
-            }
-
-            .caller-location-phone-number {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                margin-right: 25px;
-                background-color: var(--surface-color);
-                padding: 0;
-                border-radius: 50px;
-
-                &:hover {
-                    cursor: pointer;
-                }
-
-                .caller-location-phone-type {
-                    font-size: 11px;
-                    text-transform: uppercase;
-                    color: var(--text-color);
-                    letter-spacing: 0.5px;
-                    background-color: var(--button-bg-color);
-                    padding: 8px 12px;
-                    border-radius: 50px 0px 0px 50px;
-                }
-
-                .caller-location-phone-number-number {
-                    font-size: 13px;
-                    font-weight: 500;
-                    padding: 4px 10px 4px 4px;
-                }
-            }
-        }
-    }
-
-    .ticket-description {
-        display: flex;
-        flex-direction: column;
-        margin-top: 16px;
-        background-color: var(--background-color);
-        padding: 20px;
-        border-radius: 8px;
-
-        .description-title {
-            font-size: 14px;
-            opacity: 0.7;
-            margin-bottom: 4px;
-        }
-
-        .description-content {
-            font-size: 14px;
-            line-height: 1.5;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-    }
-
-    .share-container { 
-        .ticket-call-info-header {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 12px;
-
-            h2 {
-                margin-bottom: 12px;
-            }
-
-            
-        }
-
-        .call-time-and-date {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 12px;
-        }
-
-        .client-caller-details {
-            display: flex;
-            flex-direction: row;
-            align-content: center;
-            justify-content: center;
+            flex-direction: column;
+            margin-top: 16px;
             background-color: var(--background-color);
             padding: 20px;
             border-radius: 8px;
+
+            .description-title {
+                font-size: 14px;
+                opacity: 0.7;
+                margin-bottom: 4px;
+            }
+
+            .description-content {
+                font-size: 14px;
+                line-height: 1.5;
+                max-height: 250px;
+                overflow-y: auto;
+            }
+        }
+
+        .client-right-info {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
             gap: 20px;
-            margin-top: 20px;
 
-            .caller-info {
+            .client-information-right-info {
                 display: flex;
-                align-items: center;
-                gap: 14px;
-                // padding: 12px 18px;
-                border-radius: 50px;
+                flex-direction: column;
+                width: 100%;
                 background-color: var(--surface-color);
-                color: var(--text-color);
-                cursor: pointer;
-                width: fit-content;
-                transition: box-shadow 0.25s ease, transform 0.25s ease;
-                animation: fadeIn 0.25s ease-in-out;
+                padding: 20px;
+                border-radius: 8px;
+                gap: 20px;
 
-                &:hover {
-                    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-                    transform: translateY(-1px);
-                    cursor: pointer;
+                .client-caller-details {
+                    display: flex;
+                    flex-direction: row;
+                    align-content: center;
+                    justify-content: center;
+                    gap: 20px;
                 }
 
-                .phone-button {
-                    background-color: var(--button-bg-color);
-                    color: var(--light-white);
-                    padding: 10px;
-                    border-radius: 50%;
+                /* === CALLER INFO === */
+                .caller-info-ticket {
                     display: flex;
                     align-items: center;
-                    justify-content: center;
-                    font-size: 16px;
-                    min-width: 38px;
-                    min-height: 38px;
-                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-                    transition: transform 0.2s ease, background-color 0.2s ease;
-                    transform: rotate(90deg);
+                    gap: 12px;
+                    background-color: transparent;
 
-                    &:hover {
-                        background-color: var(--tiffany-blue);
-                        transform: scale(1.1) rotate(90deg);
+                    .location-name-location-phone {
+                        display: flex;
+                        gap: 20px;
+                        background-color: transparent;
+
+                        .caller-location-name {
+                            font-size: 13px;
+                            font-weight: 500;
+                            background-color: var(--surface-color);
+                            padding: 8px 12px;
+                            border-radius: 50px;
+                        }
+
+                        .caller-location-phone-number {
+                            display: flex;
+                            align-items: center;
+                            gap: 4px;
+                            background-color: var(--background-color);
+                            // padding: 8px 12px;
+                            border-radius: 50px;
+
+                            span {
+                                font-size: 12px;
+                            }
+
+                            &:hover {
+                                cursor: pointer;
+                            }
+
+                            .caller-location-phone-type {
+                                font-size: 8px;
+                                text-transform: uppercase;
+                                color: var(--text-color);
+                                letter-spacing: 0.5px;
+                                padding: 8px 12px;
+                                background-color: var(--button-bg-color);
+                                border-radius: 50px 0 0 50px;
+                            }
+
+                            .caller-location-phone-number-number {
+                                font-size: 13px;
+                                font-weight: 500;
+                                padding: 4px 10px 4px 4px;
+                            }
+                        }
                     }
                 }
 
-                .phone-number-and-title {
+                /* === CLIENT INFO === */
+                .client,
+                .client-individual-client,
+                .client-company-client {
+                    position: relative;
+                    z-index: 1;
+
                     display: flex;
-                    flex-direction: column;
-                    gap: 2px;
-                    padding: 0px;
-                    margin-right: 20px;
+                    align-items: center;
+                    gap: 8px;
 
-                    .phone-type-label {
-                        font-size: 11px;
-                        text-transform: uppercase;
-                        color: var(--text-color);
-                        opacity: 0.6;
-                        letter-spacing: 0.5px;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+
+                        width: 100%;
+                        height: 100%;
+
+                        background-color: var(--text-color);
+                        border-radius: 50px;
+
+                        opacity: 0.08;
+                        z-index: -1;
                     }
 
-                    .phone-number-label {
-                        font-size: 13px;
-                        font-weight: 500;
-                        color: var(--dark-text, var(--text-color));
+                    .client-image {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        width: 30px;
+                        height: 30px;
+
+                        margin: 3px 0 3px 3px;
+
+                        border-radius: 50%;
+
+                        overflow: hidden;
+
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            object-position: center;
+                        }
                     }
-                }
-                
-                .assign-client {
-                display: flex;
-                align-items: center;
-                width: fit-content;
-                justify-content: end;
-                gap: 6px;
-                background-color: transparent;
-                border: 1px solid var(--tiffany-blue);
-                color: var(--tiffany-blue);
-                font-size: 14px;
-                cursor: pointer;
-                border-radius: 8px;
-                transition: background-color 0.3s ease, color 0.3s ease;
 
-                &:hover {
-                    background-color: rgba(29, 161, 242, 0.1);
-                    color: var(--text-color);
-                }
+                    .client-info {
+                        margin-right: 16px;
+                        font-size: 14px;
+                        opacity: 0.7;
+                    }
 
-                svg {
-                    font-size: 16px;
-                    margin-right: 4px;
+                    .client-company-client {
+                        background-color: var(--jonquil);
+                        color: var(--light-black);
+                        padding: 8px 12px;
+                        border-radius: 50px;
+                    }
                 }
             }
+
+            .share-container {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                background-color: var(--surface-color);
+                padding: 20px;
+                border-radius: 8px;
+                gap: 12px;
+
+                .ticket-call-info-header {
+                    display: flex;
+
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+
+                    h2 {
+                        margin-bottom: 12px;
+                    }
+                }
+
+                .call-time-and-date {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 20px;
+                    margin-bottom: 12px;
+                }
             }
         }
     }
 
+    /* === NOTES AND PARTS === */
     .notes-and-parts {
         display: grid;
         grid-template-columns: 1fr 418px;
         gap: 24px;
         margin-top: 24px;
-    }
 
-    .parts-container {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
+        .notes-container,
+        .parts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
-    .parts-header {
-        display: flex;
-        align-items: center;
-        gap: 16px;
+        .notes-header,
+        .parts-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
 
-        button.btn-add-part {
-            width: 32px;
-            height: 32px;
-            margin: 0;
+            button.btn-add-note,
+            button.btn-add-part {
+                width: 32px;
+                height: 32px;
+                margin: 0;
+            }
+        }
+
+        .notes-list,
+        .parts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .parts-list {
+            flex-wrap: wrap;
+        }
+
+        .no-notes-placeholder,
+        .no-parts-placeholder {
+            font-size: 14px;
+            opacity: 0.7;
         }
     }
 
-    .parts-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-    }
-
-    .no-parts-placeholder {
-        font-size: 14px;
-        opacity: 0.7;
-    }
-
-    .notes-container {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .notes-header {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-
-        button.btn-add-note {
-            width: 32px;
-            height: 32px;
-            margin: 0;
+    /* === ANIMATIONS === */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
         }
-    }
-
-    .notes-list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .no-notes-placeholder {
-        font-size: 14px;
-        opacity: 0.7;
-    }
-}
-
-/* Subtle fade-in animation */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 }
