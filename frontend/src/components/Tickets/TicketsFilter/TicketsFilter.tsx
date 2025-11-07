@@ -84,8 +84,8 @@ export default function TicketsFilter({
                 <div className="status-filter">
                     <div className='status-list-status-list'>
                         {STATUS && STATUS.map((stat: any) => (
-                            <div className='status-ticket' key={stat.id} title={stat.name} onClick={() => toggleStatus(stat.id)}>
-                                <div className={`status-icon${selectedStatus.includes(stat.id) ? '-hovered' : ''}-${stat.id}`}>
+                            <div className={`status-ticket ${selectedStatus.includes(stat.id) ? 'active' : ''}`} key={stat.id} title={stat.name} onClick={() => toggleStatus(stat.id)}>
+                                <div className={'status-icon status-icon-' + stat.id}>
                                     <FaTicket />
                                 </div>
                                 {/* <span className={`status-name${selectedStatus.includes(stat.id) ? '-selected' : ''}`}>{stat.name}</span> */}

@@ -39,6 +39,7 @@
 .tickets-filter {
     .spacer {
         flex: 1 1 auto;
+        margin-left: -20px;
     }
 
     .filter-block {
@@ -73,34 +74,31 @@
                 flex-direction: column;
                 align-items: center;
                 cursor: pointer;
+                opacity: 0.4;
+
+                transition: all 0.3s ease;
 
                 &:hover {
-                    .status-name {
-                        opacity: 1;
-                    }
+                    opacity: 1;
+                }
+
+                &.active {
+                    opacity: 1;
                 }
 
                 .status-icon {
+                    width: 32px;
+                    height: 32px;
+
+                    font-size: 54px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
                     transition: transform 0.2s ease;
 
                     &.hovered:hover {
                         transform: scale(1.1);
-                    }
-                }
-
-                .status-icon-1,
-                .status-icon-2,
-                .status-icon-3,
-                .status-icon-4 {
-                    width: 32px;
-                    height: 32px;
-
-                    opacity: 0.4;
-
-                    transition: all 0.3s ease;
-
-                    &:hover {
-                        opacity: 1;
                     }
                 }
 
@@ -112,22 +110,12 @@
                     justify-content: center;
                 }
 
-                .status-icon-hovered-1 {
-                    color: #FF6B6B;
-                    font-size: 54px;
-                }
-
                 .status-icon-2 {
                     color: #FFB84C;
                     font-size: 54px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                }
-
-                .status-icon-hovered-2 {
-                    color: #FFB84C;
-                    font-size: 54px;
                 }
 
                 .status-icon-4 {
@@ -138,22 +126,12 @@
                     justify-content: center;
                 }
 
-                .status-icon-hovered-4 {
-                    color: #7C3AED;
-                    font-size: 54px;
-                }
-
                 .status-icon-3 {
                     color: #4CAF50;
                     font-size: 54px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                }
-
-                .status-icon-hovered-3 {
-                    color: #4CAF50;
-                    font-size: 54px;
                 }
 
                 .status-name {
@@ -233,6 +211,8 @@
             }
 
             input {
+                min-width: 210px;
+
                 border: none;
                 outline: none;
                 background: none;
@@ -245,7 +225,6 @@
     }
 
     .actions {
-        padding: 0px 20px;
         display: flex;
         justify-content: flex-end;
 
@@ -263,6 +242,8 @@
             padding: 8px 14px;
             border-radius: 8px;
             transition: background-color 0.3s ease, color 0.3s ease;
+
+            white-space: nowrap;
 
             &:hover {
                 background-color: rgba(29, 161, 242, 0.1);
