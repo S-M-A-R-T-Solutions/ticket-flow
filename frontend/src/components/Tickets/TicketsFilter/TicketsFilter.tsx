@@ -100,9 +100,10 @@ export default function TicketsFilter({
                     <div
                         className="btn-clear-filters"
                         onClick={clearFilters}
+                        title='Clear Filters'
                     >
                         <MdFilterListOff />
-                        Clear Filters
+                        <span>Clear Filters</span>
                     </div>
                 </div>
             </div>
