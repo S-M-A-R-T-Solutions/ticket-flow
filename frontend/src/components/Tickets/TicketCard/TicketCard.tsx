@@ -90,11 +90,11 @@ export default function TicketCard({ ticket, setDeleteTicketChecker }: TicketCar
                     </div>
                 </div>
 
-                {typeof (ticket.createdBy) !== "number" && (
+                {/* {typeof (ticket.createdBy) !== "number" && (
                     <div className='ticket-author'>
                         Created by: <strong>{ticket.createdBy.firstName}</strong>
                     </div>
-                )}
+                )} */}
 
                 {ticket.clientId.companyName !== '' ? (
                     <div className='client-corporate'>
