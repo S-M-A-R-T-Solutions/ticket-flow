@@ -10,7 +10,7 @@ import { FaCheck, FaTicket } from "react-icons/fa6";
 
 import './TicketsFilter.scss';
 
-const STATUS: [{ id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }] = [
+const STATUSES: [{ id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }] = [
     { id: 1, name: 'Open', color: '#FF6B6B' },
     { id: 2, name: 'In Progress', color: '#FFB84C' },
     { id: 4, name: 'Pending', color: '#7C3AED' },
@@ -83,7 +83,7 @@ export default function TicketsFilter({
 
                 <div className="status-filter">
                     <div className='status-list-status-list'>
-                        {STATUS && STATUS.map((stat: any) => (
+                        {STATUSES && STATUSES.map((stat: any) => (
                             <div className={`status-ticket ${selectedStatus.includes(stat.id) ? 'active' : ''}`} key={stat.id} title={stat.name} onClick={() => toggleStatus(stat.id)}>
                                 <div className={'status-icon status-icon-' + stat.id}>
                                     <FaTicket />
