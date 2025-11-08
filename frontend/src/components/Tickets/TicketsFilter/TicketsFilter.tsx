@@ -1,10 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { getAllStatusThunk } from '../../../store/status';
 import { getAllClientsThunk } from '../../../store/clients';
 
-import { LuSearch } from "react-icons/lu";
+import {
+    LuSearch,
+    LuCalendar,
+    LuCalendar1,
+    LuCalendarClock,
+    LuCalendarDays,
+    LuCalendarRange
+} from "react-icons/lu";
 import { MdFilterListOff } from "react-icons/md";
 import { FaCheck, FaTicket } from "react-icons/fa6";
 
@@ -25,6 +32,12 @@ interface TicketsFilterProps {
     clearFilters: () => void;
     setSelectedClient: (clientId: number | null) => void;
     setSearchFilter: (searchTerm: string) => void;
+    today: boolean;
+    selectToday: () => void;
+    last7Days: boolean;
+    selectLast7Days: () => void;
+    dateRange: { startDate: Date; endDate: Date } | null;
+    selectDateRange: (range: { startDate: Date; endDate: Date }) => void;
 }
 
 export default function TicketsFilter({
@@ -34,8 +47,15 @@ export default function TicketsFilter({
     setSelectedClient,
     searchFilter,
     setSearchFilter,
+    today,
+    selectToday,
+    last7Days,
+    selectLast7Days,
+    dateRange,
+    selectDateRange,
     clearFilters,
 }: TicketsFilterProps) {
+
 
     const dispatch = useDispatch();
 
@@ -52,6 +72,47 @@ export default function TicketsFilter({
     useEffect(() => {
         setSelectedClientLocal(selectedClient || '');
     }, [selectedClient]);
+
+    const dateFilterRef = useRef<HTMLDivElement>(null);
+    const [showDateFilterDropdown, setShowDateFilterDropdown] = useState(false);
+
+    useEffect(() => {
+        if (!showDateFilterDropdown) return;
+        const closeDropdown = (e: any) => {
+            if (dateFilterRef.current && !dateFilterRef.current.contains(e.target)) {
+                setShowDateFilterDropdown(false);
+            }
+        };
+        document.addEventListener("click", closeDropdown);
+        return () => document.removeEventListener("click", closeDropdown);
+    }, [showDateFilterDropdown]);
+
+    const toggleDateDropdown = (e: any) => {
+        // e.preventDefault();
+        e.stopPropagation();
+        setShowDateFilterDropdown(!showDateFilterDropdown);
+    };
+
+    const handleSelectToday = () => {
+        selectToday();
+        setShowDateFilterDropdown(false);
+    };
+
+    const handleSelectLast7Days = () => {
+        selectLast7Days();
+        setShowDateFilterDropdown(false);
+    };
+
+    const handleSelectDateRange = (range: { startDate: Date; endDate: Date }) => {
+        selectDateRange(range);
+        setShowDateFilterDropdown(false);
+    };
+
+    const [active, setActive] = useState(false);
+
+    useEffect(() => {
+        setActive(today || last7Days || dateRange !== null);
+    }, [today, last7Days, dateRange]);
 
     return (
         <div className="tickets-filter-wrapper">
@@ -79,6 +140,44 @@ export default function TicketsFilter({
                                 <option key={client.id} value={client.id}>{client.firstName} {client.lastName}</option>
                         ))}
                     </select>
+                </div>
+
+                <div className="date-filter">
+                    <button type='button' className={`btn-date-filters ${active ? 'active' : ''}`} title='Date Filters' onClick={toggleDateDropdown}>
+                        {
+                            today ? <LuCalendar1 className='date-filter-icon' /> :
+                                last7Days ? <LuCalendarClock className='date-filter-icon' /> :
+                                    dateRange ? <LuCalendarRange className='date-filter-icon' /> :
+                                        <LuCalendar className='date-filter-icon' />
+                        }
+
+                        <div className="badge"></div>
+                    </button>
+
+                    {showDateFilterDropdown && (
+                        <div className="date-filters-dropdown" ref={dateFilterRef}>
+                            <div className="date-filter-option" onClick={handleSelectToday}>
+                                <LuCalendar1 className='date-filter-icon' />
+                                <span>Today</span>
+
+                                {today && <FaCheck className='date-filter-check-icon' />}
+                            </div>
+
+                            <div className="date-filter-option" onClick={handleSelectLast7Days}>
+                                <LuCalendarClock className='date-filter-icon' />
+                                <span>Last 7 Days</span>
+
+                                {last7Days && <FaCheck className='date-filter-check-icon' />}
+                            </div>
+
+                            <div className="date-filter-option">
+                                <LuCalendarRange className='date-filter-icon' />
+                                <span>Date Range</span>
+
+                                {dateRange && <FaCheck className='date-filter-check-icon' />}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="status-filter">
