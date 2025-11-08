@@ -25,7 +25,7 @@ router.get('/', requireAuth, async (req, res, next) => {
         const sortLabel = req.query.sort || 'createdAt';
         const sortValue = req.query.value || 'ASC';
 
-        const { startDate, endDate } = req.query.dateRange ? JSON.parse(req.query.dateRange) : { startDate: undefined, endDate: undefined };
+        const { startDate, endDate } = req.query;
 
         const where = {};
 

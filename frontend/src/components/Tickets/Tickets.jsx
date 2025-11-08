@@ -91,11 +91,33 @@ export default function Tickets() {
     };
 
     useEffect(() => {
+        const getDateString = (date) => {
+            return date.toISOString().split('T')[0];
+        }
+
+        const getFinalDateRangeFilter = () => {
+            if (dateRangeFilter) return {
+                startDate: getDateString(dateRangeFilter.startDate),
+                endDate: getDateString(dateRangeFilter.endDate)
+            };
+
+            if (last7DaysFilter) {
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setDate(endDate.getDate() - 7);
+                return { startDate: getDateString(startDate), endDate: getDateString(endDate) };
+            }
+
+            return { startDate: null, endDate: null };
+        };
+
         dispatch(getTotalTicketsAmountThunk());
         dispatch(getAllTicketsThunk(page, TICKETS_PER_PAGE, {
             statusList: selectedStatus,
             client: selectedClient,
-            search: searchFilter
+            search: searchFilter,
+            today: todayFilter,
+            ...getFinalDateRangeFilter()
         }, sortOption.label, sortOption.value));
         dispatch(getMyTicketsThunk());
         setDeleteTicketChecker(false);
