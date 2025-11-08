@@ -15,6 +15,9 @@ import {
 import { MdFilterListOff } from "react-icons/md";
 import { FaCheck, FaTicket } from "react-icons/fa6";
 
+import OpenModalMenuItem from '../../Navigation/OpenModalMenuItem';
+import DateRangeFilterModal from './DateRangeFilterModal';
+
 import './TicketsFilter.scss';
 
 const STATUSES: [{ id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }, { id: number; name: string; color: string }] = [
@@ -114,6 +117,8 @@ export default function TicketsFilter({
         setActive(today || last7Days || dateRange !== null);
     }, [today, last7Days, dateRange]);
 
+    const onDateRangeModalClose = () => { };
+
     return (
         <div className="tickets-filter-wrapper">
             <div className="tickets-filter">
@@ -170,12 +175,17 @@ export default function TicketsFilter({
                                 {last7Days && <FaCheck className='date-filter-check-icon' />}
                             </div>
 
-                            <div className="date-filter-option">
-                                <LuCalendarRange className='date-filter-icon' />
-                                <span>Date Range</span>
+                            <OpenModalMenuItem
+                                modalComponent={<DateRangeFilterModal />}
+                                onModalClose={onDateRangeModalClose}
+                            >
+                                <div className="date-filter-option">
+                                    <LuCalendarRange className='date-filter-icon' />
+                                    <span>Date Range</span>
 
-                                {dateRange && <FaCheck className='date-filter-check-icon' />}
-                            </div>
+                                    {dateRange && <FaCheck className='date-filter-check-icon' />}
+                                </div>
+                            </OpenModalMenuItem>
                         </div>
                     )}
                 </div>
