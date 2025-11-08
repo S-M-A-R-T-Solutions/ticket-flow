@@ -58,8 +58,6 @@ export default function TicketsFilter({
     selectDateRange,
     clearFilters,
 }: TicketsFilterProps) {
-
-
     const dispatch = useDispatch();
 
     const status = useSelector((state: any) => state.status.allStatus);
@@ -106,8 +104,8 @@ export default function TicketsFilter({
         setShowDateFilterDropdown(false);
     };
 
-    const handleSelectDateRange = (range: { startDate: Date; endDate: Date }) => {
-        selectDateRange(range);
+    const handleSelectDateRange = (startDate: string, endDate: string) => {
+        selectDateRange({ startDate: new Date(startDate), endDate: new Date(endDate) });
         setShowDateFilterDropdown(false);
     };
 
@@ -116,8 +114,6 @@ export default function TicketsFilter({
     useEffect(() => {
         setActive(today || last7Days || dateRange !== null);
     }, [today, last7Days, dateRange]);
-
-    const onDateRangeModalClose = () => { };
 
     return (
         <div className="tickets-filter-wrapper">
@@ -176,8 +172,10 @@ export default function TicketsFilter({
                             </div>
 
                             <OpenModalMenuItem
-                                modalComponent={<DateRangeFilterModal />}
-                                onModalClose={onDateRangeModalClose}
+                                modalComponent={<DateRangeFilterModal currentRange={dateRange ? {
+                                    startDate: dateRange.startDate.toISOString().split('T')[0],
+                                    endDate: dateRange.endDate.toISOString().split('T')[0],
+                                } : undefined} onSelectRange={handleSelectDateRange} />}
                             >
                                 <div className="date-filter-option">
                                     <LuCalendarRange className='date-filter-icon' />

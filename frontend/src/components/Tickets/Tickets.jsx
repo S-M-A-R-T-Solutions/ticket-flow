@@ -91,21 +91,25 @@ export default function Tickets() {
     };
 
     useEffect(() => {
-        const getDateString = (date) => {
-            return date.toISOString();
+        const getStartDateString = (date) => {
+            return date.toISOString().split('T')[0] + 'T00:00:00.000Z';
+        }
+
+        const getEndDateString = (date) => {
+            return date.toISOString().split('T')[0] + 'T23:59:59.999Z';
         }
 
         const getFinalDateRangeFilter = () => {
             if (dateRangeFilter) return {
-                startDate: getDateString(dateRangeFilter.startDate),
-                endDate: getDateString(dateRangeFilter.endDate)
+                startDate: getStartDateString(dateRangeFilter.startDate),
+                endDate: getEndDateString(dateRangeFilter.endDate)
             };
 
             if (last7DaysFilter) {
                 const endDate = new Date();
                 const startDate = new Date();
                 startDate.setDate(endDate.getDate() - 7);
-                return { startDate: getDateString(startDate), endDate: getDateString(endDate) };
+                return { startDate: getStartDateString(startDate), endDate: getEndDateString(endDate) };
             }
 
             return { startDate: null, endDate: null };
