@@ -92,7 +92,7 @@ export default function Tickets() {
 
     useEffect(() => {
         const getDateString = (date) => {
-            return date.toISOString().split('T')[0];
+            return date.toISOString();
         }
 
         const getFinalDateRangeFilter = () => {
