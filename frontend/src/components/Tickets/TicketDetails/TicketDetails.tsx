@@ -332,7 +332,10 @@ export default function TicketDetails() {
                         </div>
                         {ticket.Recordings?.length > 0 ? (
                             <div className="audio-player-container">
-                                <AudioPlayer audioPlayerUrl={ticket.Recordings[0]?.recordingUrl} />
+                                <AudioPlayer
+                                    audioPlayerUrl={ticket.Recordings[0]?.recordingUrl}
+                                    // audioPlayerUrl={"https://api.twilio.com/2010-04-01/Accounts/AC472ce832975154f3d5a7c3d7df0555c2/Recordings/RE1171b72c4e1c09ca93e1e35e842d3807"}
+                                />
                             </div>
                         ) : (
                             <div className="no-audio-placeholder">No call recording available</div>
