@@ -39,7 +39,6 @@ async function upsertCallAndTicket(req) {
         // 2️⃣ Búsqueda directa en tabla Clients
         clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
 
-        console.warn(`This is clientPhone: ${clientPhone}`);
 
         // 3️⃣ Si no existe, buscar en LocationPhoneNumbers
         if (!clientByPhone) {
