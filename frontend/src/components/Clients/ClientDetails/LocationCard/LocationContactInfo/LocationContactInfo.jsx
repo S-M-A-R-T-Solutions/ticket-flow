@@ -14,7 +14,7 @@ import {
     getLocationThunk
 } from "../../../../../store/clients";
 
-import { tryFormatPhoneNumber, formatPhoneNumber } from "../../../../../utils/helperFunctions";
+import { tryFormatPhoneNumber, formatPhoneNumber, unformatPhoneNumber } from "../../../../../utils/helperFunctions";
 
 import "./LocationContactInfo.scss";
 
@@ -47,7 +47,7 @@ export default function LocationContactInfo({ locationId }) {
         e.preventDefault();
         if (!phoneNumber || !phoneType) return;
 
-        dispatch(addPhoneNumberToALocationThunk(locationId, { phoneNumber, phoneType }));
+        dispatch(addPhoneNumberToALocationThunk(locationId, { phoneNumber: unformatPhoneNumber(phoneNumber), phoneType }));
         setPhoneNumber("");
         setPhoneType("");
         setShowAddPhone(false);
