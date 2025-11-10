@@ -1,4 +1,4 @@
-const { Client, Ticket, TwilioTranscription, TwilioCall, TwilioRecording } = require('@db/models');
+const { Client, Ticket, TwilioTranscription, TwilioCall, TwilioRecording, Location, LocationPhoneNumber } = require('@db/models');
 const sq = require('../db/models').sequelize;
 const generateAlphanumericId = require('./randomGenerator');
 const twilioConfig = require('../config/twilio');
@@ -43,6 +43,21 @@ async function upsertCallAndTicket(req) {
     const clientPhone = From === "" ? Caller : From;
 
     let clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
+
+    if (!clientByPhone) {
+        try {
+            let locationPhone = await LocationPhoneNumber.findOne({ where: { phoneNumber: clientPhone } })
+            if (locationPhone) {
+                let location = await Location.findOne({ where: { id: locationPhone.locationId } });
+                if (location) {
+                    clientByPhone = await Client.findOne({ where: { id: location.clientId } });
+                    console.info(`Found client by location phone number: ${clientPhone}`);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     if (!clientByPhone) {
         console.error(`Client with phone ${clientPhone} not found, using anonymous client`);
