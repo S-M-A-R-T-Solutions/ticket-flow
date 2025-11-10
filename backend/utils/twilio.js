@@ -45,15 +45,19 @@ async function upsertCallAndTicket(req) {
 
         // 2️⃣ Si no está en Client, busca por LocationPhoneNumber
         if (!clientByPhone) {
+            console.warn(`⚠️ Client with phone ${clientPhone} not found, searching in LocationPhoneNumbers`);
             const locationPhone = await LocationPhoneNumber.findOne({
                 where: { phoneNumber: clientPhone },
             });
 
+            console.warn(`🔎 LocationPhoneNumber search result for phone ${clientPhone}: ${JSON.stringify(locationPhone)}`);
+
             if (locationPhone) {
+                console.warn(`⚠️ Found location phone number entry for phone ${clientPhone}, fetching associated client`);
                 const location = await Location.findByPk(locationPhone.locationId);
                 if (location) {
+                    console.warn(`✅ Found client by location phone number: ${clientPhone}`);
                     clientByPhone = await Client.findByPk(location.clientId);
-                    console.info(`✅ Found client by location phone number: ${clientPhone}`);
                 }
             }
         }
