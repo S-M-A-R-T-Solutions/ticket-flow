@@ -23,84 +23,110 @@ async function upsertCallAndTicket(req) {
 
     const existingCall = await TwilioCall.findOne({ where: { callSid: CallSid } });
 
-    // If call already exists, update its status and duration
     if (existingCall) {
         try {
             await existingCall.update({
                 callStatus: CallStatus || existingCall.callStatus,
                 callDuration: CallDuration || existingCall.callDuration,
             });
+            return { success: true, created: false, anonymous: null };
         } catch (error) {
             console.error(error);
             return { success: false, created: null, anonymous: null };
         }
-
-        return { success: true, created: false, anonymous: null };
     }
 
-    // If call does not exist, create a new ticket and call record
-
-    const clientPhone = From === "" ? Caller : From;
-
-    let clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
-
-    if (!clientByPhone) {
-        try {
-            let locationPhone = await LocationPhoneNumber.findOne({ where: { phoneNumber: clientPhone } })
-            if (locationPhone) {
-                let location = await Location.findOne({ where: { id: locationPhone.locationId } });
-                if (location) {
-                    clientByPhone = await Client.findOne({ where: { id: location.clientId } });
-                    console.info(`Found client by location phone number: ${clientPhone}`);
-                }
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    if (!clientByPhone) {
-        console.error(`Client with phone ${clientPhone} not found, using anonymous client`);
-        clientByPhone = await Client.findOne({ where: { id: twilioConfig.anonymousClientId } });
-    }
-
-    if (!clientByPhone) {
-        console.error('Anonymous client not found');
-        return { success: false, created: null, anonymous: null };
-    }
+    const clientPhone = From || Caller;
+    let clientByPhone = null;
 
     try {
-        await sq.transaction(async (t) => {
-            const ticket = await Ticket.create({
-                title: "",
-                description: "",
-                checkIn: null,
-                checkOut: null,
-                clientId: clientByPhone.id,
-                statusId: 1,
-                hashedId: generateAlphanumericId(10),
-                createdBy: twilioConfig.autoUserId,
-            }, { transaction: t });
+        // 1️⃣ Busca directamente por teléfono de cliente
+        clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
 
-            await TwilioCall.create({
-                ticketId: ticket.id,
-                called: Called,
-                callSid: CallSid,
-                to: To,
-                callStatus: CallStatus,
-                from: From,
-                callDuration: CallDuration || 0,
-                accountSid: AccountSid,
-                applicationSid: ApplicationSid,
-                caller: Caller,
-            }, { transaction: t });
+        // 2️⃣ Si no está en Client, busca por LocationPhoneNumber
+        if (!clientByPhone) {
+            const locationPhone = await LocationPhoneNumber.findOne({
+                where: { phoneNumber: clientPhone },
+            });
+
+            if (locationPhone) {
+                const location = await Location.findByPk(locationPhone.locationId);
+                if (location) {
+                    clientByPhone = await Client.findByPk(location.clientId);
+                    console.info(`✅ Found client by location phone number: ${clientPhone}`);
+                }
+            }
+        }
+
+        // 3️⃣ Si aún no se encuentra, asigna cliente anónimo
+        if (!clientByPhone) {
+            console.warn(`⚠️ Client with phone ${clientPhone} not found, using anonymous client`);
+            clientByPhone = await Client.findByPk(twilioConfig.anonymousClientId);
+        }
+
+        if (!clientByPhone) throw new Error('Anonymous client not found');
+
+        // 4️⃣ Evita duplicar LocationPhoneNumber si ya existe
+        if (clientByPhone.id !== twilioConfig.anonymousClientId) {
+            const clientLocations = await Location.findAll({ where: { clientId: clientByPhone.id } });
+
+            // Verifica si el número ya está registrado en alguna location del cliente
+            const numberExists = await LocationPhoneNumber.findOne({
+                where: { phoneNumber: clientPhone },
+            });
+
+            if (!numberExists && clientLocations.length > 0) {
+                // Si el número pertenece al cliente, lo asignamos a su primera location activa
+                await LocationPhoneNumber.create({
+                    phoneNumber: clientPhone,
+                    locationId: clientLocations[0].id,
+                });
+                console.info(`📞 Linked phone ${clientPhone} to client ${clientByPhone.id}`);
+            }
+        }
+
+        // 5️⃣ Crea ticket y llamada dentro de una transacción
+        await sq.transaction(async (t) => {
+            const ticket = await Ticket.create(
+                {
+                    title: "",
+                    description: "",
+                    checkIn: null,
+                    checkOut: null,
+                    clientId: clientByPhone.id,
+                    statusId: 1,
+                    hashedId: generateAlphanumericId(10),
+                    createdBy: twilioConfig.autoUserId,
+                },
+                { transaction: t }
+            );
+
+            await TwilioCall.create(
+                {
+                    ticketId: ticket.id,
+                    called: Called,
+                    callSid: CallSid,
+                    to: To,
+                    callStatus: CallStatus,
+                    from: From,
+                    callDuration: CallDuration || 0,
+                    accountSid: AccountSid,
+                    applicationSid: ApplicationSid,
+                    caller: Caller,
+                },
+                { transaction: t }
+            );
         });
-    } catch (err) {
-        console.error(err);
+
+        return {
+            success: true,
+            created: true,
+            anonymous: clientByPhone.id === twilioConfig.anonymousClientId,
+        };
+    } catch (error) {
+        console.error(error);
         return { success: false, created: null, anonymous: null };
     }
-
-    return { success: true, created: true, anonymous: clientByPhone.id === twilioConfig.anonymousClientId };
 }
 
 async function insertTranscription(req) {
