@@ -21,80 +21,79 @@ async function upsertCallAndTicket(req) {
         Caller,
     } = req.body;
 
-    const existingCall = await TwilioCall.findOne({ where: { callSid: CallSid } });
+    const clientPhone = From || Caller;
 
+    // 1️⃣ Evita procesar una llamada ya registrada
+    const existingCall = await TwilioCall.findOne({ where: { callSid: CallSid } });
     if (existingCall) {
-        try {
-            await existingCall.update({
-                callStatus: CallStatus || existingCall.callStatus,
-                callDuration: CallDuration || existingCall.callDuration,
-            });
-            return { success: true, created: false, anonymous: null };
-        } catch (error) {
-            console.error(error);
-            return { success: false, created: null, anonymous: null };
-        }
+        await existingCall.update({
+            callStatus: CallStatus || existingCall.callStatus,
+            callDuration: CallDuration || existingCall.callDuration,
+        });
+        return { success: true, created: false, anonymous: null };
     }
 
-    const clientPhone = From || Caller;
     let clientByPhone = null;
 
     try {
-        // 1️⃣ Busca directamente por teléfono de cliente
+        // 2️⃣ Búsqueda directa en tabla Clients
         clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
 
-        // 2️⃣ Si no está en Client, busca por LocationPhoneNumber
+        console.warn(`This is clientPhone: ${clientPhone}`);
+
+        // 3️⃣ Si no existe, buscar en LocationPhoneNumbers
         if (!clientByPhone) {
-            console.warn(`⚠️ Client with phone ${clientPhone} not found, searching in LocationPhoneNumbers`);
             const locationPhone = await LocationPhoneNumber.findOne({
                 where: { phoneNumber: clientPhone },
+                include: {
+                    model: Location,
+                    attributes: ['id', 'clientId'],
+                },
             });
 
-            console.warn(`🔎 LocationPhoneNumber search result for phone ${clientPhone}: ${JSON.stringify(locationPhone)}`);
-
-            if (locationPhone) {
-                console.warn(`⚠️ Found location phone number entry for phone ${clientPhone}, fetching associated client`);
-                const location = await Location.findByPk(locationPhone.locationId);
-                if (location) {
-                    console.warn(`✅ Found client by location phone number: ${clientPhone}`);
-                    clientByPhone = await Client.findByPk(location.clientId);
-                }
+            if (locationPhone && locationPhone.Location) {
+                clientByPhone = await Client.findByPk(locationPhone.Location.clientId);
+                console.info(`✅ Found client ${clientByPhone.id} via location phone ${clientPhone}`);
             }
         }
 
-        // 3️⃣ Si aún no se encuentra, asigna cliente anónimo
+        // 4️⃣ Si sigue sin encontrarse, usar cliente anónimo
         if (!clientByPhone) {
-            console.warn(`⚠️ Client with phone ${clientPhone} not found, using anonymous client`);
+            console.warn(`⚠️ Client not found for ${clientPhone}, using anonymous`);
             clientByPhone = await Client.findByPk(twilioConfig.anonymousClientId);
         }
 
         if (!clientByPhone) throw new Error('Anonymous client not found');
 
-        // 4️⃣ Evita duplicar LocationPhoneNumber si ya existe
+        // 5️⃣ Previene duplicados de LocationPhoneNumbers
         if (clientByPhone.id !== twilioConfig.anonymousClientId) {
-            const clientLocations = await Location.findAll({ where: { clientId: clientByPhone.id } });
-
-            // Verifica si el número ya está registrado en alguna location del cliente
-            const numberExists = await LocationPhoneNumber.findOne({
-                where: { phoneNumber: clientPhone },
+            const clientLocations = await Location.findAll({
+                where: { clientId: clientByPhone.id },
             });
 
-            if (!numberExists && clientLocations.length > 0) {
-                // Si el número pertenece al cliente, lo asignamos a su primera location activa
-                await LocationPhoneNumber.create({
-                    phoneNumber: clientPhone,
-                    locationId: clientLocations[0].id,
+            if (clientLocations.length > 0) {
+                const exists = await LocationPhoneNumber.findOne({
+                    where: { phoneNumber: clientPhone },
                 });
-                console.info(`📞 Linked phone ${clientPhone} to client ${clientByPhone.id}`);
+
+                // Si no existe en ninguna locación, lo asignamos a la primera
+                if (!exists) {
+                    await LocationPhoneNumber.create({
+                        phoneType: 'Office',
+                        locationId: clientLocations[0].id,
+                        phoneNumber: clientPhone,
+                    });
+                    console.info(`📞 Linked ${clientPhone} to location ${clientLocations[0].id}`);
+                }
             }
         }
 
-        // 5️⃣ Crea ticket y llamada dentro de una transacción
+        // 6️⃣ Crear ticket y llamada dentro de transacción
         await sq.transaction(async (t) => {
             const ticket = await Ticket.create(
                 {
-                    title: "",
-                    description: "",
+                    title: '',
+                    description: '',
                     checkIn: null,
                     checkOut: null,
                     clientId: clientByPhone.id,
@@ -128,10 +127,11 @@ async function upsertCallAndTicket(req) {
             anonymous: clientByPhone.id === twilioConfig.anonymousClientId,
         };
     } catch (error) {
-        console.error(error);
+        console.error('❌ Error in upsertCallAndTicket:', error);
         return { success: false, created: null, anonymous: null };
     }
 }
+
 
 async function insertTranscription(req) {
     const {
