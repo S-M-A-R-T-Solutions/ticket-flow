@@ -103,6 +103,8 @@ async function upsertCallAndTicket(req) {
 
     const fdData = await fdResponse.json();
 
+    console.log("📨 Freshservice Ticket Creation Response:", fdResponse.status, fdData);
+
     // 6️⃣ Actualizar ticket de mi base de datos con freshdeskId
     await ticket.update({ freshdeskId: fdData.id });
 
