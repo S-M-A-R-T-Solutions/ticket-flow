@@ -15,7 +15,8 @@ const {
 
 const { getTranscriptionFromRecording } = require('../../../utils/openai');
 
-const { TwilioCall, Ticket } = require('../../../models');
+const { TwilioCall } = require('../../../models/TwilioCall');
+const { Ticket } = require('../../../models/Ticket');
 
 const { singleFileUpload } = require('../../../awsS3');
 
