@@ -104,37 +104,24 @@ async function upsertCallAndTicket(req) {
                 { transaction: t }
             );
 
-            await TwilioCall.create(
-                {
-                    ticketId: ticket.id,
-                    called: Called,
-                    callSid: CallSid,
-                    to: To,
-                    callStatus: CallStatus,
-                    from: From,
-                    callDuration: CallDuration || 0,
-                    accountSid: AccountSid,
-                    applicationSid: ApplicationSid,
-                    caller: Caller,
-                },
-                { transaction: t }
-            );
+            const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
 
-            // Hacer una llamada CURL a la instancia de freshdesk para crear el ticket alla tambien
-            await axios.post(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
-                subject: `New Call Ticket - ${ticket.hashedId}`,
-                description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
-                email: clientByPhone.email || '',
-                phone: clientByPhone.phone || '',
-                priority: 1,
-                status: 2,
-            }, {
-                auth: {
-                    username: process.env.FRESHDESK_API_KEY,
-                    password: 'X'
-                }
+            await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Basic ${freshdeskAuth}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    subject: `New Call Ticket - ${ticket.hashedId}`,
+                    description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
+                    email: clientByPhone.email || '',
+                    phone: clientByPhone.phone || '',
+                    priority: 1,
+                    status: 2,
+                })
             });
-            console.info(`🎫 Created ticket ${ticket.id} for client ${clientByPhone.id}`);
+
         });
 
         return {
