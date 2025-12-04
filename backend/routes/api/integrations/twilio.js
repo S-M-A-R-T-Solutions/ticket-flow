@@ -92,7 +92,7 @@ router.post('/recordingStatus', urlencodedParser, async (req, res) => {
             await ticket.update({ recordingUrl: s3url });
 
             // Subir el MP3 como attachment al Freshservice ticket
-            if (ticket.freshdeskId) {
+            if (ticket.freshDeskId) {
                 const audioTempPath = `../media/temp_recordings/${file.originalname}`;
                 const audioName = file.originalname;
 
