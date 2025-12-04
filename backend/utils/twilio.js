@@ -193,40 +193,48 @@ async function updateTicketWithTranscription(callSid, transcription) {
     const anonymous = ticket.clientId === twilioConfig.anonymousClientId;
     const { title, description } = await getTitleAndDescription(transcription, anonymous);
 
-    // 1️⃣ Actualiza ticket interno
     await ticket.update({
         title: title.slice(0, 50),
-        description: description,
+        description: description
     });
 
-    // 2️⃣ Si el ticket tiene Freshservice ID → actualízalo
     if (ticket.freshdeskId) {
 
-        const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
+        const safeTranscript = `<div style="white-space: pre-wrap;">${transcription}</div>`;
 
-        const body = {
-            description: `
-                <b>Call Transcript:</b><br>
-                <pre>${transcription}</pre>
-                <br>
-                <b>Audio Recording:</b> <a href="${ticket.recordingUrl || ''}">Download Audio</a>
-                <br><br>
-                ${description}
-            `
-        };
+        const htmlBody = `
+            <b>Call Transcript:</b><br>
+            ${safeTranscript}
+            <br>
+            <b>Audio Recording:</b> 
+            <a href="${ticket.recordingUrl || ''}">Download Audio</a>
+            <br><br>
+            ${description}
+        `;
+
+        const FormData = require("form-data");
+        const form = new FormData();
+
+        form.append("subject", title.slice(0, 50));
+        form.append("description", htmlBody);
+
+        const freshdeskAuth = Buffer.from(
+            `${process.env.FRESHDESK_API_KEY}:X`
+        ).toString("base64");
 
         await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`, {
             method: "PUT",
             headers: {
                 "Authorization": `Basic ${freshdeskAuth}`,
-                "Content-Type": "application/json"
+                ...form.getHeaders()
             },
-            body: JSON.stringify(body)
+            body: form
         });
     }
 
     return true;
 }
+
 
 async function upsertCallRecording(req) {
     const {
