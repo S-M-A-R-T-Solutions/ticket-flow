@@ -107,10 +107,10 @@ async function upsertCallAndTicket(req) {
 
     const ticketForUpdate = await Ticket.findByPk(ticket.id);
 
-    ticketForUpdate.freshdeskId = fdData.id;
+    ticketForUpdate.freshdeskId = fdData.ticket.id;
     await ticketForUpdate.save();
 
-    console.log(`FData.id for ticket ${ticket.id}: ${fdData.id}`);
+    console.log(`Ticket ${ticket.id} linked to Freshservice Ticket ${fdData.ticket.id}`);
 
     return {
         success: true,
