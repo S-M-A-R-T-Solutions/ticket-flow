@@ -92,7 +92,7 @@ async function upsertCallAndTicket(req) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            subject: `New Call Ticket - ${ticket.hashedId}`,
+            subject: `New Call Ticket - ${clientPhone}`,
             description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
             email: clientByPhone.email || '',
             phone: clientByPhone.phone || '',
@@ -102,7 +102,9 @@ async function upsertCallAndTicket(req) {
     });
 
     const fdData = await fdResponse.json();
-    await ticket.update({ freshDeskId: fdData.id });
+
+    // 6️⃣ Actualizar ticket de mi base de datos con freshdeskId
+    await ticket.update({ freshdeskId: fdData.id });
 
     return {
         success: true,
@@ -203,17 +205,11 @@ async function updateTicketWithTranscription(callSid, transcription) {
     const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`)
         .toString("base64");
 
-    const htmlBody = `
-        <b>Call Transcript</b><br>
-        <div style="white-space: pre-wrap;">${transcription}</div><br>
-        <b>Audio Recording:</b> 
-        <a href="${ticket.recordingUrl || ''}">Download Audio</a><br><br>
-        ${description}
-    `;
+    const bodyWithTranscription = `${description}`;
 
     const form = new FormData();
     form.append("subject", title.slice(0, 50));
-    form.append("description", htmlBody);
+    form.append("description", bodyWithTranscription);
 
     const response = await fetch(
         `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
