@@ -105,8 +105,12 @@ async function upsertCallAndTicket(req) {
 
     console.log("📨 Freshservice Ticket Creation Response:", fdResponse.status, fdData);
 
-    // 6️⃣ Actualizar ticket de mi base de datos con freshdeskId
-    await ticket.update({ freshdeskId: fdData.id });
+    const ticketForUpdate = await Ticket.findByPk(ticket.id);
+
+    ticketForUpdate.freshdeskId = fdData.id;
+    await ticketForUpdate.save();
+
+    console.log(`Ticket Freshservice ID saved to local ticket ${ticket.id}`);
 
     return {
         success: true,
