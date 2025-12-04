@@ -1,7 +1,7 @@
 const fs = require('fs');
 const FormData = require('form-data');
 
-async function uploadAttachmentToFreshdesk(ticketId, filePath, fileName) {
+async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
     const authString = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
 
     const form = new FormData();
@@ -30,4 +30,4 @@ async function uploadAttachmentToFreshdesk(ticketId, filePath, fileName) {
     return true;
 }
 
-module.exports = { uploadAttachmentToFreshdesk };
+module.exports = { uploadAttachmentToFreshservice };
