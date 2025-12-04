@@ -1,22 +1,24 @@
 const fs = require('fs');
 const FormData = require('form-data');
+const path = require('path');
 
-async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
+async function uploadAttachmentToFreshservice(ticketId, absoluteFilePath, fileName) {
+
+    if (!fs.existsSync(absoluteFilePath)) {
+        console.error("❌ File not found:", absoluteFilePath);
+        throw new Error("Attachment file does not exist");
+    }
+
     const apiKey = process.env.FRESHDESK_API_KEY;
     const baseUrl = process.env.FRESHDESK_URL;
 
     const authString = Buffer.from(`${apiKey}:X`).toString('base64');
 
     const form = new FormData();
+    form.append("attachments[]", fs.createReadStream(absoluteFilePath), fileName);
 
-    // 📎 Mandatory: Freshservice only accepts attachments[] key
-    form.append('attachments[]', fs.createReadStream(filePath), fileName);
-
-    // Puedes agregar campos adicionales si quieres
-    // form.append('priority', '1');
-
-    const response = await fetch(`${baseUrl}/api/v2/tickets/${ticketId}`, {
-        method: "PUT",
+    const response = await fetch(`${baseUrl}/api/v2/tickets/${ticketId}/attachments`, {
+        method: "POST",
         headers: {
             "Authorization": `Basic ${authString}`,
             ...form.getHeaders()
@@ -24,13 +26,14 @@ async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
         body: form
     });
 
+    const text = await response.text();
+    console.log("📨 Freshservice Attachment Response:", response.status, text);
+
     if (!response.ok) {
-        const text = await response.text();
-        console.error("❌ Freshservice attachment upload failed:", text);
-        throw new Error(text);
+        throw new Error(`Freshservice attachment upload failed: ${text}`);
     }
 
-    console.log(`📎 Attachment uploaded to Freshservice ticket ${ticketId}`);
+    console.log("📎 Attachment uploaded successfully");
     return true;
 }
 

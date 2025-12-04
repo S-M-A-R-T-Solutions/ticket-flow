@@ -182,58 +182,56 @@ async function getCompletedTranscriptions(callSid) {
     return completed.trim();
 }
 
-async function updateTicketWithTranscription(callSid, transcription) {
+const FormData = require("form-data");
 
+async function updateTicketWithTranscription(callSid, transcription) {
     const call = await TwilioCall.findOne({ where: { callSid } });
     if (!call) return false;
 
     const ticket = await Ticket.findByPk(call.ticketId);
     if (!ticket) return false;
 
-    const anonymous = ticket.clientId === twilioConfig.anonymousClientId;
-    const { title, description } = await getTitleAndDescription(transcription, anonymous);
+    const { title, description } = await getTitleAndDescription(transcription);
 
     await ticket.update({
         title: title.slice(0, 50),
-        description: description
+        description
     });
 
-    if (ticket.freshdeskId) {
+    if (!ticket.freshdeskId) return true;
 
-        const safeTranscript = `<div style="white-space: pre-wrap;">${transcription}</div>`;
+    const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`)
+        .toString("base64");
 
-        const htmlBody = `
-            <b>Call Transcript:</b><br>
-            ${safeTranscript}
-            <br>
-            <b>Audio Recording:</b> 
-            <a href="${ticket.recordingUrl || ''}">Download Audio</a>
-            <br><br>
-            ${description}
-        `;
+    const htmlBody = `
+        <b>Call Transcript</b><br>
+        <div style="white-space: pre-wrap;">${transcription}</div><br>
+        <b>Audio Recording:</b> 
+        <a href="${ticket.recordingUrl || ''}">Download Audio</a><br><br>
+        ${description}
+    `;
 
-        const FormData = require("form-data");
-        const form = new FormData();
+    const form = new FormData();
+    form.append("subject", title.slice(0, 50));
+    form.append("description", htmlBody);
 
-        form.append("subject", title.slice(0, 50));
-        form.append("description", htmlBody);
-
-        const freshdeskAuth = Buffer.from(
-            `${process.env.FRESHDESK_API_KEY}:X`
-        ).toString("base64");
-
-        await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`, {
+    const response = await fetch(
+        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
+        {
             method: "PUT",
             headers: {
                 "Authorization": `Basic ${freshdeskAuth}`,
                 ...form.getHeaders()
             },
             body: form
-        });
-    }
+        }
+    );
+
+    console.log("📨 Freshservice Update Response:", response.status, await response.text());
 
     return true;
 }
+
 
 
 async function upsertCallRecording(req) {
