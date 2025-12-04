@@ -1,27 +1,28 @@
-const fs = require("fs");
-const FormData = require("form-data");
+const fs = require('fs');
+const FormData = require('form-data');
 
-async function uploadAttachmentToFreshservice(ticketId, filePath) {
+async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
     const authString = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
 
     const form = new FormData();
 
-    // Freshservice requires a dummy field besides attachments
-    form.append("description", "Attachment uploaded automatically");
+    // Freshservice requires: at least ONE non-file field
+    form.append("priority", "1");
 
-    // Correct field name: "attachments"
-    form.append("attachments", fs.createReadStream(filePath));
+    // Attach the file WITH a filename
+    form.append("attachments[]", fs.createReadStream(filePath), fileName);
 
-    const url = `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticketId}/update_ticket`;
-
-    const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-            "Authorization": `Basic ${authString}`,
-            ...form.getHeaders()
-        },
-        body: form
-    });
+    const response = await fetch(
+        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticketId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Authorization": `Basic ${authString}`,
+                ...form.getHeaders()
+            },
+            body: form
+        }
+    );
 
     const txt = await response.text();
     console.log("Freshservice Attachment Upload Response:", response.status, txt);
