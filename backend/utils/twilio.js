@@ -24,120 +24,91 @@ async function upsertCallAndTicket(req) {
 
     const clientPhone = From || Caller;
 
-    // 1️⃣ Evita procesar una llamada ya registrada
-    const existingCall = await TwilioCall.findOne({ where: { callSid: CallSid } });
-    if (existingCall) {
-        await existingCall.update({
-            callStatus: CallStatus || existingCall.callStatus,
-            callDuration: CallDuration || existingCall.callDuration,
+    // 1️⃣ Buscamos si la llamada ya existe
+    let callEntry = await TwilioCall.findOne({ where: { callSid: CallSid } });
+
+    if (callEntry) {
+        await callEntry.update({
+            callStatus: CallStatus || callEntry.callStatus,
+            callDuration: CallDuration || callEntry.callDuration,
         });
-        return { success: true, created: false, anonymous: null };
+        return { success: true, created: false };
     }
 
-    let clientByPhone = null;
+    // 2️⃣ Buscar cliente
+    let clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
 
-    try {
-        // 2️⃣ Búsqueda directa en tabla Clients
-        clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
-
-
-        // 3️⃣ Si no existe, buscar en LocationPhoneNumbers
-        if (!clientByPhone) {
-            const locationPhone = await LocationPhoneNumber.findOne({
-                where: { phoneNumber: clientPhone },
-                include: {
-                    model: Location,
-                    attributes: ['id', 'clientId'],
-                },
-            });
-
-            if (locationPhone && locationPhone.Location) {
-                clientByPhone = await Client.findByPk(locationPhone.Location.clientId);
-                console.info(`✅ Found client ${clientByPhone.id} via location phone ${clientPhone}`);
-            }
-        }
-
-        // 4️⃣ Si sigue sin encontrarse, usar cliente anónimo
-        if (!clientByPhone) {
-            console.warn(`⚠️ Client not found for ${clientPhone}, using anonymous`);
-            clientByPhone = await Client.findByPk(twilioConfig.anonymousClientId);
-        }
-
-        if (!clientByPhone) throw new Error('Anonymous client not found');
-
-        // 5️⃣ Previene duplicados de LocationPhoneNumbers
-        if (clientByPhone.id !== twilioConfig.anonymousClientId) {
-            const clientLocations = await Location.findAll({
-                where: { clientId: clientByPhone.id },
-            });
-
-            if (clientLocations.length > 0) {
-                const exists = await LocationPhoneNumber.findOne({
-                    where: { phoneNumber: clientPhone },
-                });
-
-                // Si no existe en ninguna locación, lo asignamos a la primera
-                if (!exists) {
-                    await LocationPhoneNumber.create({
-                        phoneType: 'Office',
-                        locationId: clientLocations[0].id,
-                        phoneNumber: clientPhone,
-                    });
-                    console.info(`📞 Linked ${clientPhone} to location ${clientLocations[0].id}`);
-                }
-            }
-        }
-
-        // 6️⃣ Crear ticket y llamada dentro de transacción
-        await sq.transaction(async (t) => {
-            const ticket = await Ticket.create(
-                {
-                    title: '',
-                    description: '',
-                    checkIn: null,
-                    checkOut: null,
-                    clientId: clientByPhone.id,
-                    statusId: 1,
-                    hashedId: generateAlphanumericId(10),
-                    createdBy: twilioConfig.autoUserId,
-                },
-                { transaction: t }
-            );
-
-            const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
-
-            const fdResponse = await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Basic ${freshdeskAuth}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    subject: `New Call Ticket - ${ticket.hashedId}`,
-                    description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
-                    email: clientByPhone.email || '',
-                    phone: clientByPhone.phone || '',
-                    priority: 1,
-                    status: 2,
-                })
-            });
-
-            const fdData = await fdResponse.json();
-
-            // Guarda el ID de Freshservice en tu Ticket local
-            await ticket.update({ freshdeskId: fdData.id }, { transaction: t });
-
+    if (!clientByPhone) {
+        const locationPhone = await LocationPhoneNumber.findOne({
+            where: { phoneNumber: clientPhone },
+            include: { model: Location, attributes: ['id', 'clientId'] },
         });
 
-        return {
-            success: true,
-            created: true,
-            anonymous: clientByPhone.id === twilioConfig.anonymousClientId,
-        };
-    } catch (error) {
-        console.error('❌ Error in upsertCallAndTicket:', error);
-        return { success: false, created: null, anonymous: null };
+        if (locationPhone && locationPhone.Location) {
+            clientByPhone = await Client.findByPk(locationPhone.Location.clientId);
+        }
     }
+
+    if (!clientByPhone)
+        clientByPhone = await Client.findByPk(twilioConfig.anonymousClientId);
+
+    if (!clientByPhone) throw new Error("Anonymous client missing in DB");
+
+    // 3️⃣ Crear Ticket LOCAL (rápido)
+    const ticket = await Ticket.create({
+        title: '',
+        description: '',
+        checkIn: null,
+        checkOut: null,
+        clientId: clientByPhone.id,
+        statusId: 1,
+        hashedId: generateAlphanumericId(10),
+        createdBy: twilioConfig.autoUserId,
+    });
+
+    // 4️⃣ Crear TwilioCall INMEDIATELY con ticketId → así nunca es null
+    callEntry = await TwilioCall.create({
+        ticketId: ticket.id,
+        callSid: CallSid,
+        called: Called,
+        from: From,
+        to: To,
+        callStatus: CallStatus,
+        callDuration: CallDuration || 0,
+        accountSid: AccountSid,
+        applicationSid: ApplicationSid,
+        caller: Caller,
+    });
+
+    // 5️⃣ Ahora sí podemos crear ticket en FRESHSERVICE
+    const freshdeskAuth = Buffer.from(
+        `${process.env.FRESHDESK_API_KEY}:X`
+    ).toString("base64");
+
+    const fdResponse = await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Basic ${freshdeskAuth}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            subject: `New Call Ticket - ${ticket.hashedId}`,
+            description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
+            email: clientByPhone.email || '',
+            phone: clientByPhone.phone || '',
+            priority: 1,
+            status: 2,
+        })
+    });
+
+    const fdData = await fdResponse.json();
+    await ticket.update({ freshdeskId: fdData.id });
+
+    return {
+        success: true,
+        created: true,
+        anonymous: clientByPhone.id === twilioConfig.anonymousClientId,
+    };
 }
 
 
