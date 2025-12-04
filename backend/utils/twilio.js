@@ -1,4 +1,4 @@
-onst {
+const {
     Client, Ticket, TwilioTranscription, TwilioCall, TwilioRecording,
         Location, LocationPhoneNumber
 } = require('@db/models');
