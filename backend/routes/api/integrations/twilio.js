@@ -15,6 +15,8 @@ const {
 
 const { getTranscriptionFromRecording } = require('../../../utils/openai');
 
+const { TwilioCall, Ticket } = require('../../../models');
+
 const { singleFileUpload } = require('../../../awsS3');
 
 const publicWebhookPaths = [
@@ -37,7 +39,7 @@ router.post('/callStart', urlencodedParser, async (req, res) => {
     // twiml.start().transcription({
     //     statusCallbackUrl: urlTranscriptions,
     // });
-    
+
     twiml.dial({
         record: 'record-from-answer',
         recordingStatusCallback: urlRecordings,
@@ -81,8 +83,35 @@ router.post('/recordingStatus', urlencodedParser, async (req, res) => {
             const s3url = await singleFileUpload({ file, public: true });
             console.info('Recording uploaded to S3 URL: ' + s3url);
 
+            const call = await TwilioCall.findOne({ where: { callSid: CallSid } });
+            const ticket = await Ticket.findByPk(call.ticketId);
+
+            // Guardamos la URL pública del audio
+            await ticket.update({ recordingUrl: s3url });
+
+            // Subir el MP3 como attachment al Freshservice ticket
+            if (ticket.freshdeskId) {
+                const audioTempPath = `../media/temp_recordings/${file.originalname}`;
+                const audioName = file.originalname;
+
+                const { uploadAttachmentToFreshdesk } = require('../../../utils/freshdesk');
+
+                try {
+                    await uploadAttachmentToFreshdesk(ticket.freshdeskId, audioTempPath, audioName);
+                    console.info(`📎 MP3 attached to Freshservice ticket ${ticket.freshdeskId}`);
+                } catch (error) {
+                    console.error("❌ Error uploading attachment:", error);
+                }
+            }
+
             const { recording } = result;
             const transcription = await getTranscriptionFromRecording(stream);
+
+            await recording.update({ s3url });
+
+            await ticket.update({ recordingUrl: s3url });
+
+
             await recording.update({ transcription });
 
             await updateTicketWithTranscription(CallSid, transcription);

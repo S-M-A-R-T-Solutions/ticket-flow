@@ -106,7 +106,7 @@ async function upsertCallAndTicket(req) {
 
             const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
 
-            await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
+            const fdResponse = await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Basic ${freshdeskAuth}`,
@@ -121,6 +121,11 @@ async function upsertCallAndTicket(req) {
                     status: 2,
                 })
             });
+
+            const fdData = await fdResponse.json();
+
+            // Guarda el ID de Freshservice en tu Ticket local
+            await ticket.update({ freshdeskId: fdData.id }, { transaction: t });
 
         });
 
@@ -207,31 +212,46 @@ async function getCompletedTranscriptions(callSid) {
 }
 
 async function updateTicketWithTranscription(callSid, transcription) {
-    const call = await TwilioCall.findOne({ where: { callSid: callSid } });
 
-    if (!call) {
-        console.error(`Call with SID ${callSid} not found`);
-        return false;
-    }
+    const call = await TwilioCall.findOne({ where: { callSid } });
+    if (!call) return false;
 
-    const ticket = await Ticket.findOne({ where: { id: call.ticketId } });
-
-    if (!ticket) {
-        console.error(`Ticket with ID ${call.ticketId} not found`);
-        return false;
-    }
+    const ticket = await Ticket.findByPk(call.ticketId);
+    if (!ticket) return false;
 
     const anonymous = ticket.clientId === twilioConfig.anonymousClientId;
     const { title, description } = await getTitleAndDescription(transcription, anonymous);
 
-    try {
-        await ticket.update({
-            title: title.slice(0, 50) || 'No Title',
-            description: description || 'No Description',
+    // 1️⃣ Actualiza ticket interno
+    await ticket.update({
+        title: title.slice(0, 50),
+        description: description,
+    });
+
+    // 2️⃣ Si el ticket tiene Freshservice ID → actualízalo
+    if (ticket.freshdeskId) {
+
+        const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
+
+        const body = {
+            description: `
+                <b>Call Transcript:</b><br>
+                <pre>${transcription}</pre>
+                <br>
+                <b>Audio Recording:</b> <a href="${ticket.recordingUrl || ''}">Download Audio</a>
+                <br><br>
+                ${description}
+            `
+        };
+
+        await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Basic ${freshdeskAuth}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
         });
-    } catch (error) {
-        console.error(error);
-        return false;
     }
 
     return true;
