@@ -102,7 +102,7 @@ async function upsertCallAndTicket(req) {
     });
 
     const fdData = await fdResponse.json();
-    await Ticket.update({ freshDeskId: fdData.id }, { where: { id: ticket.id } });
+    await ticket.update({ freshDeskId: fdData.id });
 
     return {
         success: true,
