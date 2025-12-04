@@ -1,32 +1,37 @@
 const fs = require('fs');
 const FormData = require('form-data');
 
-async function uploadAttachmentToFreshdesk(ticketId, filePath, fileName) {
-    const authString = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
+async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
+    const apiKey = process.env.FRESHDESK_API_KEY;
+    const baseUrl = process.env.FRESHDESK_URL;
+
+    const authString = Buffer.from(`${apiKey}:X`).toString('base64');
 
     const form = new FormData();
-    form.append("attachments[]", fs.createReadStream(filePath), fileName);
 
-    const response = await fetch(
-        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticketId}/attachments`,
-        {
-            method: "POST",
-            headers: {
-                "Authorization": `Basic ${authString}`,
-                ...form.getHeaders(),
-            },
-            body: form
-        }
-    );
+    // 📎 Mandatory: Freshservice only accepts attachments[] key
+    form.append('attachments[]', fs.createReadStream(filePath), fileName);
+
+    // Puedes agregar campos adicionales si quieres
+    // form.append('priority', '1');
+
+    const response = await fetch(`${baseUrl}/api/v2/tickets/${ticketId}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Basic ${authString}`,
+            ...form.getHeaders()
+        },
+        body: form
+    });
 
     if (!response.ok) {
-        const errText = await response.text();
-        console.error("❌ Freshservice attachment upload failed:", errText);
-        throw new Error("Failed to upload attachment to Freshservice");
+        const text = await response.text();
+        console.error("❌ Freshservice attachment upload failed:", text);
+        throw new Error(text);
     }
 
-    console.info("📎 Attachment uploaded to Freshservice");
+    console.log(`📎 Attachment uploaded to Freshservice ticket ${ticketId}`);
     return true;
 }
 
-module.exports = { uploadAttachmentToFreshdesk };
+module.exports = { uploadAttachmentToFreshservice };

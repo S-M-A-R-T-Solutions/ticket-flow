@@ -96,10 +96,10 @@ router.post('/recordingStatus', urlencodedParser, async (req, res) => {
                 const audioTempPath = `../media/temp_recordings/${file.originalname}`;
                 const audioName = file.originalname;
 
-                const { uploadAttachmentToFreshdesk } = require('../../../utils/freshdesk');
+                const { uploadAttachmentToFreshservice } = require('../../../utils/freshdesk');
 
                 try {
-                    await uploadAttachmentToFreshdesk(ticket.freshdeskId, audioTempPath, audioName);
+                    await uploadAttachmentToFreshservice(ticket.freshdeskId, audioTempPath, audioName);
                     console.info(`📎 MP3 attached to Freshservice ticket ${ticket.freshdeskId}`);
                 } catch (error) {
                     console.error("❌ Error uploading attachment:", error);
