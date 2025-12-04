@@ -2,9 +2,7 @@ const fs = require('fs');
 const FormData = require('form-data');
 
 async function uploadAttachmentToFreshdesk(ticketId, filePath, fileName) {
-    const authString = Buffer.from(
-        `${process.env.FRESHDESK_API_KEY}:X`
-    ).toString("base64");
+    const authString = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
 
     const form = new FormData();
     form.append("attachments[]", fs.createReadStream(filePath), fileName);
@@ -22,12 +20,12 @@ async function uploadAttachmentToFreshdesk(ticketId, filePath, fileName) {
     );
 
     if (!response.ok) {
-        const text = await response.text();
-        console.error("❌ Freshservice attachment error:", text);
-        throw new Error(text);
+        const errText = await response.text();
+        console.error("❌ Freshservice attachment upload failed:", errText);
+        throw new Error("Failed to upload attachment to Freshservice");
     }
 
-    console.info("📎 Attachment uploaded to Freshservice:", fileName);
+    console.info("📎 Attachment uploaded to Freshservice");
     return true;
 }
 
