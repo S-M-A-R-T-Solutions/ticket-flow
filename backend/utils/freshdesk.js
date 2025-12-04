@@ -5,12 +5,12 @@ async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
     const authString = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
 
     const form = new FormData();
-    form.append("attachments", fs.createReadStream(filePath), fileName);
+    form.append("attachments[]", fs.createReadStream(filePath));
 
     const response = await fetch(
-        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticketId}/attachments`,
+        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticketId}`,
         {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Authorization": `Basic ${authString}`,
                 ...form.getHeaders()
@@ -19,12 +19,11 @@ async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
         }
     );
 
-    const text = await response.text();
-
-    console.log("Freshservice Attachment Upload Response:", response.status, text);
+    const txt = await response.text();
+    console.log("Freshservice Attachment Upload Response:", response.status, txt);
 
     if (!response.ok) {
-        throw new Error(text);
+        throw new Error(`Failed to upload attachment to Freshservice: ${txt}`);
     }
 
     return true;
