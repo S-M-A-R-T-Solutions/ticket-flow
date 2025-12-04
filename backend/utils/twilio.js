@@ -4,6 +4,7 @@ const generateAlphanumericId = require('./randomGenerator');
 const twilioConfig = require('../config/twilio');
 const { Op } = require('sequelize');
 const { getTitleAndDescription } = require('./openai');
+
 const axios = require('axios');
 const { Buffer } = require('buffer');
 const fs = require('fs');
@@ -118,6 +119,22 @@ async function upsertCallAndTicket(req) {
                 },
                 { transaction: t }
             );
+
+            // Hacer una llamada CURL a la instancia de freshdesk para crear el ticket alla tambien
+            await axios.post(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
+                subject: `New Call Ticket - ${ticket.hashedId}`,
+                description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
+                email: clientByPhone.email || '',
+                phone: clientByPhone.phone || '',
+                priority: 1,
+                status: 2,
+            }, {
+                auth: {
+                    username: process.env.FRESHDESK_API_KEY,
+                    password: 'X'
+                }
+            });
+            console.info(`🎫 Created ticket ${ticket.id} for client ${clientByPhone.id}`);
         });
 
         return {
