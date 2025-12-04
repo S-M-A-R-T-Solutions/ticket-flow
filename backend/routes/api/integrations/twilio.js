@@ -88,7 +88,7 @@ router.post('/recordingStatus', urlencodedParser, async (req, res) => {
             const call = await TwilioCall.findOne({ where: { callSid: CallSid } });
             const ticket = await Ticket.findByPk(call.ticketId);
 
-            console.log(`Ticket Selected for Recording Update: ${ticket.id}`);
+            console.log(`Ticket Selected for Recording Update: ${ticket}`);
             console.log(`Ticket Freshdesk ID: ${ticket.freshdeskId}`);
 
             // Guardamos la URL pública del audio
