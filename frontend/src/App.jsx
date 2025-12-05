@@ -13,6 +13,7 @@ import TopBar from "./components/Layout/TopBar/TopBar";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Tickets from "./components/Tickets";
 import MyWork from "./components/MyWork";
+import Assessments from "./components/Assessments";
 import TicketDetailsOld from "./components/TicketDetails";
 import TicketDetails from "./components/Tickets/TicketDetails/TicketDetails";
 import Employees from "./components/Employees/Employees";
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
       {
         path: '/inventory/:partId',
         element: <PartDetails />
+      },
+      {
+        path: '/assessments',
+        element: <Assessments />
       }
     ]
   }
