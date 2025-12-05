@@ -225,7 +225,10 @@ async function updateTicketWithTranscription(callSid, transcription) {
                 "Authorization": `Basic ${freshdeskAuth}`,
                 ...form.getHeaders()
             },
-            body: form
+            body: {
+                description: bodyWithTranscription,
+                subject: title.slice(0, 50),
+            }
         }
     );
 
