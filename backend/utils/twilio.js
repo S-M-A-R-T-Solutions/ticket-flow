@@ -236,15 +236,14 @@ async function updateTicketWithTranscription(callSid, transcription) {
     const form = new FormData();
     form.append("attachments[]", Buffer.from(transcription, 'utf-8'), { filename: `Transcription - Ticket ${ticket.id}.txt` });
 
-    const attachResponse = await fetch(
+    const attachResponse = await axios.put(
         `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
+        form,
         {
-            method: "PUT",
             headers: {
                 "Authorization": `Basic ${freshdeskAuth}`,
                 ...form.getHeaders(),
-            },
-            body: form
+            }
         }
     );
 

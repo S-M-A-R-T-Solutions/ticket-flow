@@ -21,6 +21,7 @@ async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
     );
 
     console.log("Freshservice Upload Success:", response.status);
+
     return true;
 }
 
