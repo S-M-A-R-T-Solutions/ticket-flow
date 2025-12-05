@@ -217,6 +217,8 @@ async function updateTicketWithTranscription(callSid, transcription) {
     form.append("subject", title.slice(0, 50));
     form.append("description", bodyWithTranscription);
 
+    console.log(`Ticket ${ticket.id} updating Freshservice Ticket ${ticket.freshdeskId} with transcription: ${bodyWithTranscription}`);
+
     const response = await fetch(
         `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
         {
