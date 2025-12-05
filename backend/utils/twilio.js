@@ -199,6 +199,8 @@ async function updateTicketWithTranscription(callSid, transcription) {
     const ticket = await Ticket.findByPk(call.ticketId);
     if (!ticket) return false;
 
+    console.log(`This is the transcription to update Ticket ${ticket.id}:\n`, transcription);
+
     const { title, description } = await getTitleAndDescription(transcription);
 
     await ticket.update({
