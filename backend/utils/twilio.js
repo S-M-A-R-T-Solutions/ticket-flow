@@ -213,29 +213,25 @@ async function updateTicketWithTranscription(callSid, transcription) {
 
     const bodyWithTranscription = `${description}`;
 
-    const form = new FormData();
-    form.append("subject", title.slice(0, 50));
-    form.append("description", bodyWithTranscription);
-
     console.log(`Ticket ${ticket.id} updating Freshservice Ticket ${ticket.freshdeskId} with transcription: ${bodyWithTranscription}`);
 
+    // Option 1: Using JSON (recommended)
     const response = await fetch(
         `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
         {
             method: "PUT",
             headers: {
                 "Authorization": `Basic ${freshdeskAuth}`,
-                ...form.getHeaders()
+                "Content-Type": "application/json"
             },
-            body: {
+            body: JSON.stringify({
                 description: bodyWithTranscription,
-                subject: title.slice(0, 50),
-            }
+                subject: title.slice(0, 50)
+            })
         }
     );
 
     console.log("📨 Freshservice Update Response:", response.status, await response.text());
-
     return true;
 }
 
