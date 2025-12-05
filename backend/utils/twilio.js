@@ -215,7 +215,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
 
     console.log(`Ticket ${ticket.id} updating Freshservice Ticket ${ticket.freshdeskId} with transcription: ${bodyWithTranscription}`);
 
-    // Option 1: Using JSON (recommended)
+    // Using JSON to modify subject and description
     const response = await fetch(
         `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
         {
@@ -232,6 +232,24 @@ async function updateTicketWithTranscription(callSid, transcription) {
     );
 
     console.log("📨 Freshservice Update Response:", response.status, await response.text());
+    
+    const form = new FormData();
+    form.append("attachments[]", Buffer.from(transcription, 'utf-8'), { filename: `Transcription - Ticket ${ticket.id}.txt` });
+
+    const attachResponse = await fetch(
+        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Authorization": `Basic ${freshdeskAuth}`,
+                ...form.getHeaders(),
+            },
+            body: form
+        }
+    );
+
+    console.log("📎 Freshservice Attachment Response:", attachResponse.status, await attachResponse.text());
+    
     return true;
 }
 

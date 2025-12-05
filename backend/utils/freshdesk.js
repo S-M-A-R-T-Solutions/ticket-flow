@@ -6,7 +6,7 @@ async function uploadAttachmentToFreshservice(ticketId, filePath, fileName) {
     const authString = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
 
     const form = new FormData();
-    form.append("attachments[]", fs.createReadStream(filePath), fileName);
+    form.append("attachments[]", fs.createReadStream(filePath), `Call Recording - ${fileName}`);
     form.append("priority", 1); // FS requires at least 1 normal field
 
     const response = await axios.put(
