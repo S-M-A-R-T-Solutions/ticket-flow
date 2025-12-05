@@ -103,7 +103,7 @@ async function upsertCallAndTicket(req) {
 
     const fdData = await fdResponse.json();
 
-    console.log("📨 Freshservice Ticket Creation Response:", fdResponse.status, fdData);
+    console.log("📨 Freshservice Ticket Creation Response:", fdResponse.status);
 
     const ticketForUpdate = await Ticket.findByPk(ticket.id);
 
@@ -185,7 +185,7 @@ async function getCompletedTranscriptions(callSid) {
         return `${acc}${curr.track}:${curr.transcriptionData}\n`;
     });
 
-    console.info('getCompletedTranscriptions:\n' + completed);
+    // console.info('getCompletedTranscriptions:\n' + completed);
 
     return completed.trim();
 }
@@ -213,7 +213,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
 
     const bodyWithTranscription = `${description}`;
 
-    console.log(`Ticket ${ticket.id} updating Freshservice Ticket ${ticket.freshdeskId} with transcription: ${bodyWithTranscription}`);
+    console.log(`Ticket ${ticket.id} updating Freshservice Ticket ${ticket.freshdeskId} with transcription.`);
 
     // Using JSON to modify subject and description
     const response = await fetch(
@@ -231,7 +231,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
         }
     );
 
-    console.log("📨 Freshservice Update Response:", response.status, await response.text());
+    console.log("📨 Freshservice Update Response:", response.status);
     
     const form = new FormData();
     form.append("attachments[]", Buffer.from(transcription, 'utf-8'), { filename: `Transcription - Ticket ${ticket.id}.txt` });
@@ -247,7 +247,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
         }
     );
 
-    console.log("📎 Freshservice Attachment Response:", attachResponse.status, await attachResponse.text());
+    console.log("📎 Freshservice Attachment Response:", attachResponse.status);
     
     return true;
 }
