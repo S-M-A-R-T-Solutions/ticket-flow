@@ -107,7 +107,7 @@ async function upsertCallAndTicket(req) {
 
     console.log("📨 Freshservice Ticket Creation Response:", fdResponse.status);
 
-    firstDescription = `Ticket created for call from ${clientPhone}.\n\nFreshservice Ticket ID: ${fdData.id}\n\n`;
+    firstDescription = `Ticket created for call from ${clientPhone}.\n\n`;
 
     const ticketForUpdate = await Ticket.findByPk(ticket.id);
 
