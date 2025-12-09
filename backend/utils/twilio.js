@@ -1,372 +1,200 @@
-const { Client, Ticket, TwilioTranscription, TwilioCall, TwilioRecording, Location, LocationPhoneNumber } = require('@db/models');
-const sq = require('../db/models').sequelize;
-const generateAlphanumericId = require('./randomGenerator');
-const twilioConfig = require('../config/twilio');
-const { Op } = require('sequelize');
-const { getTitleAndDescription } = require('./openai');
-
-const axios = require('axios');
-const { Buffer } = require('buffer');
-const fs = require('fs');
-
-let firstDescription = '';
-
-async function upsertCallAndTicket(req) {
-    const {
-        Called,
-        CallSid,
-        To,
-        CallStatus,
-        From,
-        CallDuration,
-        AccountSid,
-        ApplicationSid,
-        Caller,
-    } = req.body;
-
-    const clientPhone = From || Caller;
-
-    // 1️⃣ Buscamos si la llamada ya existe
-    let callEntry = await TwilioCall.findOne({ where: { callSid: CallSid } });
-
-    if (callEntry) {
-        await callEntry.update({
-            callStatus: CallStatus || callEntry.callStatus,
-            callDuration: CallDuration || callEntry.callDuration,
-        });
-        return { success: true, created: false };
-    }
-
-    // 2️⃣ Buscar cliente
-    let clientByPhone = await Client.findOne({ where: { phone: clientPhone } });
-
-    if (!clientByPhone) {
-        const locationPhone = await LocationPhoneNumber.findOne({
-            where: { phoneNumber: clientPhone },
-            include: { model: Location, attributes: ['id', 'clientId'] },
-        });
-
-        if (locationPhone && locationPhone.Location) {
-            clientByPhone = await Client.findByPk(locationPhone.Location.clientId);
-        }
-    }
-
-    if (!clientByPhone)
-        clientByPhone = await Client.findByPk(twilioConfig.anonymousClientId);
-
-    if (!clientByPhone) throw new Error("Anonymous client missing in DB");
-
-    // 3️⃣ Crear Ticket LOCAL (rápido)
-    const ticket = await Ticket.create({
-        title: '',
-        description: '',
-        checkIn: null,
-        checkOut: null,
-        clientId: clientByPhone.id,
-        statusId: 1,
-        hashedId: generateAlphanumericId(10),
-        createdBy: twilioConfig.autoUserId,
-    });
-
-    // 4️⃣ Crear TwilioCall INMEDIATELY con ticketId → así nunca es null
-    callEntry = await TwilioCall.create({
-        ticketId: ticket.id,
-        callSid: CallSid,
-        called: Called,
-        from: From,
-        to: To,
-        callStatus: CallStatus,
-        callDuration: CallDuration || 0,
-        accountSid: AccountSid,
-        applicationSid: ApplicationSid,
-        caller: Caller,
-    });
-
-    // 5️⃣ Ahora sí podemos crear ticket en FRESHSERVICE
-    const freshdeskAuth = Buffer.from(
-        `${process.env.FRESHDESK_API_KEY}:X`
-    ).toString("base64");
-
-    const fdResponse = await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Basic ${freshdeskAuth}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            subject: `New Call Ticket - ${clientPhone}`,
-            description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
-            email: clientByPhone.email || '',
-            phone: clientPhone || '',
-            priority: 1,
-            status: 2,
-        })
-    });
-
-    const fdData = await fdResponse.json();
-
-    console.log("📨 Freshservice Ticket Creation Response:", fdResponse.status);
-
-    firstDescription = `Ticket created for call from ${clientPhone}.\n\nFreshservice Ticket ID: ${fdData.id}\n\n`;
-
-    const ticketForUpdate = await Ticket.findByPk(ticket.id);
-
-    ticketForUpdate.freshdeskId = fdData.ticket.id;
-    await ticketForUpdate.save();
-
-    console.log(`Ticket ${ticket.id} linked to Freshservice Ticket ${ticketForUpdate.freshdeskId}`);
-
-    return {
-        success: true,
-        created: true,
-        anonymous: clientByPhone.id === twilioConfig.anonymousClientId,
-    };
-}
-
-
-async function insertTranscription(req) {
-    const {
-        TranscriptionSid,
-        TranscriptionEvent,
-        CallSid,
-        Timestamp,
-        AccountSid,
-        SequenceId,
-        Final,
-        TranscriptionData,
-        Track,
-    } = req.body;
-
-    const call = await TwilioCall.findOne({ where: { callSid: CallSid } });
-
-    if (!call) {
-        console.error(`Call with SID ${CallSid} not found`);
-        return false;
-    }
-
-    try {
-        await TwilioTranscription.create({
-            callId: call.id,
-            transcriptionSid: TranscriptionSid,
-            callSid: CallSid,
-            accountSid: AccountSid,
-            timestamp: Timestamp,
-            transcriptionEvent: TranscriptionEvent,
-            sequenceId: Number(SequenceId) || 0,
-            transcriptionData: TranscriptionData || '',
-            track: Track || null,
-            final: Final === 'true' ? true : false,
-        });
-    }
-    catch (error) {
-        console.error(error);
-        return false;
-    }
-
-    return true;
-}
-
-async function getCompletedTranscriptions(callSid) {
-    const transcriptions = await TwilioTranscription.findAll({
-        where: {
-            callSid: callSid,
-            transcriptionData: {
-                [Op.and]: [
-                    { [Op.ne]: null },
-                    { [Op.ne]: '' }
-                ]
-            },
-        },
-        order: [['sequenceId', 'ASC']],
-    });
-
-    if (transcriptions.length === 0) {
-        console.info('No transcriptions found for callSid: ' + callSid);
-        return null;
-    }
-
-    const completed = transcriptions.reduce((acc, curr) => {
-        return `${acc}${curr.track}:${curr.transcriptionData}\n`;
-    });
-
-    // console.info('getCompletedTranscriptions:\n' + completed);
-
-    return completed.trim();
-}
-
+const axios = require("axios");
 const FormData = require("form-data");
+const { Buffer } = require("buffer");
 
-async function updateTicketWithTranscription(callSid, transcription) {
-    const call = await TwilioCall.findOne({ where: { callSid } });
-    if (!call) return false;
+const FRESHSERVICE_URL = process.env.FRESHDESK_URL;
+const FRESHSERVICE_KEY = process.env.FRESHDESK_API_KEY;
 
-    const ticket = await Ticket.findByPk(call.ticketId);
-    if (!ticket) return false;
+const authHeader = {
+    Authorization:
+        "Basic " + Buffer.from(`${FRESHSERVICE_KEY}:X`).toString("base64"),
+};
 
-    console.log(`This is the transcription to update Ticket ${ticket.id}:\n`, transcription);
-
-    const { title, description } = await getTitleAndDescription(transcription);
-
-    await ticket.update({
-        title: title.slice(0, 50),
-        description
-    });
-
-    if (!ticket.freshdeskId) return true;
-
-    const freshdeskAuth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`)
-        .toString("base64");
-
-    const bodyWithTranscription = `${description}`;
-
-    console.log(`Ticket ${ticket.id} updating Freshservice Ticket ${ticket.freshdeskId} with transcription.`);
-
-    // Using JSON to modify subject and description
-    const response = await fetch(
-        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
-        {
-            method: "PUT",
-            headers: {
-                "Authorization": `Basic ${freshdeskAuth}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                description: firstDescription + bodyWithTranscription,
-                subject: title.slice(0, 50)
-            })
-        }
-    );
-
-    console.log("📨 Freshservice Update Response:", response.status);
-    
-    const form = new FormData();
-    form.append("attachments[]", Buffer.from(transcription, 'utf-8'), { filename: `Transcription - Ticket ${ticket.id}.txt` });
-
-    const attachResponse = await axios.put(
-        `${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`,
-        form,
-        {
-            headers: {
-                "Authorization": `Basic ${freshdeskAuth}`,
-                ...form.getHeaders(),
-            }
-        }
-    );
-
-    console.log("📎 Freshservice Attachment Response:", attachResponse.status);
-    
-    return true;
+function normalizePhone(phone) {
+    if (!phone) return null;
+    return phone.replace(/[^\d+]/g, "");
 }
 
+/* ───────────────────────────────────────────── */
+/* CONTACT HANDLING */
+/* ───────────────────────────────────────────── */
 
-
-async function upsertCallRecording(req) {
-    const {
-        AccountSid,
-        CallSid,
-        RecordingSid,
-        RecordingUrl,
-        RecordingStatus,
-        RecordingDuration,
-        RecordingStartTime,
-        RecordingChannels,
-        RecordingSource,
-    } = req.body;
-
-    const existingRecording = await TwilioRecording.findOne({ where: { recordingSid: RecordingSid } });
-
-    let result = null;
-
-    if (existingRecording) {
-        try {
-            result = await existingRecording.update({
-                recordingUrl: RecordingUrl || existingRecording.recordingUrl,
-                recordingStatus: RecordingStatus || existingRecording.recordingStatus,
-                recordingStartTime: RecordingStartTime || existingRecording.recordingStartTime,
-                recordingDuration: Number(RecordingDuration) || existingRecording.recordingDuration,
-                recordingChannels: RecordingChannels || existingRecording.recordingChannels,
-                recordingSource: RecordingSource || existingRecording.recordingSource,
-            });
-        }
-        catch (error) {
-            console.error(error);
-            return false;
-        }
-
-        return { recording: result, created: false };
-    }
-
-    const call = await TwilioCall.findOne({ where: { callSid: CallSid } });
-
-    if (!call) {
-        console.error(`Call with SID ${CallSid} not found`);
-        return false;
-    }
+async function findFreshserviceContact({ phone, email }) {
+    const normalizedPhone = normalizePhone(phone);
 
     try {
-        result = await TwilioRecording.create({
-            callId: call.id,
-            recordingSid: RecordingSid,
-            callSid: CallSid,
-            accountSid: AccountSid,
-            recordingUrl: RecordingUrl,
-            recordingStatus: RecordingStatus,
-            recordingStartTime: RecordingStartTime,
-            recordingDuration: Number(RecordingDuration),
-            recordingChannels: RecordingChannels,
-            recordingSource: RecordingSource,
-        });
-    }
-    catch (error) {
-        console.error(error);
-        return false;
-    }
-
-    return { recording: result, created: true };
-}
-
-async function getAudioFileFromUrl(url, mimeType) {
-    const extension = url.split('.').pop().split('?')[0];
-    const filename = generateAlphanumericId(10) + '.' + extension;
-    const tempDir = '../media/temp_recordings';
-    const filePath = tempDir + '/' + filename;
-
-    try {
-        if (!fs.existsSync(tempDir)) {
-            fs.mkdirSync(tempDir, { recursive: true });
+        if (email) {
+            const res = await axios.get(
+                `${FRESHSERVICE_URL}/api/v2/contacts?email=${encodeURIComponent(email)}`,
+                { headers: authHeader }
+            );
+            if (res.data?.results?.length) return res.data.results[0];
         }
 
-        const res = await axios.get(url, { responseType: 'arraybuffer' });
-        const buffer = Buffer.from(res.data);
-
-        fs.writeFileSync(filePath, buffer);
-        const stream = fs.createReadStream(filePath);
-
-        const file = {
-            originalname: filename,
-            buffer: buffer,
-            mimetype: mimeType,
-        };
-
-        console.info('Fetched audio file from URL and saved to disk:\n' + JSON.stringify({
-            originalname: filename,
-            mimetype: mimeType,
-            buffer: String(buffer).slice(0, 20) + '...'
-        }));
-
-        return { file, stream };
-    } catch (error) {
-        console.error('Error fetching audio file from URL:', error);
+        if (normalizedPhone) {
+            const res = await axios.get(
+                `${FRESHSERVICE_URL}/api/v2/contacts?work_phone=${encodeURIComponent(normalizedPhone)}`,
+                { headers: authHeader }
+            );
+            if (res.data?.results?.length) return res.data.results[0];
+        }
+    } catch (err) {
+        console.error("Contact lookup failed:", err.response?.data || err.message);
     }
 
     return null;
 }
 
+async function createFreshserviceContact({ name, phone, email }) {
+    const payload = {
+        first_name: name || "Caller",
+        email: email || "",
+        work_phone: normalizePhone(phone) || "",
+    };
+
+    const res = await axios.post(
+        `${FRESHSERVICE_URL}/api/v2/contacts`,
+        payload,
+        { headers: authHeader }
+    );
+
+    return res.data;
+}
+
+async function getOrCreateFreshserviceContact({ name, phone, email }) {
+    const existing = await findFreshserviceContact({ phone, email });
+    if (existing) return existing;
+
+    return await createFreshserviceContact({ name, phone, email });
+}
+
+/* ───────────────────────────────────────────── */
+/* TICKET HANDLING */
+/* ───────────────────────────────────────────── */
+
+async function createFreshserviceTicket({
+    requesterId,
+    subject,
+    description,
+    phone,
+    email,
+}) {
+    const payload = {
+        requester_id: requesterId,
+        subject,
+        description,
+        phone,
+        email,
+        status: 2,
+        priority: 1,
+    };
+
+    const res = await axios.post(
+        `${FRESHSERVICE_URL}/api/v2/tickets`,
+        payload,
+        {
+            headers: {
+                ...authHeader,
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    return res.data;
+}
+
+async function updateFreshserviceTicket({
+    ticketId,
+    subject,
+    description,
+}) {
+    await axios.put(
+        `${FRESHSERVICE_URL}/api/v2/tickets/${ticketId}`,
+        { subject, description },
+        {
+            headers: {
+                ...authHeader,
+                "Content-Type": "application/json",
+            },
+        }
+    );
+}
+
+/* ───────────────────────────────────────────── */
+/* ATTACHMENTS */
+/* ───────────────────────────────────────────── */
+
+async function attachTextFileToTicket(ticketId, filename, text) {
+    const form = new FormData();
+    form.append(
+        "attachments[]",
+        Buffer.from(text, "utf8"),
+        { filename }
+    );
+
+    await axios.post(
+        `${FRESHSERVICE_URL}/api/v2/tickets/${ticketId}/attachments`,
+        form,
+        {
+            headers: {
+                ...authHeader,
+                ...form.getHeaders(),
+            },
+        }
+    );
+}
+
+/* ───────────────────────────────────────────── */
+/* PUBLIC WORKFLOW */
+/* ───────────────────────────────────────────── */
+
+async function createOrUpdateTicketWithTranscription({
+    clientName,
+    phone,
+    email,
+    subject,
+    description,
+    transcription,
+}) {
+    // 1️⃣ Contact
+    const contact = await getOrCreateFreshserviceContact({
+        name: clientName,
+        phone,
+        email,
+    });
+
+    // 2️⃣ Ticket
+    const ticket = await createFreshserviceTicket({
+        requesterId: contact.id,
+        subject,
+        description,
+        phone,
+        email,
+    });
+
+    // 3️⃣ Update description + transcription
+    await updateFreshserviceTicket({
+        ticketId: ticket.id,
+        subject,
+        description: description + "\n\n" + transcription,
+    });
+
+    // 4️⃣ Attach transcription file
+    await attachTextFileToTicket(
+        ticket.id,
+        `Call Transcription - Ticket ${ticket.id}.txt`,
+        transcription
+    );
+
+    return ticket;
+}
+
+/* ───────────────────────────────────────────── */
+
 module.exports = {
-    upsertCallAndTicket,
-    insertTranscription,
-    getCompletedTranscriptions,
-    updateTicketWithTranscription,
-    upsertCallRecording,
-    getAudioFileFromUrl,
+    getOrCreateFreshserviceContact,
+    createFreshserviceTicket,
+    updateFreshserviceTicket,
+    attachTextFileToTicket,
+    createOrUpdateTicketWithTranscription,
 };
