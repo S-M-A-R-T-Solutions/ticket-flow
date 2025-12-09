@@ -9,6 +9,8 @@ const axios = require('axios');
 const { Buffer } = require('buffer');
 const fs = require('fs');
 
+let firstDescription = '';
+
 async function upsertCallAndTicket(req) {
     const {
         Called,
@@ -96,9 +98,6 @@ async function upsertCallAndTicket(req) {
             description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
             email: clientByPhone.email || '',
             phone: clientPhone || '',
-            customFields: {
-                contactPhone: clientPhone || ''
-            },
             priority: 1,
             status: 2,
         })
@@ -107,6 +106,8 @@ async function upsertCallAndTicket(req) {
     const fdData = await fdResponse.json();
 
     console.log("📨 Freshservice Ticket Creation Response:", fdResponse.status);
+
+    firstDescription = `Ticket created for call from ${clientPhone}.\n\nFreshservice Ticket ID: ${fdData.id}\n\n`;
 
     const ticketForUpdate = await Ticket.findByPk(ticket.id);
 
@@ -230,7 +231,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                description: bodyWithTranscription,
+                description: firstDescription + bodyWithTranscription,
                 subject: title.slice(0, 50)
             })
         }
