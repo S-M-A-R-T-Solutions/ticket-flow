@@ -11,6 +11,57 @@ const fs = require('fs');
 
 let firstDescription = '';
 
+async function findOrCreateFreshserviceContact({ name, phone, email }) {
+    const auth = Buffer.from(`${process.env.FRESHDESK_API_KEY}:X`).toString("base64");
+    const headers = { Authorization: `Basic ${auth}` };
+
+    const normalizedPhone = phone?.replace(/[^\d+]/g, '');
+
+    // 1️⃣ Search by email first
+    if (email) {
+        const byEmail = await fetch(
+            `${process.env.FRESHDESK_URL}/api/v2/contacts?email=${encodeURIComponent(email)}`,
+            { headers }
+        );
+        const emailData = await byEmail.json();
+        if (emailData?.results?.length) return emailData.results[0];
+    }
+
+    // 2️⃣ Search by phone
+    if (normalizedPhone) {
+        const byPhone = await fetch(
+            `${process.env.FRESHDESK_URL}/api/v2/contacts?work_phone=${encodeURIComponent(normalizedPhone)}`,
+            { headers }
+        );
+        const phoneData = await byPhone.json();
+        if (phoneData?.results?.length) return phoneData.results[0];
+    }
+
+    // 3️⃣ Create new contact if none found
+    const createRes = await fetch(
+        `${process.env.FRESHDESK_URL}/api/v2/contacts`,
+        {
+            method: 'POST',
+            headers: {
+                Authorization: `Basic ${auth}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                first_name: name || 'Caller',
+                email: email || '',
+                work_phone: normalizedPhone || ''
+            })
+        }
+    );
+
+    if (!createRes.ok) {
+        const err = await createRes.text();
+        throw new Error(`Freshservice Contact create failed: ${err}`);
+    }
+
+    return await createRes.json();
+}
+
 async function upsertCallAndTicket(req) {
     const {
         Called,
@@ -87,6 +138,12 @@ async function upsertCallAndTicket(req) {
         `${process.env.FRESHDESK_API_KEY}:X`
     ).toString("base64");
 
+    const fsContact = await findOrCreateFreshserviceContact({
+        name: clientByPhone.name,
+        phone: clientPhone,
+        email: clientByPhone.email
+    });
+
     const fdResponse = await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets`, {
         method: "POST",
         headers: {
@@ -94,12 +151,11 @@ async function upsertCallAndTicket(req) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            requester_id: fsContact.id,
             subject: `New Call Ticket - ${clientPhone}`,
             description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
-            email: clientByPhone.email || '',
-            phone: clientPhone || '',
             priority: 1,
-            status: 2,
+            status: 2
         })
     });
 
