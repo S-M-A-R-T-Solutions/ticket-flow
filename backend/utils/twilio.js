@@ -95,7 +95,10 @@ async function upsertCallAndTicket(req) {
             subject: `New Call Ticket - ${clientPhone}`,
             description: `Ticket created for call from ${clientPhone}. Ticket ID: ${ticket.id}`,
             email: clientByPhone.email || '',
-            phone: clientByPhone.phone || '',
+            phone: clientPhone || '',
+            customFields: {
+                contactPhone: clientPhone || ''
+            },
             priority: 1,
             status: 2,
         })
