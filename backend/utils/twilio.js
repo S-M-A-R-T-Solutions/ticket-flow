@@ -299,7 +299,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                description: description,
+                description: `Call from ${call.from}. Description: ${description}`,
                 subject: title.slice(0, 50)
             })
         });
