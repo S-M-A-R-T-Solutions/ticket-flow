@@ -23,6 +23,7 @@ import ClientDetails from "./components/Clients/ClientDetails";
 import TrackingPage from "./components/TrackingPage/TrackingPage";
 import Inventory from "./components/Inventory";
 import PartDetails from "./components/Parts/PartDetails";
+import Calls from "./components/Calls/Calls";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -124,7 +125,11 @@ const router = createBrowserRouter([
       {
         path: '/assessments',
         element: <Assessments />
-      }
+      },
+      {
+        path: '/calls',
+        element: <Calls />
+      },
     ]
   }
 ])

@@ -12,6 +12,7 @@ const {
     upsertCallRecording,
     getCompletedTranscriptions,
     getAudioFileFromUrl,
+    checkOutgoingCalls,
 } = require('../../../utils/twilio');
 
 const { getTranscriptionFromRecording } = require('../../../utils/openai');
@@ -234,6 +235,12 @@ router.post('/transcription', urlencodedParser, (req, res) => {
             await updateTicketWithTranscription(CallSid, transcription);
         }
     }, 'twilio-transcription-processing', ctx);
+});
+
+router.get('/outgoingCalls', (req, res) => {
+    checkOutgoingCalls();
+
+    res.sendStatus(200);
 });
 
 module.exports = { router, publicWebhookPaths };

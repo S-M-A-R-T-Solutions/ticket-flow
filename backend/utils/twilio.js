@@ -451,6 +451,43 @@ async function getAudioFileFromUrl(url, mimeType) {
     return null;
 }
 
+async function getTwilioCalls(limit = 100) {
+    const twc = twilioConfig.client;
+
+    const calls = await bestEffort("twilio", "getTwilioCalls", { limit }, async () => {
+        return await twc.calls.list({
+            limit: limit
+        });
+    });
+
+    return calls.result;
+}
+
+async function getTwilioRecordings(calls) {
+    const twc = twilioConfig.client;
+
+    const recordings = [];
+
+    calls.forEach(async (call) => {
+        const recs = await twc.recordings.list({
+            callSid: call.sid,
+            limit: 20
+        });
+
+        recordings.push(...recs);
+    });
+
+    return recordings;
+}
+
+async function checkOutgoingCalls() {
+    const calls = await getTwilioCalls(2) || [];
+
+    calls.forEach(call => {
+        console.log(call);
+    });
+}
+
 module.exports = {
     upsertCallAndTicket,
     insertTranscription,
@@ -458,4 +495,5 @@ module.exports = {
     updateTicketWithTranscription,
     upsertCallRecording,
     getAudioFileFromUrl,
+    checkOutgoingCalls,
 };
