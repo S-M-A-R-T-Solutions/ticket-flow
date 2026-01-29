@@ -11,6 +11,8 @@ module.exports = {
     autoUserId: process.env.TWILIO_AUTO_USER_ID,
     autoUserPassword: process.env.TWILIO_AUTO_USER_PASSWORD,
     anonymousClientId: process.env.TWILIO_ANONYMOUS_CLIENT_ID,
+    outboundNumber: process.env.TWILIO_OUTBOUND_NUMBER,
+    checkCallsInterval: process.env.TWILIO_CHECK_CALLS_INTERVAL,
     accountSid,
     authToken,
     client,

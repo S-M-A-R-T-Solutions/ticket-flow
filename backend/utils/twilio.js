@@ -451,41 +451,62 @@ async function getAudioFileFromUrl(url, mimeType) {
     return null;
 }
 
-async function getTwilioCalls(limit = 100) {
+async function getTwilioCalls(from = undefined, limit = 100) {
     const twc = twilioConfig.client;
 
     const calls = await bestEffort("twilio", "getTwilioCalls", { limit }, async () => {
         return await twc.calls.list({
-            limit: limit
+            limit: limit,
+            from: from,
         });
     });
 
     return calls.result;
 }
 
-async function getTwilioRecordings(calls) {
+async function getTwilioRecordings(callSid) {
     const twc = twilioConfig.client;
 
     const recordings = [];
 
-    calls.forEach(async (call) => {
-        const recs = await twc.recordings.list({
-            callSid: call.sid,
+    await bestEffort("twilio", "getTwilioRecordings", { callSid }, async () => {
+        const res = await twc.recordings.list({
+            callSid: callSid,
             limit: 20
         });
 
-        recordings.push(...recs);
+        recordings.push(...res);
     });
 
     return recordings;
 }
 
 async function checkOutgoingCalls() {
-    const calls = await getTwilioCalls(2) || [];
-
-    calls.forEach(call => {
-        console.log(call);
+    // TODO: change limit to 100 for production
+    const twilioCalls = await getTwilioCalls(twilioConfig.outboundNumber, 2) || [];
+    const localCallsSids = await TwilioCall.findAll({
+        where: { from: twilioConfig.outboundNumber },
+        attributes: ['callSid']
     });
+
+    const calls = twilioCalls.filter(tc => {
+        return !localCallsSids.some(lc => lc.callSid === tc.sid);
+    });
+
+    for (const call of calls) {
+        console.log("Call:");
+        console.log(call);
+
+        const recordings = await getTwilioRecordings(call.sid) || [];
+
+        console.log("Recordings:");
+        recordings.forEach(rec => {
+            console.log(rec);
+        });
+    }
+
+
+
 }
 
 module.exports = {
