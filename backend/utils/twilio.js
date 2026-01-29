@@ -3,7 +3,8 @@ const sq = require('../db/models').sequelize;
 const generateAlphanumericId = require('./randomGenerator');
 const twilioConfig = require('../config/twilio');
 const { Op } = require('sequelize');
-const { getTitleAndDescription } = require('./openai');
+const { getTitleAndDescription, getTranscriptionFromRecording } = require('./openai');
+const { singleFileUpload } = require('../awsS3');
 
 const axios = require('axios');
 const { Buffer } = require('buffer');
@@ -481,9 +482,45 @@ async function getTwilioRecordings(callSid) {
     return recordings;
 }
 
+async function saveOutgoingCall(call) {
+    const req = {
+        body: {
+            Called: call.to,
+            CallSid: call.sid,
+            To: call.to,
+            CallStatus: call.status,
+            From: call.from,
+            CallDuration: call.duration,
+            AccountSid: call.accountSid,
+            ApplicationSid: null,
+            Caller: call.from,
+        }
+    };
+
+    return await upsertCallAndTicket(req);
+}
+
+async function saveOutgoingRecording(rec) {
+    const req = {
+        body: {
+            AccountSid: rec.accountSid,
+            CallSid: rec.callSid,
+            RecordingSid: rec.sid,
+            RecordingUrl: rec.mediaUrl,
+            RecordingStatus: rec.status,
+            RecordingDuration: rec.duration,
+            RecordingStartTime: rec.startTime,
+            RecordingChannels: rec.channels,
+            RecordingSource: rec.source,
+        }
+    };
+
+    return await upsertCallRecording(req);
+}
+
 async function checkOutgoingCalls() {
     // TODO: change limit to 100 for production
-    const twilioCalls = await getTwilioCalls(twilioConfig.outboundNumber, 2) || [];
+    const twilioCalls = await getTwilioCalls(twilioConfig.outboundNumber, twilioConfig.outboundCallsLimit) || [];
     const localCallsSids = await TwilioCall.findAll({
         where: { from: twilioConfig.outboundNumber },
         attributes: ['callSid']
@@ -497,16 +534,92 @@ async function checkOutgoingCalls() {
         console.log("Call:");
         console.log(call);
 
-        const recordings = await getTwilioRecordings(call.sid) || [];
+        if (call.status === 'completed') {
+            const recordings = await getTwilioRecordings(call.sid) || [];
 
-        console.log("Recordings:");
-        recordings.forEach(rec => {
-            console.log(rec);
-        });
+            if (recordings.length > 0) {
+                const { success, created } = await saveOutgoingCall(call);
+
+                if (success && created) {
+                    console.log("Recordings:");
+                    for (const rec in recordings) {
+                        console.log(rec);
+
+                        if (rec.satus === 'completed') {
+                            const result = await saveOutgoingRecording(rec);
+
+                            if (result) {
+                                const { callSid: CallSid, mediaUrl: RecordingUrl } = rec;
+
+                                const baseCtx = { CallSid };
+
+                                const audioRes = await bestEffort('twilio', 'download_mp3', baseCtx, async () => {
+                                    const mp3Url = RecordingUrl.replace(/\.[^/.]+$/, '') + '.mp3';
+                                    const out = await getAudioFileFromUrl(mp3Url, 'audio/mpeg');
+                                    if (!out) throw new Error('getAudioFileFromUrl returned null');
+                                    return out;
+                                });
+
+                                if (audioRes.ok) {
+                                    const { file, stream } = audioRes.result;
+
+                                    const s3Res = await bestEffort('s3', 'upload_mp3', baseCtx, async () => {
+                                        return singleFileUpload({ file, public: true });
+                                    });
+
+                                    const callEntry = await TwilioCall.findOne({ where: { callSid: CallSid } });
+
+                                    if (callEntry) {
+                                        const ticket = await Ticket.findByPk(callEntry.ticketId);
+
+                                        const ctx = {
+                                            ...baseCtx,
+                                            ticketId: ticket?.id,
+                                            freshdeskId: ticket?.freshdeskId,
+                                        };
+
+                                        if (ticket && s3Res.ok && s3Res.result) {
+                                            await ticket.update({ recordingUrl: s3Res.result });
+                                        }
+
+                                        await bestEffort('db', 'update_recording_s3url', ctx, async () => {
+                                            await result.recording.update({ s3url: s3Res.ok ? s3Res.result : null });
+                                            return true;
+                                        });
+
+                                        if (ticket?.freshdeskId && s3Res.ok) {
+                                            await bestEffort('freshservice', 'attach_mp3', ctx, async () => {
+                                                const { uploadAttachmentToFreshservice } = require('./freshdesk');
+                                                const audioTempPath = `../media/temp_recordings/${file.originalname}`;
+                                                return uploadAttachmentToFreshservice(ticket.freshdeskId, audioTempPath, file.originalname);
+                                            });
+                                        }
+
+                                        const aiRes = await bestEffort('openai', 'transcribe_audio', ctx, async () => {
+                                            return getTranscriptionFromRecording(stream);
+                                        });
+
+                                        if (aiRes.ok && aiRes.result) {
+                                            // Guardar transcription local (best-effort)
+                                            await bestEffort('db', 'update_recording_transcription', ctx, async () => {
+                                                await result.recording.update({ transcription: aiRes.result });
+                                                return true;
+                                            });
+
+                                            // 7) Actualizar ticket con transcription (incluye OpenAI title/desc + Freshservice update)
+                                            await bestEffort('app', 'updateTicketWithTranscription', ctx, async () => {
+                                                return updateTicketWithTranscription(CallSid, aiRes.result);
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-
-
-
 }
 
 module.exports = {
