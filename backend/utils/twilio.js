@@ -56,7 +56,7 @@ async function bestEffort(service, step, ctx, fn) {
    Core functions
 -------------------------------- */
 
-async function upsertCallAndTicket(req) {
+async function upsertCallAndTicket(req, isOutgoing = false) {
     const {
         Called,
         CallSid,
@@ -69,7 +69,7 @@ async function upsertCallAndTicket(req) {
         Caller,
     } = req.body;
 
-    const clientPhone = From || Caller;
+    const clientPhone = isOutgoing ? From || Caller : To || Called;
     const ctx = { CallSid, clientPhone };
 
     // 1) Si la llamada ya existe, solo update local (no dependas de externos)
@@ -497,7 +497,7 @@ async function saveOutgoingCall(call) {
         }
     };
 
-    return await upsertCallAndTicket(req);
+    return await upsertCallAndTicket(req, true);
 }
 
 async function saveOutgoingRecording(rec) {
