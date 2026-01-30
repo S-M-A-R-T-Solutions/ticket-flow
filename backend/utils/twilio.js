@@ -69,7 +69,7 @@ async function upsertCallAndTicket(req, isOutgoing = false) {
         Caller,
     } = req.body;
 
-    const clientPhone = isOutgoing ? From || Caller : To || Called;
+    const clientPhone = isOutgoing ? To || Called : From || Caller;
     const ctx = { CallSid, clientPhone };
 
     // 1) Si la llamada ya existe, solo update local (no dependas de externos)
