@@ -13,7 +13,7 @@ module.exports = {
     anonymousClientId: process.env.TWILIO_ANONYMOUS_CLIENT_ID,
     outboundNumber: process.env.TWILIO_OUTBOUND_NUMBER,
     checkCallsInterval: process.env.TWILIO_CHECK_CALLS_INTERVAL,
-    outboundCallsLimit: process.env.TWILIO_OUTBOUND_CALLS_LIMIT,
+    outboundCallsLimit: Number(process.env.TWILIO_OUTBOUND_CALLS_LIMIT),
     accountSid,
     authToken,
     client,

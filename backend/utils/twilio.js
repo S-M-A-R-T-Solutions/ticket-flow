@@ -400,10 +400,10 @@ async function upsertCallRecording(req) {
     }
 }
 
-async function getAudioFileFromUrl(url, mimeType) {
+async function getAudioFileFromUrl(url, mimeType, _tempDir = '../media/temp_recordings') {
     const extension = url.split('.').pop().split('?')[0];
     const filename = generateAlphanumericId(10) + '.' + extension;
-    const tempDir = '../media/temp_recordings';
+    const tempDir = _tempDir;
     const filePath = tempDir + '/' + filename;
 
     try {
@@ -468,18 +468,16 @@ async function getTwilioCalls(from = undefined, limit = 100) {
 async function getTwilioRecordings(callSid) {
     const twc = twilioConfig.client;
 
-    const recordings = [];
-
-    await bestEffort("twilio", "getTwilioRecordings", { callSid }, async () => {
+    const result = await bestEffort("twilio", "getTwilioRecordings", { callSid }, async () => {
         const res = await twc.recordings.list({
             callSid: callSid,
             limit: 20
         });
 
-        recordings.push(...res);
+        return res;
     });
 
-    return recordings;
+    return result.result;
 }
 
 async function saveOutgoingCall(call) {
@@ -509,7 +507,7 @@ async function saveOutgoingRecording(rec) {
             RecordingUrl: rec.mediaUrl,
             RecordingStatus: rec.status,
             RecordingDuration: rec.duration,
-            RecordingStartTime: rec.startTime,
+            RecordingStartTime: rec.startTime.toISOString(),
             RecordingChannels: rec.channels,
             RecordingSource: rec.source,
         }
@@ -542,10 +540,10 @@ async function checkOutgoingCalls() {
 
                 if (success && created) {
                     console.log("Recordings:");
-                    for (const rec in recordings) {
+                    for (const rec of recordings) {
                         console.log(rec);
 
-                        if (rec.satus === 'completed') {
+                        if (rec.status === 'completed') {
                             const result = await saveOutgoingRecording(rec);
 
                             if (result) {
@@ -555,7 +553,7 @@ async function checkOutgoingCalls() {
 
                                 const audioRes = await bestEffort('twilio', 'download_mp3', baseCtx, async () => {
                                     const mp3Url = RecordingUrl.replace(/\.[^/.]+$/, '') + '.mp3';
-                                    const out = await getAudioFileFromUrl(mp3Url, 'audio/mpeg');
+                                    const out = await getAudioFileFromUrl(mp3Url, 'audio/mpeg', './media/temp_recordings');
                                     if (!out) throw new Error('getAudioFileFromUrl returned null');
                                     return out;
                                 });
