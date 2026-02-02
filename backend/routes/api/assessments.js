@@ -486,4 +486,13 @@ router.post('/:assessmentId/dental-practice-information/:dentalPracticeInformati
     }
 });
 
+router.post('/create-assessment-in-freshservice', async (req, res) => {
+    const info= req.body;
+
+    console.log( 'Creating assessment in Freshservice with info:', info );
+
+    // Placeholder response
+    return res.status(201).json({ message: 'Assessment creation in Freshservice is not yet implemented.' });
+});
+
 module.exports = router;
