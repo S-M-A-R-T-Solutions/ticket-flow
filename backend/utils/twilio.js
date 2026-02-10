@@ -286,7 +286,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
             call.from == twilioConfig.outboundNumber || call.caller == twilioConfig.outboundNumber
         )) {
         if (description == null || description == undefined) description = '';
-        description += 'OUTBOUND CALL';
+        description += ' [OUTBOUND CALL]';
     }
 
     await ticket.update({
@@ -538,9 +538,9 @@ async function checkOutgoingCalls() {
 
     for (const call of calls) {
         console.log("Call:");
-        // const { sid, to, status, duration, accountSid } = call;
-        // console.log({ sid, to, status, duration, accountSid });
-        console.log(call);
+        const { sid, to, status, duration, accountSid } = call;
+        console.log({ sid, to, status, duration, accountSid });
+        // console.log(call);
 
         if (call.status === 'completed') {
             const recordings = await getTwilioRecordings(call.sid) || [];
