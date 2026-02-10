@@ -530,7 +530,8 @@ async function checkOutgoingCalls() {
 
     for (const call of calls) {
         console.log("Call:");
-        console.log(call);
+        const { sid, to, status, duration, accountSid } = call;
+        console.log({ sid, to, status, duration, accountSid });
 
         if (call.status === 'completed') {
             const recordings = await getTwilioRecordings(call.sid) || [];
@@ -588,7 +589,7 @@ async function checkOutgoingCalls() {
                                         if (ticket?.freshdeskId && s3Res.ok) {
                                             await bestEffort('freshservice', 'attach_mp3', ctx, async () => {
                                                 const { uploadAttachmentToFreshservice } = require('./freshdesk');
-                                                const audioTempPath = `../media/temp_recordings/${file.originalname}`;
+                                                const audioTempPath = `./media/temp_recordings/${file.originalname}`;
                                                 return uploadAttachmentToFreshservice(ticket.freshdeskId, audioTempPath, file.originalname);
                                             });
                                         }
