@@ -281,6 +281,14 @@ async function updateTicketWithTranscription(callSid, transcription) {
         if (aiRes.result.description) description = aiRes.result.description;
     }
 
+    if (
+        call.applicationSid == null && (
+            call.from == twilioConfig.outboundNumber || call.caller == twilioConfig.outboundNumber
+        )) {
+        if (description == null || description == undefined) description = '';
+        description += 'OUTBOUND CALL';
+    }
+
     await ticket.update({
         title: title.slice(0, 50),
         description,
