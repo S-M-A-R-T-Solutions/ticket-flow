@@ -530,8 +530,9 @@ async function checkOutgoingCalls() {
 
     for (const call of calls) {
         console.log("Call:");
-        const { sid, to, status, duration, accountSid } = call;
-        console.log({ sid, to, status, duration, accountSid });
+        // const { sid, to, status, duration, accountSid } = call;
+        // console.log({ sid, to, status, duration, accountSid });
+        console.log(call);
 
         if (call.status === 'completed') {
             const recordings = await getTwilioRecordings(call.sid) || [];
