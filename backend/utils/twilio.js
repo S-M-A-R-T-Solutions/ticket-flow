@@ -286,7 +286,8 @@ async function updateTicketWithTranscription(callSid, transcription) {
             call.from == twilioConfig.outboundNumber || call.caller == twilioConfig.outboundNumber
         )) {
         if (description == null || description == undefined) description = '';
-        description += ' [OUTBOUND CALL]';
+        description.split('Call from +13053562650')[1] ? description = '[OUTBOUND CALL] ' + description.split('Call from +13053562650')[1].trim() :
+        description = '[OUTBOUND CALL] ' + description;
     }
 
     await ticket.update({
