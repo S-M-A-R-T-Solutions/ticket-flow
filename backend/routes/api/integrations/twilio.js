@@ -243,4 +243,77 @@ router.get('/outgoingCalls', (req, res) => {
     res.sendStatus(200);
 });
 
+
+router.post('/pbxOutboundStart', urlencodedParser, (req, res) => {
+    const twiml = new twilio.twiml.VoiceResponse();
+    const protocol = env === 'production' ? 'https' : 'http';
+    const urlRecordings = `${protocol}://${req.get('host')}/api/integrations/twilio/recordingStatus`;
+
+    // Extract destination from SIP URI or plain number
+    const rawTo = req.body?.To || '';
+    const dest = extractDialedNumber(rawTo);
+
+    // If we can't parse, fail fast (but still return TwiML)
+    if (!dest) {
+        twiml.say("We could not route your call. Please contact support.");
+        res.type('text/xml');
+        return res.send(twiml.toString());
+    }
+
+    // Dial PSTN with the desired Caller ID (your inbound Twilio number)
+    twiml.dial({
+        callerId: config.inboundTwilioNumber || '+18886661014',
+        record: 'record-from-answer',
+        recordingStatusCallback: urlRecordings,
+        recordingStatusCallbackMethod: 'POST',
+    }, dest);
+
+    res.type('text/xml');
+    res.send(twiml.toString());
+
+    // Side-effects: create ticket/call entry as OUTGOING
+    const ctx = { CallSid: req?.body?.CallSid, dest };
+    fireAndForget(async () => {
+        // clone req-like object with normalized fields to satisfy your existing function
+        const outgoingReq = {
+            body: {
+                ...req.body,
+                // for your upsertCallAndTicket outgoing logic: clientPhone should be "To"
+                To: dest,
+                Called: dest,
+                // Ensure From reflects your displayed caller ID
+                From: config.inboundTwilioNumber || '+18886661014',
+                Caller: config.inboundTwilioNumber || '+18886661014',
+            }
+        };
+
+        // Pass isOutgoing=true so clientPhone resolves to To/Called
+        await upsertCallAndTicket(outgoingReq, true);
+    }, 'upsertCallAndTicket(pbxOutboundStart)', ctx);
+});
+
+function extractDialedNumber(toVal) {
+    if (!toVal) return null;
+
+    // Twilio SIP Domain often provides: "sip:+13055551212@domain" or "sip:13055551212@domain"
+    const m = String(toVal).match(/sip:([^@;>]+)/i);
+    let user = m ? m[1] : String(toVal);
+
+    // Remove common 3CX prefixes like 9 (outside line) if you use them
+    // Adjust if your dial plan differs.
+    user = user.replace(/^\+?9/, '');
+
+    // If it already has +, assume E.164
+    if (user.startsWith('+')) return user;
+
+    // If it's all digits and looks like NANP 10/11 digits, normalize
+    const digits = user.replace(/\D/g, '');
+    if (digits.length === 10) return `+1${digits}`;
+    if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
+
+    // If you support other countries, you should handle your own rules here.
+    return null;
+}
+
+
 module.exports = { router, publicWebhookPaths };
