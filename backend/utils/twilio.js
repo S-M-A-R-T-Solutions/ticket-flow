@@ -305,7 +305,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
 
     // ✅ Ensure outbound description starts with the required header
     if (isOutbound) {
-        const header = `[OUTBOUND CALL] [${moment(call.createdAt).format('YYYY-MM-DD HH:mm')}] Call to ${toNumber || 'UNKNOWN'}`;
+        const header = `[OUTBOUND CALL] [${moment.utc(call.createdAt).tz("America/New_York").format('YYYY-MM-DD HH:mm:ss')}] | Call to ${toNumber || 'UNKNOWN'}`;
         const descStr = String(description || '');
         if (!descStr.startsWith('[OUTBOUND CALL]')) {
             description = `${header}\n\n${descStr}`.trim();
