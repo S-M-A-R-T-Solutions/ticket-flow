@@ -14,6 +14,8 @@ const { Buffer } = require('buffer');
 const fs = require('fs');
 const FormData = require("form-data");
 
+const moment = require('moment');
+
 /* -----------------------------
    Structured logs helpers
 -------------------------------- */
@@ -303,7 +305,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
 
     // ✅ Ensure outbound description starts with the required header
     if (isOutbound) {
-        const header = `[OUTBOUND CALL] Call to ${toNumber || 'UNKNOWN'}`;
+        const header = `[OUTBOUND CALL] [${moment(call.createdAt).format('YYYY-MM-DD HH:mm')}] Call to ${toNumber || 'UNKNOWN'}`;
         const descStr = String(description || '');
         if (!descStr.startsWith('[OUTBOUND CALL]')) {
             description = `${header}\n\n${descStr}`.trim();
@@ -330,7 +332,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
             },
             body: JSON.stringify({
                 // ✅ Keep description exactly as stored (includes outbound header if applicable)
-                description: `Call from ${call.caller} ${description}` || '',
+                description: `Call from ${call.caller} ${description}`,
                 subject: title.slice(0, 50)
             })
         });
