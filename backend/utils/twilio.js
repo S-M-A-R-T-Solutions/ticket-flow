@@ -53,7 +53,7 @@ async function bestEffort(service, step, ctx, fn) {
 }
 
 /* -----------------------------
-   Core functions
+    Core functions
 -------------------------------- */
 
 async function upsertCallAndTicket(req, isOutgoing = false) {
@@ -259,7 +259,7 @@ async function getCompletedTranscriptions(callSid) {
     return completed.trim();
 }
 
-async function updateTicketWithTranscription(callSid, transcription) {
+async function updateTicketWithTranscription(callSid, transcription, callTo) {
     const call = await TwilioCall.findOne({ where: { callSid } });
     if (!call) return false;
 
@@ -286,7 +286,7 @@ async function updateTicketWithTranscription(callSid, transcription) {
             call.from == twilioConfig.outboundNumber || call.caller == twilioConfig.outboundNumber
         )) {
         if (description == null || description == undefined) description = '';
-        description.split('Call from +13053562650')[1] ? description = '[OUTBOUND CALL] ' + description.split('Call from +13053562650')[1].trim() :
+        description.split(`Call to ${callTo}`)[1] ? description = '[OUTBOUND CALL] ' + description.split(`Call to ${To}`)[1].trim() :
         description = '[OUTBOUND CALL] ' + description;
     }
 
@@ -347,6 +347,52 @@ async function updateTicketWithTranscription(callSid, transcription) {
 
         return attachResponse.status;
     });
+
+    // 5) Buscar cliente en Freshservice por telefono (BEST-EFFORT, no confíes en esto)
+    const fdClientId = await bestEffort("freshservice", "find_contact_by_phone", ctx, async () => {
+        const searchResponse = await fetch(`${process.env.FRESHDESK_URL}/api/v2/contacts/search?query="phone:${call.To}"`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Basic ${freshdeskAuth}`,
+                "Content-Type": "application/json"
+            },
+        });
+
+        if (!searchResponse.ok) {
+            const errText = await searchResponse.text().catch(() => '');
+            const err = new Error(`Freshservice contact search failed: ${searchResponse.status}`);
+            err.response = { status: searchResponse.status, data: errText };
+            throw err;
+        }
+
+        const searchData = await searchResponse.json();
+        return searchData?.contacts?.[0]?.id || null;
+    });
+
+    // 6) Si encontramos cliente en Freshservice, asociarlo al ticket (BEST-EFFORT)
+    if (fdClientId) {
+        await bestEffort("freshservice", "update_ticket_contact", { ...ctx, fdClientId }, async () => {
+            const response = await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Basic ${freshdeskAuth}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    contact_id: fdClientId,
+                })
+            });
+
+            if (!response.ok) {
+                const errText = await response.text().catch(() => '');
+                const err = new Error(`Freshservice update contact failed: ${response.status}`);
+                err.response = { status: response.status, data: errText };
+                throw err;
+            }
+
+            return true;
+        });
+    }
 
     return true;
 }
@@ -617,7 +663,7 @@ async function checkOutgoingCalls() {
 
                                             // 7) Actualizar ticket con transcription (incluye OpenAI title/desc + Freshservice update)
                                             await bestEffort('app', 'updateTicketWithTranscription', ctx, async () => {
-                                                return updateTicketWithTranscription(CallSid, aiRes.result);
+                                                return updateTicketWithTranscription(CallSid, aiRes.result, to);
                                             });
                                         }
                                     }
