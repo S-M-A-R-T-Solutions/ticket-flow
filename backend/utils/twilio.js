@@ -390,7 +390,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
     const fdClientIdRes = await bestEffort("freshservice", "find_contact_by_phone", { ...ctx, contactPhone }, async () => {
         const q = encodeURIComponent(`phone:${contactPhone}`);
         const searchResponse = await fetch(
-            `${process.env.FRESHDESK_URL}/api/v2/contacts/search?query="${q}"`,
+            `${process.env.FRESHDESK_URL}/api/v2/requesters?query="${q}"`,
             {
                 method: "GET",
                 headers: {
@@ -408,7 +408,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
         }
 
         const searchData = await searchResponse.json();
-        return searchData?.contacts?.[0]?.id || null;
+        return searchData?.requesters?.[0]?.id || null;
     });
 
     const fdClientId = fdClientIdRes.ok ? fdClientIdRes.result : null;
@@ -423,7 +423,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    contact_id: fdClientId,
+                    requester_id: fdClientId,
                 })
             });
 
