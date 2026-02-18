@@ -1,3 +1,6 @@
+// ============================
+// CHUNK 2 (utils/twilio)
+// ============================
 const { Client, Ticket, TwilioTranscription, TwilioCall, TwilioRecording, Location, LocationPhoneNumber } = require('@db/models');
 const sq = require('../db/models').sequelize;
 const generateAlphanumericId = require('./randomGenerator');
@@ -69,7 +72,7 @@ async function upsertCallAndTicket(req, isOutgoing = false) {
         Caller,
     } = req.body;
 
-    const clientPhone = isOutgoing ? To || Called : From || Caller;
+    const clientPhone = isOutgoing ? (To || Called) : (From || Caller);
     const ctx = { CallSid, clientPhone };
 
     // 1) Si la llamada ya existe, solo update local (no dependas de externos)
@@ -152,8 +155,15 @@ async function upsertCallAndTicket(req, isOutgoing = false) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                subject: `New Call Ticket - ${clientPhone}`,
-                description: `Ticket created for call from ${clientPhone}. Local Ticket ID: ${ticket.id}`,
+                subject: isOutgoing
+                    ? `Outbound Call Ticket - ${clientPhone}`
+                    : `New Call Ticket - ${clientPhone}`,
+
+                // ✅ Outbound description prefix exactly as requested
+                description: isOutgoing
+                    ? `[OUTBOUND CALL] Call to ${clientPhone}. Local Ticket ID: ${ticket.id}`
+                    : `Ticket created for call from ${clientPhone}. Local Ticket ID: ${ticket.id}`,
+
                 email: clientByPhone.email || '',
                 phone: clientPhone || '',
                 priority: 1,
@@ -259,7 +269,9 @@ async function getCompletedTranscriptions(callSid) {
     return completed.trim();
 }
 
-async function updateTicketWithTranscription(callSid, transcription, callTo) {
+// ✅ calledNumber is the number we called for outbound (e.g., "to")
+//    For inbound calls, you can omit it; we infer from DB.
+async function updateTicketWithTranscription(callSid, transcription, calledNumber = null) {
     const call = await TwilioCall.findOne({ where: { callSid } });
     if (!call) return false;
 
@@ -267,6 +279,14 @@ async function updateTicketWithTranscription(callSid, transcription, callTo) {
     if (!ticket) return false;
 
     const ctx = { CallSid: callSid, ticketId: ticket.id, freshdeskId: ticket.freshdeskId };
+
+    // Infer "to" for outbound header/search
+    const toNumber = calledNumber || call.to || call.called || null;
+
+    // Outbound heuristic (keep your existing approach)
+    const isOutbound =
+        call.applicationSid == null &&
+        (call.from == twilioConfig.outboundNumber || call.caller == twilioConfig.outboundNumber);
 
     // 1) OpenAI title/description BEST-EFFORT (fallback si falla)
     let title = 'Call transcription received';
@@ -278,16 +298,16 @@ async function updateTicketWithTranscription(callSid, transcription, callTo) {
 
     if (aiRes.ok && aiRes.result) {
         if (aiRes.result.title) title = aiRes.result.title;
-        if (aiRes.result.description) description = aiRes.result.description;
+        if (aiRes.result.description != null) description = aiRes.result.description;
     }
 
-    if (
-        call.applicationSid == null && (
-            call.from == twilioConfig.outboundNumber || call.caller == twilioConfig.outboundNumber
-        )) {
-        if (description == null || description == undefined) description = '';
-        description.split(`Call to ${callTo}`)[1] ? description = '[OUTBOUND CALL] ' + description.split(`Call to ${To}`)[1].trim() :
-        description = '[OUTBOUND CALL] ' + description;
+    // ✅ Ensure outbound description starts with the required header
+    if (isOutbound) {
+        const header = `[OUTBOUND CALL] Call to ${toNumber || 'UNKNOWN'}`;
+        const descStr = String(description || '');
+        if (!descStr.startsWith('[OUTBOUND CALL]')) {
+            description = `${header}\n\n${descStr}`.trim();
+        }
     }
 
     await ticket.update({
@@ -309,7 +329,8 @@ async function updateTicketWithTranscription(callSid, transcription, callTo) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                description: `Call from ${call.from} Description: ${description}`,
+                // ✅ Keep description exactly as stored (includes outbound header if applicable)
+                description: description || '',
                 subject: title.slice(0, 50)
             })
         });
@@ -348,15 +369,36 @@ async function updateTicketWithTranscription(callSid, transcription, callTo) {
         return attachResponse.status;
     });
 
-    // 5) Buscar cliente en Freshservice por telefono (BEST-EFFORT, no confíes en esto)
-    const fdClientId = await bestEffort("freshservice", "find_contact_by_phone", ctx, async () => {
-        const searchResponse = await fetch(`${process.env.FRESHDESK_URL}/api/v2/contacts/search?query="phone:${call.To}"`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Basic ${freshdeskAuth}`,
-                "Content-Type": "application/json"
-            },
-        });
+    // 5) Buscar cliente en Freshservice por telefono y asociarlo al ticket
+    // ✅ outbound: search by number we called (toNumber)
+    // ✅ inbound: search by caller
+    const contactPhone = isOutbound
+        ? (toNumber || call.to || call.called || null)
+        : (call.from || call.caller || null);
+
+    if (!contactPhone) {
+        console.info(JSON.stringify({
+            level: "info",
+            type: "freshservice_contact_skip",
+            reason: "no_contact_phone",
+            ...ctx,
+            ts: new Date().toISOString(),
+        }));
+        return true;
+    }
+
+    const fdClientIdRes = await bestEffort("freshservice", "find_contact_by_phone", { ...ctx, contactPhone }, async () => {
+        const q = encodeURIComponent(`phone:${contactPhone}`);
+        const searchResponse = await fetch(
+            `${process.env.FRESHDESK_URL}/api/v2/contacts/search?query="${q}"`,
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Basic ${freshdeskAuth}`,
+                    "Content-Type": "application/json"
+                },
+            }
+        );
 
         if (!searchResponse.ok) {
             const errText = await searchResponse.text().catch(() => '');
@@ -368,6 +410,8 @@ async function updateTicketWithTranscription(callSid, transcription, callTo) {
         const searchData = await searchResponse.json();
         return searchData?.contacts?.[0]?.id || null;
     });
+
+    const fdClientId = fdClientIdRes.ok ? fdClientIdRes.result : null;
 
     // 6) Si encontramos cliente en Freshservice, asociarlo al ticket (BEST-EFFORT)
     if (fdClientId) {
@@ -587,7 +631,6 @@ async function checkOutgoingCalls() {
         console.log("Call:");
         const { sid, to, status, duration, accountSid } = call;
         console.log({ sid, to, status, duration, accountSid });
-        // console.log(call);
 
         if (call.status === 'completed') {
             const recordings = await getTwilioRecordings(call.sid) || [];
@@ -662,6 +705,7 @@ async function checkOutgoingCalls() {
                                             });
 
                                             // 7) Actualizar ticket con transcription (incluye OpenAI title/desc + Freshservice update)
+                                            // ✅ pass "to" as calledNumber so outbound header is correct
                                             await bestEffort('app', 'updateTicketWithTranscription', ctx, async () => {
                                                 return updateTicketWithTranscription(CallSid, aiRes.result, to);
                                             });

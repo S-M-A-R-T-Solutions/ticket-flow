@@ -1,3 +1,6 @@
+// ============================
+// CHUNK 1 (Express router)
+// ============================
 const express = require('express');
 const router = express.Router();
 const twilio = require('twilio');
@@ -205,8 +208,9 @@ router.post('/recordingStatus', urlencodedParser, (req, res) => {
             });
 
             // 7) Actualizar ticket con transcription (incluye OpenAI title/desc + Freshservice update)
+            //    ✅ Pasamos call.to como "number_called" para outbound (y no rompe inbound)
             await bestEffort('app', 'updateTicketWithTranscription', ctx, async () => {
-                return updateTicketWithTranscription(CallSid, aiRes.result);
+                return updateTicketWithTranscription(CallSid, aiRes.result, call?.to || call?.called || null);
             });
         }
     }, 'recordingStatus-processing', { CallSid: req?.body?.CallSid });
@@ -232,6 +236,7 @@ router.post('/transcription', urlencodedParser, (req, res) => {
 
         if (TranscriptionEvent === 'transcription-stopped') {
             const transcription = await getCompletedTranscriptions(CallSid);
+            // calledNumber not available here; updateTicketWithTranscription can infer from DB
             await updateTicketWithTranscription(CallSid, transcription);
         }
     }, 'twilio-transcription-processing', ctx);
@@ -239,10 +244,8 @@ router.post('/transcription', urlencodedParser, (req, res) => {
 
 router.get('/outgoingCalls', (req, res) => {
     checkOutgoingCalls();
-
     res.sendStatus(200);
 });
-
 
 router.post('/pbxOutboundStart', urlencodedParser, (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
@@ -314,6 +317,5 @@ function extractDialedNumber(toVal) {
     // If you support other countries, you should handle your own rules here.
     return null;
 }
-
 
 module.exports = { router, publicWebhookPaths };
