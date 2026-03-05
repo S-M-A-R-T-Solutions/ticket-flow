@@ -333,7 +333,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
             body: JSON.stringify({
                 // ✅ Keep description exactly as stored (includes outbound header if applicable)
                 description: `Call from ${call.caller} ${description}`,
-                subject: title.slice(0, 50)
+                subject: "OUTBOUND CALL " + title.slice(0, 50)
             })
         });
 
