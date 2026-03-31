@@ -158,7 +158,7 @@ async function upsertCallAndTicket(req, isOutgoing = false) {
             },
             body: JSON.stringify({
                 subject: isOutgoing
-                    ? `Outbound Call Ticket - ${clientPhone}`
+                    ? `[OUTBOUND CALL] Ticket - ${clientPhone}`
                     : `New Call Ticket - ${clientPhone}`,
 
                 // ✅ Outbound description prefix exactly as requested
@@ -333,7 +333,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
             body: JSON.stringify({
                 // ✅ Keep description exactly as stored (includes outbound header if applicable)
                 description: `Call from ${call.caller} ${description}`,
-                subject: "OUTBOUND CALL " + title.slice(0, 50)
+                subject: `[OUTBOUND CALL] ${title.slice(0, 50)}`
             })
         });
 
