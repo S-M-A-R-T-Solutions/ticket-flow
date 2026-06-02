@@ -195,11 +195,15 @@ router.post('/recordingStatus', urlencodedParser, (req, res) => {
             });
         }
 
-        // 6) Transcribir con OpenAI (externo → log, NO bloquea)
+       // 6) Transcribir con OpenAI (externo → log, NO bloquea)
+        // Wave 3-prep: infer Spanish from area code so gpt-4o-transcribe
+        // gets an explicit language hint for Miami-area callers. Only
+        // applies when SPANISH_LANGUAGE_HINT_ENABLED=true; otherwise the
+        // hint is silently ignored and we fall back to auto-detect.
+        const langHint = inferSpanishFromPhone(call?.from) || inferSpanishFromPhone(call?.to);
         const aiRes = await bestEffort('openai', 'transcribe_audio', ctx, async () => {
-            return getTranscriptionFromRecording(stream);
+            return getTranscriptionFromRecording(stream, { languageHint: langHint });
         });
-
         if (aiRes.ok && aiRes.result) {
             // Guardar transcription local (best-effort)
             await bestEffort('db', 'update_recording_transcription', ctx, async () => {
@@ -316,6 +320,23 @@ function extractDialedNumber(toVal) {
 
     // If you support other countries, you should handle your own rules here.
     return null;
+}
+
+// Wave 3-prep: heuristic for inferring caller language from phone number.
+// South Florida area codes (305 Miami-Dade, 786 Miami-Dade, 954 Broward,
+// 561 Palm Beach) where Spanish-as-first-language is dominant in
+// S.M.A.R.T Solutions' dental client base. Returns 'es' or null.
+// Conservative: only returns a hint if confident — auto-detect remains
+// the fallback for any number not in this set.
+function inferSpanishFromPhone(phoneNumber) {
+    if (!phoneNumber) return null;
+    const digits = String(phoneNumber).replace(/\D/g, '');
+    // E.164 like +13055551212 → strip leading 1 if NANP
+    const local = digits.startsWith('1') && digits.length === 11 ? digits.slice(1) : digits;
+    if (local.length < 10) return null;
+    const areaCode = local.slice(0, 3);
+    const SPANISH_DOMINANT = new Set(['305', '786', '954', '561']);
+    return SPANISH_DOMINANT.has(areaCode) ? 'es' : null;
 }
 
 module.exports = { router, publicWebhookPaths };

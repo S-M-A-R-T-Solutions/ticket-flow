@@ -32,21 +32,32 @@ async function getTitleAndDescription(transcription, anonymous = false) {
     return { title: '', description: '' };
 }
 
-async function getTranscriptionFromRecording(file) {
-    const client = new OpenAI({ apiKey: openaiApiKey });
+// Wave 3-prep: env-flag gate for Spanish-aware transcription.
+// When SPANISH_LANGUAGE_HINT_ENABLED=true AND opts.languageHint is provided
+// (typically 'es' inferred from Miami area codes in twilio.js), pass
+// language explicitly to gpt-4o-transcribe. This is OpenAI's documented
+// fix for the auto-detect-misfires-on-Spanish problem.
+const SPANISH_HINT_ENABLED = String(process.env.SPANISH_LANGUAGE_HINT_ENABLED || '').toLowerCase() === 'true';
 
-    // const audioUrl = recordingUrl.replace(/\.[^/.]+$/, '') + '.mp3';
-    // console.info('getTranscriptionFromRecording - audioUrl: ' + audioUrl);
+async function getTranscriptionFromRecording(file, opts = {}) {
+    const client = new OpenAI({ apiKey: openaiApiKey });
 
     let transcription = null;
 
     try {
-        const response = await client.audio.transcriptions.create({
+        const params = {
             file: file,
             model: "gpt-4o-transcribe",
             response_format: "text",
-            prompt: "Here is an audio file. All my audio files are IT support calls where a client reports a technical issue and a help-desk technician provides troubleshooting. Please transcribe the call verbatim with proper punctuation, and label the speakers as Client and Technician. Automatically detect the language spoken in the audio and provide the transcript in that same language, whether it is English, Spanish, or Spanglish. Add timestamps every 30 seconds and mark unclear audio with ‘[inaudible]’. After the transcript, provide a concise help-desk analysis that includes: 1) the main issue reported by the client, 2) the probable root cause, 3) the troubleshooting steps taken during the call, and 4) recommended next steps or follow-up actions. Do not summarize the transcript itself—only provide the analysis after the full transcript.",
-        });
+            prompt: "Here is an audio file. All my audio files are IT support calls where a client reports a technical issue and a help-desk technician provides troubleshooting. Please transcribe the call verbatim with proper punctuation, and label the speakers as Client and Technician. Automatically detect the language spoken in the audio and provide the transcript in that same language, whether it is English, Spanish, or Spanglish. Add timestamps every 30 seconds and mark unclear audio with '[inaudible]'. After the transcript, provide a concise help-desk analysis that includes: 1) the main issue reported by the client, 2) the probable root cause, 3) the troubleshooting steps taken during the call, and 4) recommended next steps or follow-up actions. Do not summarize the transcript itself—only provide the analysis after the full transcript.",
+        };
+
+        if (SPANISH_HINT_ENABLED && opts.languageHint) {
+            params.language = opts.languageHint;   // e.g. "es"
+            console.info(`getTranscriptionFromRecording: using languageHint=${opts.languageHint}`);
+        }
+
+        const response = await client.audio.transcriptions.create(params);
 
         console.info('getTranscriptionFromRecording:\n' + JSON.stringify(response));
 
