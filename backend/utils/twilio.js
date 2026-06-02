@@ -16,6 +16,39 @@ const FormData = require("form-data");
 
 const moment = require('moment');
 
+function normalizePhone(value) {
+    if (!value) return null;
+    const digits = String(value).replace(/\D/g, '');
+    if (!digits) return null;
+    // Normalize NANP numbers to 10 digits so +1XXXXXXXXXX and XXXXXXXXXX match.
+    if (digits.length === 11 && digits.startsWith('1')) return digits.slice(1);
+    return digits;
+}
+
+function isOutboundCallData({ from, caller, to, called }) {
+    const outboundNumber = normalizePhone(twilioConfig.outboundNumber);
+    if (!outboundNumber) return false;
+
+    const fromNumber = normalizePhone(from || caller);
+    const toNumber = normalizePhone(to || called);
+
+    if (!fromNumber || fromNumber !== outboundNumber) return false;
+
+    // Prevent false positives for inbound calls where destination is the Twilio outbound number.
+    if (toNumber && toNumber === outboundNumber) return false;
+
+    return true;
+}
+
+function isOutboundCallRecord(call) {
+    return isOutboundCallData({
+        from: call?.from,
+        caller: call?.caller,
+        to: call?.to,
+        called: call?.called,
+    });
+}
+
 /* -----------------------------
    Structured logs helpers
 -------------------------------- */
@@ -74,7 +107,9 @@ async function upsertCallAndTicket(req, isOutgoing = false) {
         Caller,
     } = req.body;
 
-    const clientPhone = isOutgoing ? (To || Called) : (From || Caller);
+    const inferredOutbound = isOutboundCallData({ from: From, caller: Caller, to: To, called: Called });
+    const outbound = isOutgoing || inferredOutbound;
+    const clientPhone = outbound ? (To || Called) : (From || Caller);
     const ctx = { CallSid, clientPhone };
 
     // 1) Si la llamada ya existe, solo update local (no dependas de externos)
@@ -157,12 +192,12 @@ async function upsertCallAndTicket(req, isOutgoing = false) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                subject: isOutgoing
+                subject: outbound
                     ? `[OUTBOUND CALL] Ticket - ${clientPhone}`
                     : `New Call Ticket - ${clientPhone}`,
 
                 // ✅ Outbound description prefix exactly as requested
-                description: isOutgoing
+                description: outbound
                     ? `[OUTBOUND CALL] Call to ${clientPhone}. Local Ticket ID: ${ticket.id}`
                     : `Ticket created for call from ${clientPhone}. Local Ticket ID: ${ticket.id}`,
 
@@ -285,10 +320,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
     // Infer "to" for outbound header/search
     const toNumber = calledNumber || call.to || call.called || null;
 
-    // Outbound heuristic (keep your existing approach)
-    const isOutbound =
-        call.applicationSid == null &&
-        (call.from == twilioConfig.outboundNumber || call.caller == twilioConfig.outboundNumber);
+    const isOutbound = isOutboundCallRecord(call);
 
     // 1) OpenAI title/description BEST-EFFORT (fallback si falla)
     let title = 'Call transcription received';
@@ -324,6 +356,10 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
 
     // 3) Update ticket en Freshservice BEST-EFFORT
     await bestEffort("freshservice", "update_ticket", ctx, async () => {
+        const subject = isOutbound
+            ? `[OUTBOUND CALL] ${title.slice(0, 50)}`
+            : title.slice(0, 50);
+
         const response = await fetch(`${process.env.FRESHDESK_URL}/api/v2/tickets/${ticket.freshdeskId}`, {
             method: "PUT",
             headers: {
@@ -333,7 +369,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
             body: JSON.stringify({
                 // ✅ Keep description exactly as stored (includes outbound header if applicable)
                 description: `Call from ${call.caller} ${description}`,
-                subject: `[OUTBOUND CALL] ${title.slice(0, 50)}`
+                subject
             })
         });
 
