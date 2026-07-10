@@ -25,6 +25,143 @@ function normalizePhone(value) {
     return digits;
 }
 
+function buildPhoneCandidates(value) {
+    const raw = String(value || '').trim();
+    const normalized = normalizePhone(raw);
+    const candidates = new Set();
+
+    if (raw) candidates.add(raw);
+
+    if (normalized) {
+        candidates.add(normalized);
+
+        if (normalized.length === 10) {
+            candidates.add(`+1${normalized}`);
+            candidates.add(`1${normalized}`);
+            candidates.add(`(${normalized.slice(0, 3)}) ${normalized.slice(3, 6)}-${normalized.slice(6)}`);
+            candidates.add(`${normalized.slice(0, 3)}-${normalized.slice(3, 6)}-${normalized.slice(6)}`);
+        }
+    }
+
+    return Array.from(candidates);
+}
+
+function getRequesterPhoneValues(requester) {
+    if (!requester || typeof requester !== 'object') return [];
+
+    const values = [
+        requester.phone,
+        requester.mobile,
+        requester.mobile_phone_number,
+        requester.work_phone,
+        requester.work_phone_number,
+        requester.business_phone,
+        requester.primary_phone_number,
+    ].filter(Boolean);
+
+    return values;
+}
+
+function requesterMatchesPhone(requester, targetPhone) {
+    const target = normalizePhone(targetPhone);
+    if (!target) return false;
+
+    const requesterPhones = getRequesterPhoneValues(requester);
+    return requesterPhones.some((phone) => normalizePhone(phone) === target);
+}
+
+async function fetchFreshserviceRequestersByQuery({ baseUrl, auth, field, phoneValue }) {
+    const params = new URLSearchParams({ query: `"${field}:${phoneValue}"` });
+    const response = await fetch(`${baseUrl}/api/v2/requesters?${params.toString()}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Basic ${auth}`,
+            "Content-Type": "application/json"
+        },
+    });
+
+    if (!response.ok) {
+        const errText = await response.text().catch(() => '');
+        const err = new Error(`Freshservice contact search failed: ${response.status}`);
+        err.response = { status: response.status, data: errText };
+        throw err;
+    }
+
+    const data = await response.json();
+    if (Array.isArray(data?.requesters)) return data.requesters;
+    if (Array.isArray(data)) return data;
+    return [];
+}
+
+async function fetchFreshserviceRequestersPage({ baseUrl, auth, page = 1, perPage = 100 }) {
+    const params = new URLSearchParams({ page: String(page), per_page: String(perPage) });
+    const response = await fetch(`${baseUrl}/api/v2/requesters?${params.toString()}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Basic ${auth}`,
+            "Content-Type": "application/json"
+        },
+    });
+
+    if (!response.ok) {
+        const errText = await response.text().catch(() => '');
+        const err = new Error(`Freshservice requester list failed: ${response.status}`);
+        err.response = { status: response.status, data: errText };
+        throw err;
+    }
+
+    const data = await response.json();
+    if (Array.isArray(data?.requesters)) return data.requesters;
+    if (Array.isArray(data)) return data;
+    return [];
+}
+
+async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone }) {
+    const candidates = buildPhoneCandidates(contactPhone);
+    if (candidates.length === 0) return null;
+
+    const searchableFields = ['phone', 'mobile', 'mobile_phone_number', 'work_phone', 'work_phone_number'];
+
+    for (const candidate of candidates) {
+        for (const field of searchableFields) {
+            try {
+                const requesters = await fetchFreshserviceRequestersByQuery({
+                    baseUrl,
+                    auth,
+                    field,
+                    phoneValue: candidate,
+                });
+
+                if (!requesters.length) continue;
+
+                const strictMatch = requesters.find((req) => requesterMatchesPhone(req, contactPhone));
+                const selected = strictMatch || requesters[0];
+                if (selected?.id) return selected.id;
+            } catch {
+                // Continue trying next field/candidate; this isolates transient query issues.
+                continue;
+            }
+        }
+    }
+
+    // Fallback: scan the first pages and compare normalized phone values.
+    for (let page = 1; page <= 3; page += 1) {
+        const requesters = await fetchFreshserviceRequestersPage({
+            baseUrl,
+            auth,
+            page,
+            perPage: 100,
+        });
+
+        if (!requesters.length) break;
+
+        const match = requesters.find((req) => requesterMatchesPhone(req, contactPhone));
+        if (match?.id) return match.id;
+    }
+
+    return null;
+}
+
 function isOutboundCallData({ from, caller, to, called }) {
     const outboundNumber = normalizePhone(twilioConfig.outboundNumber);
     if (!outboundNumber) return false;
@@ -50,7 +187,7 @@ function isOutboundCallRecord(call) {
 }
 
 /* -----------------------------
-   Structured logs helpers
+Structured logs helpers
 -------------------------------- */
 function logExtOk(service, step, ctx = {}, extra = {}) {
     console.info(JSON.stringify({
@@ -426,27 +563,11 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
     }
 
     const fdClientIdRes = await bestEffort("freshservice", "find_contact_by_phone", { ...ctx, contactPhone }, async () => {
-        const q = encodeURIComponent(`phone:${contactPhone}`);
-        const searchResponse = await fetch(
-            `${process.env.FRESHDESK_URL}/api/v2/requesters?query="${q}"`,
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": `Basic ${freshdeskAuth}`,
-                    "Content-Type": "application/json"
-                },
-            }
-        );
-
-        if (!searchResponse.ok) {
-            const errText = await searchResponse.text().catch(() => '');
-            const err = new Error(`Freshservice contact search failed: ${searchResponse.status}`);
-            err.response = { status: searchResponse.status, data: errText };
-            throw err;
-        }
-
-        const searchData = await searchResponse.json();
-        return searchData?.requesters?.[0]?.id || null;
+        return findFreshserviceRequesterIdByPhone({
+            baseUrl: process.env.FRESHDESK_URL,
+            auth: freshdeskAuth,
+            contactPhone,
+        });
     });
 
     const fdClientId = fdClientIdRes.ok ? fdClientIdRes.result : null;
