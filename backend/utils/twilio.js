@@ -71,25 +71,35 @@ function requesterMatchesPhone(requester, targetPhone) {
 }
 
 async function fetchFreshserviceRequestersByQuery({ baseUrl, auth, field, phoneValue }) {
-    const params = new URLSearchParams({ query: `"${field}:${phoneValue}"` });
-    const response = await fetch(`${baseUrl}/api/v2/requesters?${params.toString()}`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Basic ${auth}`,
-            "Content-Type": "application/json"
-        },
-    });
+    const queryVariants = [
+        `"${field}:${phoneValue}"`,
+        `"${field}:'${phoneValue}'"`,
+        `${field}:${phoneValue}`,
+        `${field}:'${phoneValue}'`,
+    ];
 
-    if (!response.ok) {
-        const errText = await response.text().catch(() => '');
-        const err = new Error(`Freshservice contact search failed: ${response.status}`);
-        err.response = { status: response.status, data: errText };
-        throw err;
+    for (const query of queryVariants) {
+        const params = new URLSearchParams({ query });
+        const response = await fetch(`${baseUrl}/api/v2/requesters?${params.toString()}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Basic ${auth}`,
+                "Content-Type": "application/json"
+            },
+        });
+
+        if (!response.ok) {
+            const errText = await response.text().catch(() => '');
+            const err = new Error(`Freshservice contact search failed: ${response.status}`);
+            err.response = { status: response.status, data: errText };
+            throw err;
+        }
+
+        const data = await response.json();
+        const requesters = Array.isArray(data?.requesters) ? data.requesters : (Array.isArray(data) ? data : []);
+        if (requesters.length) return requesters;
     }
 
-    const data = await response.json();
-    if (Array.isArray(data?.requesters)) return data.requesters;
-    if (Array.isArray(data)) return data;
     return [];
 }
 
@@ -571,6 +581,17 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
     });
 
     const fdClientId = fdClientIdRes.ok ? fdClientIdRes.result : null;
+
+    if (!fdClientId) {
+        console.info(JSON.stringify({
+            level: "info",
+            type: "freshservice_contact_skip",
+            reason: "no_match_found",
+            contactPhone,
+            ...ctx,
+            ts: new Date().toISOString(),
+        }));
+    }
 
     // 6) Si encontramos cliente en Freshservice, asociarlo al ticket (BEST-EFFORT)
     if (fdClientId) {
