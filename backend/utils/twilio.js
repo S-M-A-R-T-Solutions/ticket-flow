@@ -27,20 +27,20 @@ function normalizePhone(value) {
 
 function buildPhoneCandidates(value) {
     const raw = String(value || '').trim();
-    const normalized = normalizePhone(raw);
+    const digits = String(raw).replace(/\D/g, '');
     const candidates = new Set();
 
-    if (raw) candidates.add(raw);
+    // Freshservice search works best when phone is sent as digits only (no +, no symbols).
+    if (digits) candidates.add(digits);
 
-    if (normalized) {
-        candidates.add(normalized);
+    if (digits.length === 11 && digits.startsWith('1')) {
+        // Some records are stored without country code.
+        candidates.add(digits.slice(1));
+    }
 
-        if (normalized.length === 10) {
-            candidates.add(`+1${normalized}`);
-            candidates.add(`1${normalized}`);
-            candidates.add(`(${normalized.slice(0, 3)}) ${normalized.slice(3, 6)}-${normalized.slice(6)}`);
-            candidates.add(`${normalized.slice(0, 3)}-${normalized.slice(3, 6)}-${normalized.slice(6)}`);
-        }
+    if (digits.length === 10) {
+        // If caller comes without country code, try NANP canonical 11-digit value.
+        candidates.add(`1${digits}`);
     }
 
     return Array.from(candidates);
@@ -49,14 +49,10 @@ function buildPhoneCandidates(value) {
 function getRequesterPhoneValues(requester) {
     if (!requester || typeof requester !== 'object') return [];
 
+    // Requested behavior: match only against mobile/work phone number fields.
     const values = [
-        requester.phone,
-        requester.mobile,
         requester.mobile_phone_number,
-        requester.work_phone,
         requester.work_phone_number,
-        requester.business_phone,
-        requester.primary_phone_number,
     ].filter(Boolean);
 
     return values;
@@ -130,7 +126,7 @@ async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone 
     const candidates = buildPhoneCandidates(contactPhone);
     if (candidates.length === 0) return null;
 
-    const searchableFields = ['phone', 'mobile', 'mobile_phone_number', 'work_phone', 'work_phone_number'];
+    const searchableFields = ['mobile_phone_number', 'work_phone_number'];
 
     for (const candidate of candidates) {
         for (const field of searchableFields) {
@@ -154,22 +150,65 @@ async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone 
         }
     }
 
-    // Fallback: scan the first pages and compare normalized phone values.
-    for (let page = 1; page <= 3; page += 1) {
+    // Fallback: deep page scan with normalized comparison across all known phone fields.
+    // Keep this bounded but high enough for larger requester directories.
+    const maxPages = Number(process.env.FRESHSERVICE_REQUESTER_SCAN_MAX_PAGES || 50);
+    const perPage = Number(process.env.FRESHSERVICE_REQUESTER_SCAN_PER_PAGE || 100);
+
+    for (let page = 1; page <= maxPages; page += 1) {
         const requesters = await fetchFreshserviceRequestersPage({
             baseUrl,
             auth,
             page,
-            perPage: 100,
+            perPage,
         });
 
         if (!requesters.length) break;
 
         const match = requesters.find((req) => requesterMatchesPhone(req, contactPhone));
         if (match?.id) return match.id;
+
+        // If we got less than requested page size, there are no more pages.
+        if (requesters.length < perPage) break;
     }
 
     return null;
+}
+
+async function createFreshserviceRequesterFromClient({ baseUrl, auth, client, contactPhone }) {
+    if (!client) return null;
+
+    const firstName = String(client.firstName || client.companyName || 'Caller').trim();
+    const lastName = String(client.lastName || '').trim();
+    const email = String(client.email || '').trim();
+    const phone = String(contactPhone || client.phone || '').trim();
+
+    const payload = {
+        first_name: firstName,
+    };
+
+    if (lastName) payload.last_name = lastName;
+    if (email) payload.primary_email = email;
+    if (phone) payload.phone = phone;
+
+    const response = await fetch(`${baseUrl}/api/v2/requesters`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Basic ${auth}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        const errText = await response.text().catch(() => '');
+        const err = new Error(`Freshservice requester create failed: ${response.status}`);
+        err.response = { status: response.status, data: errText };
+        throw err;
+    }
+
+    const data = await response.json();
+    return data?.requester?.id || data?.id || null;
 }
 
 function isOutboundCallData({ from, caller, to, called }) {
@@ -580,7 +619,7 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
         });
     });
 
-    const fdClientId = fdClientIdRes.ok ? fdClientIdRes.result : null;
+    let fdClientId = fdClientIdRes.ok ? fdClientIdRes.result : null;
 
     if (!fdClientId) {
         console.info(JSON.stringify({
@@ -591,6 +630,18 @@ async function updateTicketWithTranscription(callSid, transcription, calledNumbe
             ...ctx,
             ts: new Date().toISOString(),
         }));
+
+        const localClient = await Client.findByPk(ticket.clientId);
+        const createRequesterRes = await bestEffort("freshservice", "create_requester_fallback", { ...ctx, contactPhone }, async () => {
+            return createFreshserviceRequesterFromClient({
+                baseUrl: process.env.FRESHDESK_URL,
+                auth: freshdeskAuth,
+                client: localClient,
+                contactPhone,
+            });
+        });
+
+        fdClientId = createRequesterRes.ok ? createRequesterRes.result : null;
     }
 
     // 6) Si encontramos cliente en Freshservice, asociarlo al ticket (BEST-EFFORT)
