@@ -66,41 +66,8 @@ function requesterMatchesPhone(requester, targetPhone) {
     return requesterPhones.some((phone) => normalizePhone(phone) === target);
 }
 
-async function fetchFreshserviceRequestersByQuery({ baseUrl, auth, field, phoneValue }) {
-    const queryVariants = [
-        `"${field}:${phoneValue}"`,
-        `"${field}:'${phoneValue}'"`,
-        `${field}:${phoneValue}`,
-        `${field}:'${phoneValue}'`,
-    ];
-
-    for (const query of queryVariants) {
-        const params = new URLSearchParams({ query });
-        const response = await fetch(`${baseUrl}/api/v2/requesters?${params.toString()}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Basic ${auth}`,
-                "Content-Type": "application/json"
-            },
-        });
-
-        if (!response.ok) {
-            const errText = await response.text().catch(() => '');
-            const err = new Error(`Freshservice contact search failed: ${response.status}`);
-            err.response = { status: response.status, data: errText };
-            throw err;
-        }
-
-        const data = await response.json();
-        const requesters = Array.isArray(data?.requesters) ? data.requesters : (Array.isArray(data) ? data : []);
-        if (requesters.length) return requesters;
-    }
-
-    return [];
-}
-
-async function fetchFreshserviceRequestersPage({ baseUrl, auth, page = 1, perPage = 100 }) {
-    const params = new URLSearchParams({ page: String(page), per_page: String(perPage) });
+async function fetchFreshserviceRequestersByField({ baseUrl, auth, field, phoneValue }) {
+    const params = new URLSearchParams({ [field]: phoneValue });
     const response = await fetch(`${baseUrl}/api/v2/requesters?${params.toString()}`, {
         method: "GET",
         headers: {
@@ -111,7 +78,7 @@ async function fetchFreshserviceRequestersPage({ baseUrl, auth, page = 1, perPag
 
     if (!response.ok) {
         const errText = await response.text().catch(() => '');
-        const err = new Error(`Freshservice requester list failed: ${response.status}`);
+        const err = new Error(`Freshservice requester search failed: ${response.status}`);
         err.response = { status: response.status, data: errText };
         throw err;
     }
@@ -140,7 +107,7 @@ async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone 
     for (const candidate of candidates) {
         for (const field of searchableFields) {
             try {
-                const requesters = await fetchFreshserviceRequestersByQuery({
+                const requesters = await fetchFreshserviceRequestersByField({
                     baseUrl,
                     auth,
                     field,
@@ -168,38 +135,6 @@ async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone 
                 continue;
             }
         }
-    }
-
-    // Fallback: deep page scan with normalized comparison across all known phone fields.
-    // Keep this bounded but high enough for larger requester directories.
-    const maxPages = Number(process.env.FRESHSERVICE_REQUESTER_SCAN_MAX_PAGES || 50);
-    const perPage = Number(process.env.FRESHSERVICE_REQUESTER_SCAN_PER_PAGE || 100);
-
-    for (let page = 1; page <= maxPages; page += 1) {
-        const requesters = await fetchFreshserviceRequestersPage({
-            baseUrl,
-            auth,
-            page,
-            perPage,
-        });
-
-        if (!requesters.length) break;
-
-        const match = requesters.find((req) => requesterMatchesPhone(req, contactPhone));
-        if (match?.id) {
-            console.info(JSON.stringify({
-                level: "info",
-                type: "freshservice_contact_search_match_fallback",
-                contactPhone,
-                page,
-                requesterId: match.id,
-                ts: new Date().toISOString(),
-            }));
-            return match.id;
-        }
-
-        // If we got less than requested page size, there are no more pages.
-        if (requesters.length < perPage) break;
     }
 
     console.info(JSON.stringify({
