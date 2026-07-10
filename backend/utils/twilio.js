@@ -128,6 +128,15 @@ async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone 
 
     const searchableFields = ['mobile_phone_number', 'work_phone_number'];
 
+    console.info(JSON.stringify({
+        level: "info",
+        type: "freshservice_contact_search_start",
+        contactPhone,
+        candidates,
+        searchableFields,
+        ts: new Date().toISOString(),
+    }));
+
     for (const candidate of candidates) {
         for (const field of searchableFields) {
             try {
@@ -142,7 +151,18 @@ async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone 
 
                 const strictMatch = requesters.find((req) => requesterMatchesPhone(req, contactPhone));
                 const selected = strictMatch || requesters[0];
-                if (selected?.id) return selected.id;
+                if (selected?.id) {
+                    console.info(JSON.stringify({
+                        level: "info",
+                        type: "freshservice_contact_search_match",
+                        contactPhone,
+                        candidate,
+                        field,
+                        requesterId: selected.id,
+                        ts: new Date().toISOString(),
+                    }));
+                    return selected.id;
+                }
             } catch {
                 // Continue trying next field/candidate; this isolates transient query issues.
                 continue;
@@ -166,11 +186,29 @@ async function findFreshserviceRequesterIdByPhone({ baseUrl, auth, contactPhone 
         if (!requesters.length) break;
 
         const match = requesters.find((req) => requesterMatchesPhone(req, contactPhone));
-        if (match?.id) return match.id;
+        if (match?.id) {
+            console.info(JSON.stringify({
+                level: "info",
+                type: "freshservice_contact_search_match_fallback",
+                contactPhone,
+                page,
+                requesterId: match.id,
+                ts: new Date().toISOString(),
+            }));
+            return match.id;
+        }
 
         // If we got less than requested page size, there are no more pages.
         if (requesters.length < perPage) break;
     }
+
+    console.info(JSON.stringify({
+        level: "info",
+        type: "freshservice_contact_search_no_match",
+        contactPhone,
+        candidates,
+        ts: new Date().toISOString(),
+    }));
 
     return null;
 }
