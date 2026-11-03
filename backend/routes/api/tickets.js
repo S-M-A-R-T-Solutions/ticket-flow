@@ -292,7 +292,9 @@ router.get('/:id', requireAuth, async (req, res, next) => {
         }
 
         let Notes = await Note.findAll({
-
+            where: {
+                ticketId: ticket.id
+            }
         })
 
         const StatusInfo = await Status.findByPk(ticket.statusId);
